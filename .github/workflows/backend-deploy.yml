@@ -27,10 +27,9 @@ jobs:
           cache: 'npm'
           
       - name: Install Supabase CLI
-        run: |
-          wget -qO- https://supabase.com/install.sh | sh
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          supabase --version
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
         
       - name: Start Supabase locally
         run: supabase start
@@ -62,10 +61,9 @@ jobs:
           cache: 'npm'
           
       - name: Install Supabase CLI
-        run: |
-          wget -qO- https://supabase.com/install.sh | sh
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          supabase --version
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
         
       - name: Link to Supabase project
         run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF_STAGING }}
@@ -103,10 +101,9 @@ jobs:
           cache: 'npm'
           
       - name: Install Supabase CLI
-        run: |
-          wget -qO- https://supabase.com/install.sh | sh
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          supabase --version
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
         
       - name: Link to Supabase project
         run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF_PROD }}

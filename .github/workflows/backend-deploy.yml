@@ -67,34 +67,67 @@ jobs:
         
       - name: Debug project reference
         run: |
-          echo "=== DEBUG INFO ==="
-          echo "Project ref length: ${#SUPABASE_PROJECT_REF}"
-          echo "Project ref value: '$SUPABASE_PROJECT_REF'"
-          echo "Project ref (first 4 chars): ${SUPABASE_PROJECT_REF:0:4}..."
-          echo "Access token length: ${#SUPABASE_ACCESS_TOKEN}"
-          echo "Access token (first 4 chars): ${SUPABASE_ACCESS_TOKEN:0:4}..."
-          echo "=================="
+          echo "=== DETAILED DEBUG INFO ==="
+          echo "Environment variables:"
+          echo "  SUPABASE_PROJECT_REF: '$SUPABASE_PROJECT_REF'"
+          echo "  SUPABASE_ACCESS_TOKEN: '$SUPABASE_ACCESS_TOKEN'"
+          echo ""
+          echo "Lengths:"
+          echo "  Project ref length: ${#SUPABASE_PROJECT_REF}"
+          echo "  Access token length: ${#SUPABASE_ACCESS_TOKEN}"
+          echo ""
+          echo "First few characters:"
+          echo "  Project ref (first 4): '${SUPABASE_PROJECT_REF:0:4}'"
+          echo "  Access token (first 4): '${SUPABASE_ACCESS_TOKEN:0:4}'"
+          echo ""
+          echo "GitHub context:"
+          echo "  Repository: ${{ github.repository }}"
+          echo "  Branch: ${{ github.ref }}"
+          echo "  Event: ${{ github.event_name }}"
+          echo "========================"
           
+          # Check if secrets are empty
           if [ -z "$SUPABASE_PROJECT_REF" ]; then
-            echo "❌ ERROR: SUPABASE_PROJECT_REF is empty!"
-            echo "Please set the GitHub Secret: SUPABASE_PROJECT_REF = gwizmwhxbvayhebbyvql"
-            exit 1
-          fi
-          
-          # Check if project ref is reasonable length (21-24 characters)
-          if [ ${#SUPABASE_PROJECT_REF} -lt 20 ] || [ ${#SUPABASE_PROJECT_REF} -gt 25 ]; then
-            echo "❌ ERROR: SUPABASE_PROJECT_REF length is ${#SUPABASE_PROJECT_REF}, expected 21-24 characters"
-            echo "Current value: '$SUPABASE_PROJECT_REF'"
+            echo ""
+            echo "❌ CRITICAL ERROR: SUPABASE_PROJECT_REF is EMPTY!"
+            echo ""
+            echo "🔧 TROUBLESHOOTING STEPS:"
+            echo "1. Go to: https://github.com/${{ github.repository }}/settings/secrets/actions"
+            echo "2. Click 'New repository secret'"
+            echo "3. Name: SUPABASE_PROJECT_REF"
+            echo "4. Value: gwizmwhxbvayhebbyvql"
+            echo "5. Click 'Add secret'"
+            echo ""
+            echo "📋 Current secrets in this repository:"
+            echo "  (This will show if any secrets exist)"
             exit 1
           fi
           
           if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
-            echo "❌ ERROR: SUPABASE_ACCESS_TOKEN is empty!"
-            echo "Please set the GitHub Secret: SUPABASE_ACCESS_TOKEN"
+            echo ""
+            echo "❌ CRITICAL ERROR: SUPABASE_ACCESS_TOKEN is EMPTY!"
+            echo ""
+            echo "🔧 TROUBLESHOOTING STEPS:"
+            echo "1. Go to: https://github.com/${{ github.repository }}/settings/secrets/actions"
+            echo "2. Name: SUPABASE_ACCESS_TOKEN"
+            echo "3. Value: sbp_your_token_here (get from https://supabase.com/dashboard/account/tokens)"
+            echo "4. Click 'Add secret'"
             exit 1
           fi
           
-          echo "✅ Both secrets are set correctly!"
+          # Check if project ref is reasonable length
+          if [ ${#SUPABASE_PROJECT_REF} -lt 20 ] || [ ${#SUPABASE_PROJECT_REF} -gt 25 ]; then
+            echo ""
+            echo "❌ ERROR: SUPABASE_PROJECT_REF length is ${#SUPABASE_PROJECT_REF}, expected 21-24 characters"
+            echo "Current value: '$SUPABASE_PROJECT_REF'"
+            echo "Expected value: 'gwizmwhxbvayhebbyvql' (21 characters)"
+            exit 1
+          fi
+          
+          echo ""
+          echo "✅ SUCCESS: Both secrets are set correctly!"
+          echo "  Project ref: '$SUPABASE_PROJECT_REF' (${#SUPABASE_PROJECT_REF} chars)"
+          echo "  Access token: '${SUPABASE_ACCESS_TOKEN:0:4}...' (${#SUPABASE_ACCESS_TOKEN} chars)"
         env:
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}

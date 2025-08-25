@@ -28,7 +28,7 @@ jobs:
           
       - name: Install Supabase CLI
         run: |
-          curl -fsSL https://supabase.com/install.sh | sh
+          wget -qO- https://supabase.com/install.sh | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           supabase --version
         
@@ -63,7 +63,7 @@ jobs:
           
       - name: Install Supabase CLI
         run: |
-          curl -fsSL https://supabase.com/install.sh | sh
+          wget -qO- https://supabase.com/install.sh | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           supabase --version
         
@@ -104,7 +104,7 @@ jobs:
           
       - name: Install Supabase CLI
         run: |
-          curl -fsSL https://supabase.com/install.sh | sh
+          wget -qO- https://supabase.com/install.sh | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           supabase --version
         

@@ -73,7 +73,9 @@ jobs:
       - name: Install Supabase CLI
         run: |
           curl -fsSL https://supabase.com/install.sh | sh
+          export PATH="$HOME/.local/bin:$PATH"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+          supabase --version
         
       - name: Set project reference
         id: set-project-ref
@@ -87,17 +89,23 @@ jobs:
           fi
         
       - name: Link to Supabase project
-        run: supabase link --project-ref ${{ steps.set-project-ref.outputs.project_ref }}
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          supabase link --project-ref ${{ steps.set-project-ref.outputs.project_ref }}
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           
       - name: Deploy database migrations
-        run: supabase db push
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          supabase db push
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           
       - name: Deploy Edge Functions
-        run: supabase functions deploy
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          supabase functions deploy
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           

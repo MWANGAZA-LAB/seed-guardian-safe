@@ -68,7 +68,9 @@ jobs:
       - name: Install Supabase CLI
         run: |
           curl -fsSL https://supabase.com/install.sh | sh
+          export PATH="$HOME/.local/bin:$PATH"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+          supabase --version
         
       - name: Validate Supabase configuration
         run: |

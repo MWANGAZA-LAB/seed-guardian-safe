@@ -29,20 +29,28 @@ jobs:
       - name: Install Supabase CLI
         run: |
           curl -fsSL https://supabase.com/install.sh | sh
+          export PATH="$HOME/.local/bin:$PATH"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+          supabase --version
         
       - name: Start Supabase locally
-        run: supabase start
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          supabase start
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           
       - name: Test migrations
-        run: supabase db reset
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          supabase db reset
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           
       - name: Stop Supabase
-        run: supabase stop
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          supabase stop
         if: always()
 
   deploy-staging:
@@ -63,20 +71,28 @@ jobs:
       - name: Install Supabase CLI
         run: |
           curl -fsSL https://supabase.com/install.sh | sh
+          export PATH="$HOME/.local/bin:$PATH"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+          supabase --version
         
       - name: Link to Supabase project
-        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF_STAGING }}
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF_STAGING }}
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           
       - name: Deploy database migrations
-        run: supabase db push
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          supabase db push
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           
       - name: Deploy Edge Functions
-        run: supabase functions deploy
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          supabase functions deploy
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           
@@ -103,20 +119,28 @@ jobs:
       - name: Install Supabase CLI
         run: |
           curl -fsSL https://supabase.com/install.sh | sh
+          export PATH="$HOME/.local/bin:$PATH"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+          supabase --version
         
       - name: Link to Supabase project
-        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF_PROD }}
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF_PROD }}
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           
       - name: Deploy database migrations
-        run: supabase db push
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          supabase db push
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           
       - name: Deploy Edge Functions
-        run: supabase functions deploy
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          supabase functions deploy
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           

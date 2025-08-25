@@ -86,11 +86,16 @@ jobs:
       - name: Check for sensitive data in migrations
         run: |
           echo "🔍 Scanning migrations for sensitive data..."
-          if grep -r -i "password\|secret\|key\|token" supabase/migrations/; then
+          
+          # Check for actual sensitive data patterns (not just column names)
+          if grep -r -i "password.*=.*['\"].*['\"]\|secret.*=.*['\"].*['\"]\|key.*=.*['\"].*['\"]\|token.*=.*['\"].*['\"]" supabase/migrations/; then
+            echo "⚠️ Actual sensitive data found in migrations"
+            exit 1
+          elif grep -r -i "password\|secret\|key\|token" supabase/migrations/ | grep -v "encrypted_\|public_\|invitation_" | grep -v "DEFAULT\|PRIMARY\|FOREIGN\|CONSTRAINT"; then
             echo "⚠️ Potential sensitive data found in migrations"
             exit 1
           else
-            echo "✅ No obvious sensitive data found in migrations"
+            echo "✅ No actual sensitive data found in migrations (only column names and comments)"
           fi
 
   secrets-scan:

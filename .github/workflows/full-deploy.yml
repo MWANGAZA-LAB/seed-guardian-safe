@@ -72,7 +72,8 @@ jobs:
           
       - name: Install Supabase CLI
         run: |
-          npm install -g supabase@latest
+          curl -fsSL https://supabase.com/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
           supabase --version
         
       - name: Set project reference

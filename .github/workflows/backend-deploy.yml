@@ -65,6 +65,15 @@ jobs:
         with:
           version: latest
         
+      - name: Debug project reference
+        run: |
+          echo "Project ref length: ${#SUPABASE_PROJECT_REF}"
+          echo "Project ref (first 4 chars): ${SUPABASE_PROJECT_REF:0:4}..."
+          echo "Access token length: ${#SUPABASE_ACCESS_TOKEN}"
+        env:
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          
       - name: Link to Supabase project
         run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
         env:
@@ -105,6 +114,15 @@ jobs:
         with:
           version: latest
         
+      - name: Debug project reference
+        run: |
+          echo "Project ref length: ${#SUPABASE_PROJECT_REF}"
+          echo "Project ref (first 4 chars): ${SUPABASE_PROJECT_REF:0:4}..."
+          echo "Access token length: ${#SUPABASE_ACCESS_TOKEN}"
+        env:
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          
       - name: Link to Supabase project
         run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
         env:

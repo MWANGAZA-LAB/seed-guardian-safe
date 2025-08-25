@@ -81,6 +81,13 @@ jobs:
             exit 1
           fi
           
+          # Check if project ref is reasonable length (21-24 characters)
+          if [ ${#SUPABASE_PROJECT_REF} -lt 20 ] || [ ${#SUPABASE_PROJECT_REF} -gt 25 ]; then
+            echo "❌ ERROR: SUPABASE_PROJECT_REF length is ${#SUPABASE_PROJECT_REF}, expected 21-24 characters"
+            echo "Current value: '$SUPABASE_PROJECT_REF'"
+            exit 1
+          fi
+          
           if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
             echo "❌ ERROR: SUPABASE_ACCESS_TOKEN is empty!"
             echo "Please set the GitHub Secret: SUPABASE_ACCESS_TOKEN"
@@ -145,6 +152,13 @@ jobs:
           if [ -z "$SUPABASE_PROJECT_REF" ]; then
             echo "❌ ERROR: SUPABASE_PROJECT_REF is empty!"
             echo "Please set the GitHub Secret: SUPABASE_PROJECT_REF = gwizmwhxbvayhebbyvql"
+            exit 1
+          fi
+          
+          # Check if project ref is reasonable length (21-24 characters)
+          if [ ${#SUPABASE_PROJECT_REF} -lt 20 ] || [ ${#SUPABASE_PROJECT_REF} -gt 25 ]; then
+            echo "❌ ERROR: SUPABASE_PROJECT_REF length is ${#SUPABASE_PROJECT_REF}, expected 21-24 characters"
+            echo "Current value: '$SUPABASE_PROJECT_REF'"
             exit 1
           fi
           

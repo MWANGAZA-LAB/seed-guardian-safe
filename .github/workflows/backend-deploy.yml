@@ -4,347 +4,118 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'supabase/**'
-      - '.github/workflows/backend-deploy.yml'
+      - "supabase/**"
+      - ".github/workflows/backend-deploy.yml"
   pull_request:
-    branches: [main]
+    branches: [main, develop]
     paths:
-      - 'supabase/**'
+      - "supabase/**"
+
+# Prevent overlapping deploys per branch
+concurrency:
+  group: backend-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test-migrations:
-    name: Test Database Migrations
+    name: Test Database Migrations (local)
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
-          
+          node-version: "18"
+          cache: "npm"
+
       - name: Install Supabase CLI
         uses: supabase/setup-cli@v1
         with:
           version: latest
-        
+
+      # Spin up local stack and verify migrations apply cleanly
       - name: Start Supabase locally
         run: supabase start
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          
-      - name: Test migrations
+
+      - name: Reset & apply migrations locally
         run: supabase db reset
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          
+
       - name: Stop Supabase
-        run: supabase stop
         if: always()
+        run: supabase stop
 
   deploy-staging:
     name: Deploy to Staging
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop'
-    
+    needs: [test-migrations]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
-          
+          node-version: "18"
+          cache: "npm"
+
       - name: Install Supabase CLI
         uses: supabase/setup-cli@v1
         with:
           version: latest
-        
-      - name: Debug project reference
-        run: |
-          echo "=== DETAILED DEBUG INFO ==="
-          echo "Environment variables:"
-          echo "  SUPABASE_PROJECT_REF: '$SUPABASE_PROJECT_REF'"
-          echo "  SUPABASE_ACCESS_TOKEN: '$SUPABASE_ACCESS_TOKEN'"
-          echo "  SUPABASE_DB_PASSWORD: '$SUPABASE_DB_PASSWORD'"
-          echo ""
-          echo "Lengths:"
-          echo "  Project ref length: ${#SUPABASE_PROJECT_REF}"
-          echo "  Access token length: ${#SUPABASE_ACCESS_TOKEN}"
-          echo "  DB password length: ${#SUPABASE_DB_PASSWORD}"
-          echo ""
-          echo "First few characters:"
-          echo "  Project ref (first 4): '${SUPABASE_PROJECT_REF:0:4}'"
-          echo "  Access token (first 4): '${SUPABASE_ACCESS_TOKEN:0:4}'"
-          echo "  DB password (first 4): '${SUPABASE_DB_PASSWORD:0:4}'"
-          echo ""
-          echo "GitHub context:"
-          echo "  Repository: ${{ github.repository }}"
-          echo "  Branch: ${{ github.ref }}"
-          echo "  Event: ${{ github.event_name }}"
-          echo "========================"
-          
-          # Check if secrets are empty
-          if [ -z "$SUPABASE_PROJECT_REF" ]; then
-            echo ""
-            echo "❌ CRITICAL ERROR: SUPABASE_PROJECT_REF is EMPTY!"
-            echo ""
-            echo "🔧 TROUBLESHOOTING STEPS:"
-            echo "1. Go to: https://github.com/${{ github.repository }}/settings/secrets/actions"
-            echo "2. Click 'New repository secret'"
-            echo "3. Name: SUPABASE_PROJECT_REF"
-            echo "4. Value: gwizmwhxbvayhebbyvql"
-            echo "5. Click 'Add secret'"
-            echo ""
-            echo "📋 Current secrets in this repository:"
-            echo "  (This will show if any secrets exist)"
-            exit 1
-          fi
-          
-          if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
-            echo ""
-            echo "❌ CRITICAL ERROR: SUPABASE_ACCESS_TOKEN is EMPTY!"
-            echo ""
-            echo "🔧 TROUBLESHOOTING STEPS:"
-            echo "1. Go to: https://github.com/${{ github.repository }}/settings/secrets/actions"
-            echo "2. Name: SUPABASE_ACCESS_TOKEN"
-            echo "3. Value: sbp_your_token_here (get from https://supabase.com/dashboard/account/tokens)"
-            echo "4. Click 'Add secret'"
-            exit 1
-          fi
-          
-          if [ -z "$SUPABASE_DB_PASSWORD" ]; then
-            echo ""
-            echo "❌ CRITICAL ERROR: SUPABASE_DB_PASSWORD is EMPTY!"
-            echo ""
-            echo "🔧 TROUBLESHOOTING STEPS:"
-            echo "1. Go to: https://github.com/${{ github.repository }}/settings/secrets/actions"
-            echo "2. Click 'New repository secret'"
-            echo "3. Name: SUPABASE_DB_PASSWORD"
-            echo "4. Value: Your database password (get from Supabase Dashboard → Settings → Database)"
-            echo "5. Click 'Add secret'"
-            exit 1
-          fi
-          
-          # Check if project ref is reasonable length
-          if [ ${#SUPABASE_PROJECT_REF} -lt 20 ] || [ ${#SUPABASE_PROJECT_REF} -gt 25 ]; then
-            echo ""
-            echo "❌ ERROR: SUPABASE_PROJECT_REF length is ${#SUPABASE_PROJECT_REF}, expected 21-24 characters"
-            echo "Current value: '$SUPABASE_PROJECT_REF'"
-            echo "Expected value: 'gwizmwhxbvayhebbyvql' (21 characters)"
-            exit 1
-          fi
-          
-          echo ""
-          echo "✅ SUCCESS: All secrets are set correctly!"
-          echo "  Project ref: '$SUPABASE_PROJECT_REF' (${#SUPABASE_PROJECT_REF} chars)"
-          echo "  Access token: '${SUPABASE_ACCESS_TOKEN:0:4}...' (${#SUPABASE_ACCESS_TOKEN} chars)"
-          echo "  DB password: '${SUPABASE_DB_PASSWORD:0:4}...' (${#SUPABASE_DB_PASSWORD} chars)"
-        env:
-          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-          
-      - name: Link to Supabase project
-        run: |
-          echo "Attempting to link with direct database connection..."
-          echo "Note: Using direct connection string to avoid pooler issues"
-          
-          # URL encode the password (replace @ with %40)
-          ENCODED_PASSWORD=$(echo "${{ secrets.SUPABASE_DB_PASSWORD }}" | sed 's/@/%40/g')
-          echo "URL-encoded password: ${ENCODED_PASSWORD:0:4}..."
-          
-          # Use direct connection string to avoid pooler connection
-          DIRECT_URL="postgresql://postgres:$ENCODED_PASSWORD@aws-1-eu-north-1.supabase.com:5432/postgres"
-          echo "Direct connection URL: postgresql://postgres:****@aws-1-eu-north-1.supabase.com:5432/postgres"
-          
-          # Link using direct connection string
-          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --db-url "$DIRECT_URL" || {
-            echo "❌ Failed with direct connection string."
-            echo ""
-            echo "🔧 TROUBLESHOOTING:"
-            echo "1. Go to Supabase Dashboard → Settings → Database"
-            echo "2. Look for 'Connection string' (NOT 'Connection pooling')"
-            echo "3. Extract password from: postgresql://postgres:[PASSWORD]@aws-1-eu-north-1.supabase.com:5432/postgres"
-            echo "4. If password contains @, use URL-encoded version: @ → %40"
-            echo ""
-            echo "Current connection attempt:"
-            echo "  Project ref: ${{ secrets.SUPABASE_PROJECT_REF }}"
-            echo "  Host: aws-1-eu-north-1.supabase.com:5432 (direct connection)"
-            echo "  Password: ${ENCODED_PASSWORD:0:4}... (URL-encoded)"
-            exit 1
-          }
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          
-      - name: Deploy database migrations
-        run: supabase db push
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          
+
+      # Push DB migrations directly using the direct (non-pooler) connection string.
+      # Store this in a secret to avoid URL-encoding headaches.
+      # Example secret value format:
+      #   postgresql://postgres:Kryshevin%402025@aws-1-eu-north-1.supabase.com:5432/postgres
+      - name: Push database migrations
+        run: supabase db push --db-url "${{ secrets.SUPABASE_DB_URL_STAGING }}"
+
+      # Deploy all edge functions in supabase/functions
       - name: Deploy Edge Functions
-        run: supabase functions deploy
+        run: supabase functions deploy --project-ref "${{ secrets.SUPABASE_PROJECT_REF_STAGING }}"
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          
-      - name: Notify staging deployment
+
+      - name: Done
         run: |
-          echo "🚀 Backend deployed to staging successfully!"
-          echo "Staging URL: https://${{ secrets.SUPABASE_PROJECT_REF }}.supabase.co"
+          echo "✅ Staging deploy complete"
+          echo "Project: https://${{ secrets.SUPABASE_PROJECT_REF_STAGING }}.supabase.co"
 
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    
+    needs: [test-migrations]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
-          
+          node-version: "18"
+          cache: "npm"
+
       - name: Install Supabase CLI
         uses: supabase/setup-cli@v1
         with:
           version: latest
-        
-      - name: Debug project reference
-        run: |
-          echo "=== DETAILED DEBUG INFO ==="
-          echo "Environment variables:"
-          echo "  SUPABASE_PROJECT_REF: '$SUPABASE_PROJECT_REF'"
-          echo "  SUPABASE_ACCESS_TOKEN: '$SUPABASE_ACCESS_TOKEN'"
-          echo "  SUPABASE_DB_PASSWORD: '$SUPABASE_DB_PASSWORD'"
-          echo ""
-          echo "Lengths:"
-          echo "  Project ref length: ${#SUPABASE_PROJECT_REF}"
-          echo "  Access token length: ${#SUPABASE_ACCESS_TOKEN}"
-          echo "  DB password length: ${#SUPABASE_DB_PASSWORD}"
-          echo ""
-          echo "First few characters:"
-          echo "  Project ref (first 4): '${SUPABASE_PROJECT_REF:0:4}'"
-          echo "  Access token (first 4): '${SUPABASE_ACCESS_TOKEN:0:4}'"
-          echo "  DB password (first 4): '${SUPABASE_DB_PASSWORD:0:4}'"
-          echo ""
-          echo "GitHub context:"
-          echo "  Repository: ${{ github.repository }}"
-          echo "  Branch: ${{ github.ref }}"
-          echo "  Event: ${{ github.event_name }}"
-          echo "========================"
-          
-          # Check if secrets are empty
-          if [ -z "$SUPABASE_PROJECT_REF" ]; then
-            echo ""
-            echo "❌ CRITICAL ERROR: SUPABASE_PROJECT_REF is EMPTY!"
-            echo ""
-            echo "🔧 TROUBLESHOOTING STEPS:"
-            echo "1. Go to: https://github.com/${{ github.repository }}/settings/secrets/actions"
-            echo "2. Click 'New repository secret'"
-            echo "3. Name: SUPABASE_PROJECT_REF"
-            echo "4. Value: gwizmwhxbvayhebbyvql"
-            echo "5. Click 'Add secret'"
-            echo ""
-            echo "📋 Current secrets in this repository:"
-            echo "  (This will show if any secrets exist)"
-            exit 1
-          fi
-          
-          if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
-            echo ""
-            echo "❌ CRITICAL ERROR: SUPABASE_ACCESS_TOKEN is EMPTY!"
-            echo ""
-            echo "🔧 TROUBLESHOOTING STEPS:"
-            echo "1. Go to: https://github.com/${{ github.repository }}/settings/secrets/actions"
-            echo "2. Name: SUPABASE_ACCESS_TOKEN"
-            echo "3. Value: sbp_your_token_here (get from https://supabase.com/dashboard/account/tokens)"
-            echo "4. Click 'Add secret'"
-            exit 1
-          fi
-          
-          if [ -z "$SUPABASE_DB_PASSWORD" ]; then
-            echo ""
-            echo "❌ CRITICAL ERROR: SUPABASE_DB_PASSWORD is EMPTY!"
-            echo ""
-            echo "🔧 TROUBLESHOOTING STEPS:"
-            echo "1. Go to: https://github.com/${{ github.repository }}/settings/secrets/actions"
-            echo "2. Click 'New repository secret'"
-            echo "3. Name: SUPABASE_DB_PASSWORD"
-            echo "4. Value: Your database password (get from Supabase Dashboard → Settings → Database)"
-            echo "5. Click 'Add secret'"
-            exit 1
-          fi
-          
-          # Check if project ref is reasonable length
-          if [ ${#SUPABASE_PROJECT_REF} -lt 20 ] || [ ${#SUPABASE_PROJECT_REF} -gt 25 ]; then
-            echo ""
-            echo "❌ ERROR: SUPABASE_PROJECT_REF length is ${#SUPABASE_PROJECT_REF}, expected 21-24 characters"
-            echo "Current value: '$SUPABASE_PROJECT_REF'"
-            echo "Expected value: 'gwizmwhxbvayhebbyvql' (21 characters)"
-            exit 1
-          fi
-          
-          echo ""
-          echo "✅ SUCCESS: All secrets are set correctly!"
-          echo "  Project ref: '$SUPABASE_PROJECT_REF' (${#SUPABASE_PROJECT_REF} chars)"
-          echo "  Access token: '${SUPABASE_ACCESS_TOKEN:0:4}...' (${#SUPABASE_ACCESS_TOKEN} chars)"
-          echo "  DB password: '${SUPABASE_DB_PASSWORD:0:4}...' (${#SUPABASE_DB_PASSWORD} chars)"
-        env:
-          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-          
-      - name: Link to Supabase project
-        run: |
-          echo "Attempting to link with direct database connection..."
-          echo "Note: Using direct connection string to avoid pooler issues"
-          
-          # URL encode the password (replace @ with %40)
-          ENCODED_PASSWORD=$(echo "${{ secrets.SUPABASE_DB_PASSWORD }}" | sed 's/@/%40/g')
-          echo "URL-encoded password: ${ENCODED_PASSWORD:0:4}..."
-          
-          # Use direct connection string to avoid pooler connection
-          DIRECT_URL="postgresql://postgres:$ENCODED_PASSWORD@aws-1-eu-north-1.supabase.com:5432/postgres"
-          echo "Direct connection URL: postgresql://postgres:****@aws-1-eu-north-1.supabase.com:5432/postgres"
-          
-          # Link using direct connection string
-          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --db-url "$DIRECT_URL" || {
-            echo "❌ Failed with direct connection string."
-            echo ""
-            echo "🔧 TROUBLESHOOTING:"
-            echo "1. Go to Supabase Dashboard → Settings → Database"
-            echo "2. Look for 'Connection string' (NOT 'Connection pooling')"
-            echo "3. Extract password from: postgresql://postgres:[PASSWORD]@aws-1-eu-north-1.supabase.com:5432/postgres"
-            echo "4. If password contains @, use URL-encoded version: @ → %40"
-            echo ""
-            echo "Current connection attempt:"
-            echo "  Project ref: ${{ secrets.SUPABASE_PROJECT_REF }}"
-            echo "  Host: aws-1-eu-north-1.supabase.com:5432 (direct connection)"
-            echo "  Password: ${ENCODED_PASSWORD:0:4}... (URL-encoded)"
-            exit 1
-          }
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          
-      - name: Deploy database migrations
-        run: supabase db push
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          
+
+      - name: Push database migrations
+        run: supabase db push --db-url "${{ secrets.SUPABASE_DB_URL_PROD }}"
+
       - name: Deploy Edge Functions
-        run: supabase functions deploy
+        run: supabase functions deploy --project-ref "${{ secrets.SUPABASE_PROJECT_REF_PROD }}"
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          
-      - name: Notify production deployment
+
+      - name: Done
         run: |
-          echo "🚀 Backend deployed to production successfully!"
-          echo "Production URL: https://${{ secrets.SUPABASE_PROJECT_REF }}.supabase.co"
+          echo "✅ Production deploy complete"
+          echo "Project: https://${{ secrets.SUPABASE_PROJECT_REF_PROD }}.supabase.co"

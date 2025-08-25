@@ -71,9 +71,7 @@ jobs:
           
       - name: Install Supabase CLI
         run: |
-          wget -qO- https://supabase.com/install.sh | sh
-          export PATH="$HOME/.local/bin:$PATH"
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          npm install -g supabase@latest
           supabase --version
         
       - name: Validate Supabase configuration

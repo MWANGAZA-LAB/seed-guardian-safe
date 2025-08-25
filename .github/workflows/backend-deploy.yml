@@ -153,10 +153,18 @@ jobs:
       - name: Link to Supabase project
         run: |
           echo "Attempting to link with database password..."
+          echo "Note: Using direct database connection (not pooler)"
           supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --password ${{ secrets.SUPABASE_DB_PASSWORD }} || {
-            echo "❌ Failed to link with password. Trying alternative method..."
-            echo "Please check your database password in Supabase Dashboard → Settings → Database"
-            echo "The password should be extracted from the connection string, not the full string itself."
+            echo "❌ Failed to link with password."
+            echo ""
+            echo "🔧 TROUBLESHOOTING:"
+            echo "1. Go to Supabase Dashboard → Settings → Database"
+            echo "2. Look for 'Connection string' (NOT 'Connection pooling')"
+            echo "3. Extract password from: postgresql://postgres:[PASSWORD]@aws-1-eu-north-1.pooler.supabase.com"
+            echo "4. The password is between 'postgres:' and '@aws-1-eu-north-1'"
+            echo ""
+            echo "Alternative: Try using the direct connection string:"
+            echo "supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --db-url postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@aws-1-eu-north-1.supabase.com:5432/postgres"
             exit 1
           }
         env:
@@ -283,7 +291,22 @@ jobs:
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           
       - name: Link to Supabase project
-        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --password ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          echo "Attempting to link with database password..."
+          echo "Note: Using direct database connection (not pooler)"
+          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --password ${{ secrets.SUPABASE_DB_PASSWORD }} || {
+            echo "❌ Failed to link with password."
+            echo ""
+            echo "🔧 TROUBLESHOOTING:"
+            echo "1. Go to Supabase Dashboard → Settings → Database"
+            echo "2. Look for 'Connection string' (NOT 'Connection pooling')"
+            echo "3. Extract password from: postgresql://postgres:[PASSWORD]@aws-1-eu-north-1.pooler.supabase.com"
+            echo "4. The password is between 'postgres:' and '@aws-1-eu-north-1'"
+            echo ""
+            echo "Alternative: Try using the direct connection string:"
+            echo "supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --db-url postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@aws-1-eu-north-1.supabase.com:5432/postgres"
+            exit 1
+          }
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           

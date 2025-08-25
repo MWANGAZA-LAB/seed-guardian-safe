@@ -148,7 +148,7 @@ export class BitcoinRPC {
   }
 
   // Fee estimation
-  async estimateSmartFee(confTarget: number = 6): Promise<any> {
+  async estimateSmartFee(confTarget: number = 6): Promise<unknown> {
     return this.call('estimatesmartfee', [confTarget]);
   }
 
@@ -165,16 +165,16 @@ export class BitcoinRPC {
     return this.call('getblockhash', [height]) as Promise<string>;
   }
 
-  async getBlock(hash: string): Promise<any> {
+  async getBlock(hash: string): Promise<unknown> {
     return this.call('getblock', [hash]);
   }
 
   // Mining and mempool
-  async getMempoolInfo(): Promise<any> {
+  async getMempoolInfo(): Promise<unknown> {
     return this.call('getmempoolinfo');
   }
 
-  async getMempoolEntry(txid: string): Promise<any> {
+  async getMempoolEntry(txid: string): Promise<unknown> {
     return this.call('getmempoolentry', [txid]);
   }
 }

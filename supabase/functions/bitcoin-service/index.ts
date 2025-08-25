@@ -87,7 +87,7 @@ serve(async (req) => {
   }
 });
 
-async function handleCreateTransaction(req: Request, supabase: any, bitcoin: BitcoinRPC, user: any) {
+async function handleCreateTransaction(req: Request, supabase: unknown, bitcoin: BitcoinRPC, user: { id: string }) {
   const { walletId, toAddress, amountSatoshis, feeRate = 10, userPassword }: CreateTransactionRequest = await req.json();
 
   // Validate input
@@ -125,7 +125,7 @@ async function handleCreateTransaction(req: Request, supabase: any, bitcoin: Bit
     throw new Error('No addresses found for wallet');
   }
 
-  const addressList = addresses.map((addr: any) => addr.address);
+  const addressList = addresses.map((addr: { address: string }) => addr.address);
 
   // Get UTXOs for wallet addresses
   const utxos = await bitcoin.getUTXOs(addressList);
@@ -208,7 +208,7 @@ async function handleCreateTransaction(req: Request, supabase: any, bitcoin: Bit
   );
 }
 
-async function handleGetBalance(req: Request, supabase: any, user: any) {
+async function handleGetBalance(req: Request, supabase: unknown, user: { id: string }) {
   const { walletId, userPassword }: GetWalletBalanceRequest = await req.json();
 
   // Validate input
@@ -241,7 +241,7 @@ async function handleGetBalance(req: Request, supabase: any, user: any) {
   );
 }
 
-async function handleGetAddresses(req: Request, supabase: any, user: any) {
+async function handleGetAddresses(req: Request, supabase: unknown, user: { id: string }) {
   const { walletId, userPassword, count = 5 }: GetWalletAddressesRequest = await req.json();
 
   // Validate input
@@ -313,7 +313,7 @@ async function handleGetAddresses(req: Request, supabase: any, user: any) {
   );
 }
 
-async function handleSendTransaction(req: Request, supabase: any, bitcoin: BitcoinRPC, user: any) {
+async function handleSendTransaction(req: Request, supabase: unknown, bitcoin: BitcoinRPC, user: { id: string }) {
   const { transactionId, signedTransaction } = await req.json();
 
   // Validate input

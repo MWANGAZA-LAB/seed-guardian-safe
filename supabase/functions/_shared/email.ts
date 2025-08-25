@@ -63,7 +63,7 @@ export class EmailService {
     }
   }
 
-  async sendGuardianInvitation(guardian: any): Promise<void> {
+  async sendGuardianInvitation(guardian: { email: string; full_name: string; invitation_token: string; invitation_expires_at: string }): Promise<void> {
     const emailData: EmailData = {
       to: guardian.email,
       from: this.fromEmail,
@@ -75,7 +75,7 @@ export class EmailService {
     await this.sendEmail(emailData);
   }
 
-  async sendRecoveryNotification(recoveryId: string, guardian: any): Promise<void> {
+  async sendRecoveryNotification(recoveryId: string, guardian: { email: string; full_name: string }): Promise<void> {
     const emailData: EmailData = {
       to: guardian.email,
       from: this.fromEmail,
@@ -111,7 +111,7 @@ export class EmailService {
     await this.sendEmail(emailData);
   }
 
-  private generateInvitationEmail(guardian: any): string {
+  private generateInvitationEmail(guardian: { full_name: string; invitation_token: string; invitation_expires_at: string }): string {
     const frontendUrl = Deno.env.get('FRONTEND_URL') || 'https://bsriwallet.com';
     const verifyUrl = `${frontendUrl}/guardian/verify?token=${guardian.invitation_token}`;
     const expiresDate = new Date(guardian.invitation_expires_at).toLocaleDateString();
@@ -170,7 +170,7 @@ export class EmailService {
     `;
   }
 
-  private generateInvitationEmailText(guardian: any): string {
+  private generateInvitationEmailText(guardian: { full_name: string; invitation_token: string; invitation_expires_at: string }): string {
     const frontendUrl = Deno.env.get('FRONTEND_URL') || 'https://bsriwallet.com';
     const verifyUrl = `${frontendUrl}/guardian/verify?token=${guardian.invitation_token}`;
     const expiresDate = new Date(guardian.invitation_expires_at).toLocaleDateString();
@@ -199,7 +199,7 @@ If you did not expect this invitation, please ignore this email.
     `;
   }
 
-  private generateRecoveryEmail(recoveryId: string, guardian: any): string {
+  private generateRecoveryEmail(recoveryId: string, guardian: { full_name: string }): string {
     const frontendUrl = Deno.env.get('FRONTEND_URL') || 'https://bsriwallet.com';
     const recoveryUrl = `${frontendUrl}/guardian/recovery/${recoveryId}`;
 
@@ -259,7 +259,7 @@ If you did not expect this invitation, please ignore this email.
     `;
   }
 
-  private generateRecoveryEmailText(recoveryId: string, guardian: any): string {
+  private generateRecoveryEmailText(recoveryId: string, guardian: { full_name: string }): string {
     const frontendUrl = Deno.env.get('FRONTEND_URL') || 'https://bsriwallet.com';
     const recoveryUrl = `${frontendUrl}/guardian/recovery/${recoveryId}`;
 

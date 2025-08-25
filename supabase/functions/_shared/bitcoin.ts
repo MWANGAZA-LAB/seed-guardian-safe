@@ -50,7 +50,7 @@ export class BitcoinRPC {
     this.baseUrl = `http://${this.host}:${this.port}`;
   }
 
-  async call(method: string, params: any[] = []): Promise<any> {
+  async call(method: string, params: unknown[] = []): Promise<unknown> {
     const auth = btoa(`${this.username}:${this.password}`);
     
     const response = await fetch(this.baseUrl, {
@@ -81,34 +81,34 @@ export class BitcoinRPC {
   }
 
   // Blockchain information
-  async getBlockchainInfo(): Promise<any> {
+  async getBlockchainInfo(): Promise<unknown> {
     return this.call('getblockchaininfo');
   }
 
-  async getNetworkInfo(): Promise<any> {
+  async getNetworkInfo(): Promise<unknown> {
     return this.call('getnetworkinfo');
   }
 
-  async getWalletInfo(): Promise<any> {
+  async getWalletInfo(): Promise<unknown> {
     return this.call('getwalletinfo');
   }
 
   // Address management
   async getNewAddress(label: string = '', addressType: string = 'legacy'): Promise<string> {
-    return this.call('getnewaddress', [label, addressType]);
+    return this.call('getnewaddress', [label, addressType]) as Promise<string>;
   }
 
-  async getAddressInfo(address: string): Promise<any> {
+  async getAddressInfo(address: string): Promise<unknown> {
     return this.call('getaddressinfo', [address]);
   }
 
-  async validateAddress(address: string): Promise<any> {
+  async validateAddress(address: string): Promise<unknown> {
     return this.call('validateaddress', [address]);
   }
 
   // UTXO management
   async listUnspent(minConf: number = 0, maxConf: number = 9999999, addresses: string[] = []): Promise<UTXO[]> {
-    return this.call('listunspent', [minConf, maxConf, addresses]);
+    return this.call('listunspent', [minConf, maxConf, addresses]) as Promise<UTXO[]>;
   }
 
   async getUTXOs(addresses: string[]): Promise<UTXO[]> {
@@ -117,23 +117,23 @@ export class BitcoinRPC {
 
   // Transaction management
   async createRawTransaction(inputs: TransactionInput[], outputs: Record<string, number>): Promise<string> {
-    return this.call('createrawtransaction', [inputs, outputs]);
+    return this.call('createrawtransaction', [inputs, outputs]) as Promise<string>;
   }
 
-  async signRawTransaction(rawTx: string, privateKeys: string[] = []): Promise<any> {
+  async signRawTransaction(rawTx: string, privateKeys: string[] = []): Promise<unknown> {
     return this.call('signrawtransactionwithkey', [rawTx, privateKeys]);
   }
 
   async sendRawTransaction(signedTx: string): Promise<string> {
-    return this.call('sendrawtransaction', [signedTx]);
+    return this.call('sendrawtransaction', [signedTx]) as Promise<string>;
   }
 
-  async getRawTransaction(txid: string, verbose: boolean = true): Promise<any> {
+  async getRawTransaction(txid: string, verbose: boolean = true): Promise<unknown> {
     return this.call('getrawtransaction', [txid, verbose]);
   }
 
   async getTransaction(txid: string): Promise<BitcoinTransaction> {
-    return this.call('gettransaction', [txid]);
+    return this.call('gettransaction', [txid]) as Promise<BitcoinTransaction>;
   }
 
   // Balance and address management
@@ -143,7 +143,7 @@ export class BitcoinRPC {
   }
 
   async getWalletBalance(): Promise<number> {
-    const balance = await this.call('getbalance');
+    const balance = await this.call('getbalance') as number;
     return balance * 100000000; // Convert to satoshis
   }
 
@@ -153,16 +153,16 @@ export class BitcoinRPC {
   }
 
   async estimateFee(confTarget: number = 6): Promise<number> {
-    return this.call('estimatefee', [confTarget]);
+    return this.call('estimatefee', [confTarget]) as Promise<number>;
   }
 
   // Block information
   async getBlockCount(): Promise<number> {
-    return this.call('getblockcount');
+    return this.call('getblockcount') as Promise<number>;
   }
 
   async getBlockHash(height: number): Promise<string> {
-    return this.call('getblockhash', [height]);
+    return this.call('getblockhash', [height]) as Promise<string>;
   }
 
   async getBlock(hash: string): Promise<any> {
@@ -183,7 +183,7 @@ export class BitcoinRPC {
 export class BitcoinUtils {
   static selectUtxos(utxos: UTXO[], targetAmount: number, feeRate: number): UTXO[] {
     // Implement coin selection algorithm (Branch and Bound)
-    let selected: UTXO[] = [];
+    const selected: UTXO[] = [];
     let selectedAmount = 0;
     
     // Sort UTXOs by amount (largest first for simplicity)

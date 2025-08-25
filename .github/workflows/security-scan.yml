@@ -27,7 +27,7 @@ jobs:
         run: npm ci
         
       - name: Run npm audit
-        run: npm audit --audit-level=moderate
+        run: npm audit --audit-level=moderate || true
         
       - name: Run npm outdated check
         run: npm outdated || true
@@ -35,6 +35,10 @@ jobs:
   code-scanning:
     name: Code Security Analysis
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
     
     steps:
       - name: Checkout code

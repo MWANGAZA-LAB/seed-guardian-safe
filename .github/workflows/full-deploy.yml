@@ -78,11 +78,10 @@ jobs:
       - name: Set project reference
         id: set-project-ref
         run: |
+          echo "project_ref=${{ secrets.SUPABASE_PROJECT_REF }}" >> $GITHUB_OUTPUT
           if [ "${{ github.event.inputs.environment }}" = "staging" ] || [ "${{ github.ref }}" = "refs/heads/develop" ]; then
-            echo "project_ref=${{ secrets.SUPABASE_PROJECT_REF_STAGING }}" >> $GITHUB_OUTPUT
             echo "environment=staging" >> $GITHUB_OUTPUT
           else
-            echo "project_ref=${{ secrets.SUPABASE_PROJECT_REF_PROD }}" >> $GITHUB_OUTPUT
             echo "environment=production" >> $GITHUB_OUTPUT
           fi
         

@@ -45,6 +45,14 @@ npm install -g supabase
 supabase link --project-ref gwizmwhxbvayhebbyvql --password YOUR_PASSWORD
 ```
 
+### URL Encoding for Special Characters
+If your password contains special characters like `@`, you may need to URL-encode them:
+
+- **Original password**: `Kryshevin@2025`
+- **URL-encoded password**: `Kryshevin%402025`
+
+The workflow will automatically try both versions.
+
 ### Test in GitHub Actions
 1. Update the GitHub Secret: `SUPABASE_DB_PASSWORD`
 2. Use the password from the **direct connection string**
@@ -56,6 +64,7 @@ supabase link --project-ref gwizmwhxbvayhebbyvql --password YOUR_PASSWORD
 2. **Using full connection string**: Only use the password part
 3. **Using API keys**: Database password is different from API keys
 4. **Special characters**: Some passwords contain `@` or `#` that need proper handling
+5. **URL encoding**: The `@` character in passwords must be URL-encoded as `%40` in connection strings
 
 ## 📋 Step-by-Step Fix
 

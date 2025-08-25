@@ -154,18 +154,30 @@ jobs:
         run: |
           echo "Attempting to link with database password..."
           echo "Note: Using direct database connection (not pooler)"
+          echo "Password contains special characters - checking for URL encoding..."
+          
+          # Try with original password first
           supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --password ${{ secrets.SUPABASE_DB_PASSWORD }} || {
-            echo "❌ Failed to link with password."
-            echo ""
-            echo "🔧 TROUBLESHOOTING:"
-            echo "1. Go to Supabase Dashboard → Settings → Database"
-            echo "2. Look for 'Connection string' (NOT 'Connection pooling')"
-            echo "3. Extract password from: postgresql://postgres:[PASSWORD]@aws-1-eu-north-1.pooler.supabase.com"
-            echo "4. The password is between 'postgres:' and '@aws-1-eu-north-1'"
-            echo ""
-            echo "Alternative: Try using the direct connection string:"
-            echo "supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --db-url postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@aws-1-eu-north-1.supabase.com:5432/postgres"
-            exit 1
+            echo "❌ Failed with original password. Trying URL-encoded version..."
+            
+            # URL encode the password (replace @ with %40)
+            ENCODED_PASSWORD=$(echo "${{ secrets.SUPABASE_DB_PASSWORD }}" | sed 's/@/%40/g')
+            echo "URL-encoded password: ${ENCODED_PASSWORD:0:4}..."
+            
+            # Try with URL-encoded password
+            supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --password "$ENCODED_PASSWORD" || {
+              echo "❌ Failed with URL-encoded password too."
+              echo ""
+              echo "🔧 TROUBLESHOOTING:"
+              echo "1. Go to Supabase Dashboard → Settings → Database"
+              echo "2. Look for 'Connection string' (NOT 'Connection pooling')"
+              echo "3. Extract password from: postgresql://postgres:[PASSWORD]@aws-1-eu-north-1.supabase.com:5432/postgres"
+              echo "4. If password contains @, use URL-encoded version: @ → %40"
+              echo ""
+              echo "Alternative: Try using the direct connection string:"
+              echo "supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --db-url postgresql://postgres:$ENCODED_PASSWORD@aws-1-eu-north-1.supabase.com:5432/postgres"
+              exit 1
+            }
           }
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -294,18 +306,30 @@ jobs:
         run: |
           echo "Attempting to link with database password..."
           echo "Note: Using direct database connection (not pooler)"
+          echo "Password contains special characters - checking for URL encoding..."
+          
+          # Try with original password first
           supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --password ${{ secrets.SUPABASE_DB_PASSWORD }} || {
-            echo "❌ Failed to link with password."
-            echo ""
-            echo "🔧 TROUBLESHOOTING:"
-            echo "1. Go to Supabase Dashboard → Settings → Database"
-            echo "2. Look for 'Connection string' (NOT 'Connection pooling')"
-            echo "3. Extract password from: postgresql://postgres:[PASSWORD]@aws-1-eu-north-1.pooler.supabase.com"
-            echo "4. The password is between 'postgres:' and '@aws-1-eu-north-1'"
-            echo ""
-            echo "Alternative: Try using the direct connection string:"
-            echo "supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --db-url postgresql://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@aws-1-eu-north-1.supabase.com:5432/postgres"
-            exit 1
+            echo "❌ Failed with original password. Trying URL-encoded version..."
+            
+            # URL encode the password (replace @ with %40)
+            ENCODED_PASSWORD=$(echo "${{ secrets.SUPABASE_DB_PASSWORD }}" | sed 's/@/%40/g')
+            echo "URL-encoded password: ${ENCODED_PASSWORD:0:4}..."
+            
+            # Try with URL-encoded password
+            supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --password "$ENCODED_PASSWORD" || {
+              echo "❌ Failed with URL-encoded password too."
+              echo ""
+              echo "🔧 TROUBLESHOOTING:"
+              echo "1. Go to Supabase Dashboard → Settings → Database"
+              echo "2. Look for 'Connection string' (NOT 'Connection pooling')"
+              echo "3. Extract password from: postgresql://postgres:[PASSWORD]@aws-1-eu-north-1.supabase.com:5432/postgres"
+              echo "4. If password contains @, use URL-encoded version: @ → %40"
+              echo ""
+              echo "Alternative: Try using the direct connection string:"
+              echo "supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --db-url postgresql://postgres:$ENCODED_PASSWORD@aws-1-eu-north-1.supabase.com:5432/postgres"
+              exit 1
+            }
           }
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}

@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
-    "lint": "eslint .",
+    "lint": "eslint . --ignore-pattern 'coverage/**/*' --ignore-pattern 'dist/**/*' --ignore-pattern 'build/**/*'",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "test": "jest",

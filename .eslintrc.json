@@ -14,13 +14,15 @@
     "plugin:react/jsx-runtime"
   ],
   "ignorePatterns": [
-    "dist",
-    "coverage",
+    "dist/**/*",
+    "coverage/**/*",
     "*.lcov",
     "*.html",
     "*.css",
     "*.js",
-    "node_modules"
+    "node_modules/**/*",
+    "build/**/*",
+    "out/**/*"
   ],
   "parser": "@typescript-eslint/parser",
   "plugins": ["react-refresh", "@typescript-eslint"],

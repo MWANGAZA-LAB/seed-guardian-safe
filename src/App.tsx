@@ -3,8 +3,9 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ErrorBoundary } from "@/lib/errorBoundary";
 import { logger } from "@/lib/logger";
+import { useErrorHandler } from "@/lib/errorBoundary";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -14,22 +15,19 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
       gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
-      retry: (failureCount, error) => {
+      retry: (failureCount, error: unknown) => {
         // Don't retry on 4xx errors
         if (error && typeof error === 'object' && 'status' in error) {
-          const status = (error as any).status;
+          const status = (error as { status: number }).status;
           if (status >= 400 && status < 500) {
             return false;
           }
         }
         return failureCount < 3;
       },
-      onError: (error) => {
-        logger.error('Query error', error as Error);
-      },
     },
     mutations: {
-      onError: (error) => {
+      onError: (error: unknown) => {
         logger.error('Mutation error', error as Error);
       },
     },
@@ -37,11 +35,7 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const handleError = (error: any, errorInfo: any) => {
-    logger.error('App error boundary caught error', error, {
-      componentStack: errorInfo?.componentStack,
-    });
-  };
+  const { handleError } = useErrorHandler();
 
   return (
     <ErrorBoundary onError={handleError}>

@@ -3,6 +3,17 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { corsHeaders } from '../_shared/cors.ts'
 import { ShamirSecretSharing, BitcoinCrypto, DataEncryption } from '../_shared/crypto.ts'
 import { EmailService } from '../_shared/email.ts'
+import { Validator, createWalletSchema, guardianSchema, sanitizeEmail, sanitizeString, sanitizePhoneNumber } from '../_shared/validation.ts'
+import { 
+  createErrorResponse, 
+  createSuccessResponse, 
+  createCORSResponse,
+  AuthenticationError,
+  ValidationError,
+  DatabaseError,
+  CryptoError,
+  ErrorHandler
+} from '../_shared/errors.ts'
 
 interface CreateWalletRequest {
   name: string;
@@ -24,10 +35,11 @@ interface CreateWalletResponse {
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return createCORSResponse();
   }
 
   try {
+    // Initialize Supabase client
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -36,7 +48,7 @@ serve(async (req) => {
     // Verify authentication
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      throw new Error('Authorization header required');
+      throw new AuthenticationError('Authorization header required');
     }
 
     const { data: { user }, error: authError } = await supabase.auth.getUser(
@@ -44,155 +56,139 @@ serve(async (req) => {
     );
     
     if (authError || !user) {
-      throw new Error('Unauthorized');
+      throw new AuthenticationError('Invalid or expired token');
     }
 
-    const { name, masterSeed, guardians, thresholdRequirement, userPassword }: CreateWalletRequest = await req.json();
+    // Parse and validate request body
+    const requestData = await req.json();
+    
+    // Validate main request structure
+    const validator = new Validator(createWalletSchema);
+    const validatedData = validator.validate(requestData);
 
-    // Validate input
-    if (!name || !masterSeed || !guardians || !thresholdRequirement || !userPassword) {
-      throw new Error('Missing required fields');
+    // Validate guardians array
+    if (!Array.isArray(validatedData.guardians) || validatedData.guardians.length < 2) {
+      throw new ValidationError('At least 2 guardians are required');
     }
 
-    if (guardians.length < thresholdRequirement || thresholdRequirement < 2) {
-      throw new Error('Invalid threshold configuration: must have at least 2 guardians and threshold cannot exceed guardian count');
+    if (validatedData.guardians.length > 10) {
+      throw new ValidationError('Maximum 10 guardians allowed');
     }
 
-    if (guardians.length > 10) {
-      throw new Error('Maximum 10 guardians allowed');
+    // Validate threshold requirement
+    if (validatedData.thresholdRequirement < 2 || validatedData.thresholdRequirement > validatedData.guardians.length) {
+      throw new ValidationError('Threshold must be between 2 and the number of guardians');
     }
 
-    // Validate guardian emails
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    for (const guardian of guardians) {
-      if (!emailRegex.test(guardian.email)) {
-        throw new Error(`Invalid email address: ${guardian.email}`);
-      }
-    }
+    // Validate and sanitize each guardian
+    const guardianValidator = new Validator(guardianSchema);
+    const sanitizedGuardians = validatedData.guardians.map((guardian, index) => {
+      const validatedGuardian = guardianValidator.validate(guardian);
+      return {
+        email: sanitizeEmail(validatedGuardian.email),
+        fullName: sanitizeString(validatedGuardian.fullName),
+        phoneNumber: validatedGuardian.phoneNumber ? sanitizePhoneNumber(validatedGuardian.phoneNumber) : undefined,
+      };
+    });
 
     // Check for duplicate guardian emails
-    const guardianEmails = guardians.map(g => g.email.toLowerCase());
+    const guardianEmails = sanitizedGuardians.map(g => g.email);
     const uniqueEmails = new Set(guardianEmails);
     if (uniqueEmails.size !== guardianEmails.length) {
-      throw new Error('Duplicate guardian emails are not allowed');
+      throw new ValidationError('Duplicate guardian emails are not allowed');
     }
 
     // Encrypt master seed with user password for additional security
-    const encryptedMasterSeed = await DataEncryption.encryptWithPassword(masterSeed, userPassword);
+    const encryptedMasterSeed = await DataEncryption.encryptWithPassword(
+      validatedData.masterSeed, 
+      validatedData.userPassword
+    );
 
     // Create wallet record
     const { data: wallet, error: walletError } = await supabase
       .from('wallets')
       .insert({
         owner_id: user.id,
-        name,
+        name: sanitizeString(validatedData.name),
         encrypted_master_seed: encryptedMasterSeed,
-        threshold_requirement: thresholdRequirement,
-        total_guardians: guardians.length
+        threshold_requirement: validatedData.thresholdRequirement,
+        total_guardians: sanitizedGuardians.length
       })
       .select()
       .single();
 
     if (walletError) {
-      console.error('Wallet creation error:', walletError);
-      throw new Error('Failed to create wallet');
+      throw new DatabaseError('create_wallet', walletError.message, walletError);
     }
 
-    // Generate secret shares using Shamir's Secret Sharing
+    // Split the master seed using Shamir's Secret Sharing
     const shamirSharing = new ShamirSecretSharing();
-    const shares = await shamirSharing.splitSecret(
-      masterSeed,
-      thresholdRequirement,
-      guardians.length
+    const secretShares = await shamirSharing.splitSecret(
+      validatedData.masterSeed,
+      validatedData.thresholdRequirement,
+      sanitizedGuardians.length
     );
 
-    // Create guardian records with encrypted shares
-    const guardianRecords = guardians.map((guardian, index) => ({
+    // Create guardian records
+    const guardianRecords = sanitizedGuardians.map((guardian, index) => ({
       wallet_id: wallet.id,
-      email: guardian.email.toLowerCase(),
+      email: guardian.email,
       full_name: guardian.fullName,
       phone_number: guardian.phoneNumber,
-      encrypted_secret_share: shares[index].encryptedShare,
-      share_index: index + 1,
-      public_key: shares[index].publicKey,
+      share_index: secretShares[index].shareIndex,
+      encrypted_share: secretShares[index].encryptedShare,
+      public_key: secretShares[index].publicKey,
+      private_key: secretShares[index].privateKey,
       invitation_token: crypto.randomUUID(),
-      invitation_expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
+      invitation_expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days
+      status: 'pending'
     }));
 
-    const { error: guardiansError } = await supabase
+    const { error: guardianError } = await supabase
       .from('guardians')
       .insert(guardianRecords);
 
-    if (guardiansError) {
-      console.error('Guardian creation error:', guardiansError);
+    if (guardianError) {
       // Clean up wallet if guardian creation fails
       await supabase.from('wallets').delete().eq('id', wallet.id);
-      throw new Error('Failed to create guardians');
+      throw new DatabaseError('create_guardians', guardianError.message, guardianError);
     }
 
-    // Create audit log
-    await supabase.rpc('create_audit_log', {
-      p_user_id: user.id,
-      p_wallet_id: wallet.id,
-      p_action: 'wallet_created',
-      p_resource_type: 'wallet',
-      p_resource_id: wallet.id,
-      p_new_values: {
-        name,
-        threshold_requirement: thresholdRequirement,
-        total_guardians: guardians.length
-      }
+    // Send invitation emails to guardians
+    const emailService = new EmailService();
+    const emailPromises = guardianRecords.map(guardian => 
+      emailService.sendGuardianInvitation(guardian)
+    );
+
+    // Send emails in parallel but don't fail the entire operation if emails fail
+    try {
+      await Promise.allSettled(emailPromises);
+    } catch (emailError) {
+      console.error('Failed to send some guardian invitations:', emailError);
+      // Continue with the operation even if emails fail
+    }
+
+    // Create audit log entry
+    await supabase.from('audit_logs').insert({
+      wallet_id: wallet.id,
+      user_id: user.id,
+      action: 'wallet_created',
+      details: {
+        wallet_name: validatedData.name,
+        guardian_count: sanitizedGuardians.length,
+        threshold: validatedData.thresholdRequirement
+      },
+      ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
     });
 
-    // Send guardian invitations
-    const emailService = new EmailService();
-    for (const guardianRecord of guardianRecords) {
-      try {
-        await emailService.sendGuardianInvitation(guardianRecord);
-      } catch (emailError) {
-        console.error(`Failed to send invitation to ${guardianRecord.email}:`, emailError);
-        // Continue with other invitations even if one fails
-      }
-    }
-
-    // Create initial proof of life entry
-    await supabase
-      .from('proof_of_life')
-      .insert({
-        wallet_id: wallet.id,
-        proof_type: 'manual',
-        proof_data: { action: 'wallet_creation' },
-        ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip'),
-        user_agent: req.headers.get('user-agent')
-      });
-
-    const response: CreateWalletResponse = {
+    return createSuccessResponse({
       success: true,
-      walletId: wallet.id
-    };
-
-    return new Response(
-      JSON.stringify(response),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 201
-      }
-    );
+      walletId: wallet.id,
+      message: 'Wallet created successfully. Guardian invitations have been sent.'
+    });
 
   } catch (error) {
-    console.error('Create wallet error:', error);
-    
-    const response: CreateWalletResponse = {
-      success: false,
-      error: error.message
-    };
-
-    return new Response(
-      JSON.stringify(response),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 400
-      }
-    );
+    const appError = ErrorHandler.handle(error);
+    return createErrorResponse(appError);
   }
 });

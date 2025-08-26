@@ -70,9 +70,9 @@ export class PasswordValidator {
       score += 10;
     }
 
-    if (SECURITY_CONFIG.password.requireSpecialChars && !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    if (SECURITY_CONFIG.password.requireSpecialChars && !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
       errors.push('Password must contain at least one special character');
-    } else if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    } else if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
       score += 15;
     }
 
@@ -165,7 +165,7 @@ export class InputSanitizer {
     }
 
     // Remove null bytes and control characters
-    sanitized = sanitized.replace(/[\x00-\x1F\x7F]/g, '');
+    sanitized = sanitized.replace(/[\u0000-\u001F\u007F]/g, '');
 
     // Normalize unicode
     sanitized = sanitized.normalize('NFC');
@@ -214,12 +214,18 @@ export class InputSanitizer {
     allowedAttributes?: string[];
   }): string {
     if (typeof window !== 'undefined') {
-      // Client-side DOMPurify
-      const DOMPurify = require('dompurify');
-      return DOMPurify.sanitize(html, {
-        ALLOWED_TAGS: options?.allowedTags || ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li'],
-        ALLOWED_ATTR: options?.allowedAttributes || []
-      });
+      // Client-side DOMPurify - dynamic import to avoid SSR issues
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const DOMPurify = require('dompurify');
+        return DOMPurify.sanitize(html, {
+          ALLOWED_TAGS: options?.allowedTags || ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li'],
+          ALLOWED_ATTR: options?.allowedAttributes || []
+        });
+      } catch {
+        // Fallback if DOMPurify is not available
+        return this.sanitizeString(html, { allowHtml: false });
+      }
     } else {
       // Server-side fallback
       return this.sanitizeString(html, { allowHtml: false });

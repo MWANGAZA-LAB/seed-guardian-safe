@@ -69,7 +69,7 @@ class ApiService {
     const sanitizedData = data ? this.sanitizeRequestData(data) : undefined;
 
     // Add CSRF token for state-changing operations
-    let requestHeaders = {
+    const requestHeaders: Record<string, string> = {
       'Content-Type': 'application/json',
       ...headers,
     };
@@ -140,25 +140,29 @@ class ApiService {
     throw lastError || new Error('Request failed');
   }
 
-  private sanitizeRequestData(data: any): any {
+    private sanitizeRequestData(data: unknown): unknown {
     if (typeof data === 'string') {
       return InputSanitizer.sanitizeString(data);
     }
 
     if (typeof data === 'object' && data !== null) {
-      const sanitized = Array.isArray(data) ? [] : {};
-      
-      for (const [key, value] of Object.entries(data)) {
-        if (typeof value === 'string') {
-          sanitized[key] = InputSanitizer.sanitizeString(value);
-        } else if (typeof value === 'object' && value !== null) {
-          sanitized[key] = this.sanitizeRequestData(value);
-        } else {
-          sanitized[key] = value;
+      if (Array.isArray(data)) {
+        return data.map(item => this.sanitizeRequestData(item));
+      } else {
+        const sanitized: Record<string, unknown> = {};
+
+        for (const [key, value] of Object.entries(data)) {
+          if (typeof value === 'string') {
+            sanitized[key] = InputSanitizer.sanitizeString(value);
+          } else if (typeof value === 'object' && value !== null) {
+            sanitized[key] = this.sanitizeRequestData(value);
+          } else {
+            sanitized[key] = value;
+          }
         }
+
+        return sanitized;
       }
-      
-      return sanitized;
     }
 
     return data;

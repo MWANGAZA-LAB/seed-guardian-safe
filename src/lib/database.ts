@@ -36,9 +36,9 @@ interface QueryMetrics {
 
 // Database query cache
 class QueryCache {
-  private cache = new Map<string, { data: any; timestamp: number; ttl: number }>();
+  private cache = new Map<string, { data: unknown; timestamp: number; ttl: number }>();
 
-  set(key: string, data: any, ttl: number = DB_CONFIG.cache.ttl): void {
+  set(key: string, data: unknown, ttl: number = DB_CONFIG.cache.ttl): void {
     this.cache.set(key, {
       data,
       timestamp: Date.now(),
@@ -49,7 +49,7 @@ class QueryCache {
     this.cleanup();
   }
 
-  get(key: string): any | null {
+  get<T>(key: string): T | null {
     const entry = this.cache.get(key);
     if (!entry) return null;
 
@@ -58,7 +58,7 @@ class QueryCache {
       return null;
     }
 
-    return entry.data;
+    return entry.data as T;
   }
 
   clear(): void {

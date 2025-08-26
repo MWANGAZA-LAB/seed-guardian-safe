@@ -23,7 +23,7 @@ const API_CONFIG = {
 interface RequestConfig {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   url: string;
-  data?: any;
+  data?: unknown;
   headers?: Record<string, string>;
   timeout?: number;
   retryAttempts?: number;
@@ -214,11 +214,11 @@ class ApiService {
     return this.request<T>({ method: 'GET', url, headers, requireCSRF: false });
   }
 
-  async post<T>(url: string, data?: any, headers?: Record<string, string>): Promise<ApiResponse<T>> {
+  async post<T>(url: string, data?: unknown, headers?: Record<string, string>): Promise<ApiResponse<T>> {
     return this.request<T>({ method: 'POST', url, data, headers });
   }
 
-  async put<T>(url: string, data?: any, headers?: Record<string, string>): Promise<ApiResponse<T>> {
+  async put<T>(url: string, data?: unknown, headers?: Record<string, string>): Promise<ApiResponse<T>> {
     return this.request<T>({ method: 'PUT', url, data, headers });
   }
 
@@ -226,7 +226,7 @@ class ApiService {
     return this.request<T>({ method: 'DELETE', url, headers });
   }
 
-  async patch<T>(url: string, data?: any, headers?: Record<string, string>): Promise<ApiResponse<T>> {
+  async patch<T>(url: string, data?: unknown, headers?: Record<string, string>): Promise<ApiResponse<T>> {
     return this.request<T>({ method: 'PATCH', url, data, headers });
   }
 
@@ -235,7 +235,7 @@ class ApiService {
     endpoint: string, 
     options: { 
       method?: string; 
-      body?: any; 
+      body?: unknown; 
       headers?: Record<string, string>; 
       requireCSRF?: boolean;
     } = {}
@@ -250,7 +250,7 @@ class ApiService {
       }
 
       const response = await this.request<T>({
-        method: method as any,
+        method: method as 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
         url: `/functions/v1/${endpoint}`,
         data: body,
         headers: {

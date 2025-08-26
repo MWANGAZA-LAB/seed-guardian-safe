@@ -161,7 +161,7 @@ export class SupabaseClient {
   }
 
   // Enhanced database methods with error handling
-  async query<T = any>(table: string, query: any) {
+  async query<T = unknown>(table: string, query: Record<string, unknown>) {
     try {
       const { data, error } = await this.client
         .from(table)
@@ -179,7 +179,7 @@ export class SupabaseClient {
     }
   }
 
-  async insert<T = any>(table: string, data: any) {
+  async insert<T = unknown>(table: string, data: Record<string, unknown>) {
     try {
       const { data: result, error } = await this.client
         .from(table)
@@ -220,7 +220,7 @@ export class SupabaseClient {
     }
   }
 
-  async delete(table: string, match: any) {
+  async delete(table: string, match: Record<string, unknown>) {
     try {
       const { error } = await this.client
         .from(table)

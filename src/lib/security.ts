@@ -199,7 +199,7 @@ export class InputSanitizer {
     }
   }
 
-  static sanitizeJson(input: string): any {
+  static sanitizeJson(input: string): unknown {
     try {
       const sanitized = this.sanitizeString(input, { maxLength: 10000 });
       return JSON.parse(sanitized);
@@ -368,7 +368,7 @@ export class SensitiveDataHandler {
     'mnemonic', 'passphrase', 'credential', 'auth', 'login'
   ];
 
-  static maskSensitiveData(data: any, fieldsToMask: string[] = []): any {
+  static maskSensitiveData(data: unknown, fieldsToMask: string[] = []): unknown {
     const fields = [...this.sensitiveFields, ...fieldsToMask];
     
     if (typeof data === 'string') {
@@ -415,9 +415,9 @@ export class SensitiveDataHandler {
     );
   }
 
-  static secureLog(message: string, data?: any): void {
+  static secureLog(message: string, data?: unknown): void {
     const maskedData = data ? this.maskSensitiveData(data) : undefined;
-    logger.info(message, maskedData);
+    logger.info(message, maskedData as Record<string, unknown> | undefined);
   }
 }
 

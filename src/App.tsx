@@ -7,6 +7,11 @@ import { ErrorBoundary, useErrorHandler } from "@/components/ErrorBoundary";
 import { AppError } from "@/lib/errors";
 import { logger } from "@/lib/logger";
 import Index from "./pages/Index";
+import CreateWallet from "./pages/CreateWallet";
+import Dashboard from "./pages/Dashboard";
+import Documentation from "./pages/Documentation";
+import Contact from "./pages/Contact";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 // Configure QueryClient with optimized caching and performance
@@ -54,6 +59,11 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/create-wallet" element={<CreateWallet />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/documentation" element={<Documentation />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/settings" element={<Settings />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

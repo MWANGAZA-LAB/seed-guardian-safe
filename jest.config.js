@@ -34,8 +34,14 @@ export default {
       tsconfig: {
         jsx: 'react-jsx',
         esModuleInterop: true
-      }
+      },
+      useESM: true
     }]
+  },
+  globals: {
+    'ts-jest': {
+      useESM: true
+    }
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   testPathIgnorePatterns: [

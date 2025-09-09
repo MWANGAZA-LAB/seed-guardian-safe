@@ -1,8 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Shield, Users, Key, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-bitcoin.jpg";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const handleStartWallet = () => {
+    navigate('/create-wallet');
+  };
+
+  const handleViewSpecs = () => {
+    navigate('/documentation');
+  };
+
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-subtle relative overflow-hidden">
       {/* Background Image */}
@@ -57,11 +68,21 @@ const HeroSection = () => {
 
           {/* Call to Action */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button variant="hero" size="lg" className="text-lg px-8 py-4">
+            <Button 
+              variant="hero" 
+              size="lg" 
+              className="text-lg px-8 py-4"
+              onClick={handleStartWallet}
+            >
               Start Your Wallet
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            <Button variant="premium" size="lg" className="text-lg px-8 py-4">
+            <Button 
+              variant="premium" 
+              size="lg" 
+              className="text-lg px-8 py-4"
+              onClick={handleViewSpecs}
+            >
               View Technical Specs
             </Button>
           </div>

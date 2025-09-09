@@ -39,9 +39,10 @@ export interface UseProtocolConfig {
 export interface UseProtocolReturn {
   // Protocol state
   protocol: SeedGuardianProtocol | null;
+  protocolClient: SeedGuardianProtocol | null;
   status: ProtocolStatus | null;
   loading: boolean;
-  error: string | null;
+  error: Error | null;
 
   // Protocol methods
   initialize: () => Promise<void>;
@@ -64,11 +65,11 @@ export interface UseProtocolReturn {
   isInitialized: boolean;
 }
 
-export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
+export function useProtocol(config?: UseProtocolConfig): UseProtocolReturn {
   const [protocol, setProtocol] = useState<SeedGuardianProtocol | null>(null);
   const [status, setStatus] = useState<ProtocolStatus | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
   const protocolRef = useRef<SeedGuardianProtocol | null>(null);
@@ -103,7 +104,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       console.log('Protocol initialized successfully');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to initialize protocol';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       console.error('Protocol initialization failed:', err);
     } finally {
       setLoading(false);
@@ -127,7 +128,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       return result;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to create wallet';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -143,7 +144,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       return await protocolRef.current.loadWallet(walletId, ownerId);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to load wallet';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -165,7 +166,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       return await protocolRef.current.initiateRecovery(walletId, guardianId, reason, newOwnerEmail, guardianPrivateKey);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to initiate recovery';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -187,7 +188,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       return await protocolRef.current.signRecovery(walletId, recoveryId, guardianId, guardianPrivateKey, verificationMethod);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to sign recovery';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -206,7 +207,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       return await protocolRef.current.reconstructSeed(walletId, guardianShares);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to reconstruct seed';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -222,7 +223,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       return await protocolRef.current.generateGuardianKeyPair();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to generate guardian key pair';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -242,7 +243,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       return await protocolRef.current.encryptForGuardian(data, guardianPublicKey, keyId);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to encrypt for guardian';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -262,7 +263,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       return await protocolRef.current.decryptForGuardian(encryptedData, guardianPrivateKey, keyId);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to decrypt for guardian';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -278,7 +279,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       return await protocolRef.current.signData(data, privateKey);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to sign data';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -298,7 +299,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       return await protocolRef.current.verifySignature(data, signature, publicKey);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to verify signature';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -314,7 +315,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       return await protocolRef.current.getAuditLogChain(walletId);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get audit log chain';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -336,7 +337,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       return await protocolRef.current.verifyAuditLogChain(walletId);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to verify audit log chain';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -356,7 +357,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
       setStatus(newStatus);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to sync wallet';
-      setError(errorMessage);
+      setError(new Error(errorMessage));
       throw err;
     }
   }, []);
@@ -390,6 +391,7 @@ export function useProtocol(config: UseProtocolConfig): UseProtocolReturn {
   return {
     // Protocol state
     protocol,
+    protocolClient: protocol,
     status,
     loading,
     error,

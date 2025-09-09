@@ -1,8 +1,38 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Shield, Users, Zap, Github, FileText, Mail } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 const CtaSection = () => {
+  const navigate = useNavigate();
+
+  const handleCreateWallet = () => {
+    navigate('/create-wallet');
+  };
+
+  const handleScheduleDemo = () => {
+    navigate('/contact');
+  };
+
+  const handleViewRepository = () => {
+    toast({
+      title: "GitHub Repository",
+      description: "Opening GitHub repository in new tab...",
+      variant: "default",
+    });
+    // In a real app, this would open the GitHub repo
+    window.open('https://github.com/seed-guardian-safe', '_blank');
+  };
+
+  const handleReadDocs = () => {
+    navigate('/documentation');
+  };
+
+  const handleContactSales = () => {
+    navigate('/contact');
+  };
+
   return (
     <section className="py-24 bg-gradient-subtle">
       <div className="container mx-auto px-6">
@@ -17,11 +47,21 @@ const CtaSection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Button variant="hero" size="lg" className="text-lg px-10 py-6">
+            <Button 
+              variant="hero" 
+              size="lg" 
+              className="text-lg px-10 py-6"
+              onClick={handleCreateWallet}
+            >
               Create Your Wallet
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            <Button variant="outline" size="lg" className="text-lg px-10 py-6">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="text-lg px-10 py-6"
+              onClick={handleScheduleDemo}
+            >
               Schedule Demo
             </Button>
           </div>
@@ -50,7 +90,11 @@ const CtaSection = () => {
             <p className="text-muted-foreground mb-6">
               Review our code, contribute to development, and build on our platform.
             </p>
-            <Button variant="outline" className="w-full">
+            <Button 
+              variant="outline" 
+              className="w-full"
+              onClick={handleViewRepository}
+            >
               View Repository
             </Button>
           </Card>
@@ -61,7 +105,11 @@ const CtaSection = () => {
             <p className="text-muted-foreground mb-6">
               Complete technical docs, API references, and integration guides.
             </p>
-            <Button variant="outline" className="w-full">
+            <Button 
+              variant="outline" 
+              className="w-full"
+              onClick={handleReadDocs}
+            >
               Read Docs
             </Button>
           </Card>
@@ -72,7 +120,11 @@ const CtaSection = () => {
             <p className="text-muted-foreground mb-6">
               Custom solutions for institutions and high-net-worth individuals.
             </p>
-            <Button variant="outline" className="w-full">
+            <Button 
+              variant="outline" 
+              className="w-full"
+              onClick={handleContactSales}
+            >
               Contact Sales
             </Button>
           </Card>

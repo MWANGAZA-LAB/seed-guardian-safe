@@ -228,7 +228,7 @@ export class StorageClient {
         return null;
       }
 
-      return JSON.parse(response.data) as GuardianShare;
+      return JSON.parse(response.data as string) as GuardianShare;
     } catch (error) {
       throw new ProtocolError('Failed to retrieve guardian share', 'STORAGE_ERROR', {
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -256,7 +256,7 @@ export class StorageClient {
         return null;
       }
 
-      return JSON.parse(response.data) as Guardian;
+      return JSON.parse(response.data as string) as Guardian;
     } catch (error) {
       throw new ProtocolError('Failed to retrieve guardian info', 'STORAGE_ERROR', {
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -284,7 +284,7 @@ export class StorageClient {
         return null;
       }
 
-      return JSON.parse(response.data) as RecoveryAttempt;
+      return JSON.parse(response.data as string) as RecoveryAttempt;
     } catch (error) {
       throw new ProtocolError('Failed to retrieve recovery attempt', 'STORAGE_ERROR', {
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -313,7 +313,7 @@ export class StorageClient {
         return [];
       }
 
-      return JSON.parse(response.data) as AuditLogEntry[];
+      return JSON.parse(response.data as string) as AuditLogEntry[];
     } catch (error) {
       throw new ProtocolError('Failed to retrieve audit logs', 'STORAGE_ERROR', {
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -339,7 +339,7 @@ export class StorageClient {
         return [];
       }
 
-      return JSON.parse(response.data) as Guardian[];
+      return JSON.parse(response.data as string) as Guardian[];
     } catch (error) {
       throw new ProtocolError('Failed to retrieve wallet guardians', 'STORAGE_ERROR', {
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -365,7 +365,7 @@ export class StorageClient {
         return [];
       }
 
-      return JSON.parse(response.data) as RecoveryAttempt[];
+      return JSON.parse(response.data as string) as RecoveryAttempt[];
     } catch (error) {
       throw new ProtocolError('Failed to retrieve wallet recovery attempts', 'STORAGE_ERROR', {
         error: error instanceof Error ? error.message : 'Unknown error',

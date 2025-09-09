@@ -98,6 +98,10 @@ export function createQuickStartProtocol(storageConfig: {
   timeout?: number;
   retryAttempts?: number;
 }) {
+  // Import the functions dynamically to avoid circular dependencies
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { createProtocolClient, defaultProtocolConfig } = require('./protocol-client');
+  
   const config = {
     storage: {
       baseUrl: storageConfig.baseUrl,

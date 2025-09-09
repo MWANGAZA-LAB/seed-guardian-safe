@@ -1,5 +1,5 @@
 // Custom hook for wallet management with caching and real-time updates
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { WalletApi, Wallet, Guardian, CreateWalletRequest } from '@/services/api';
 import { logger } from '@/lib/logger';
@@ -36,7 +36,7 @@ export function useWallets(options: UseWalletsOptions = {}): UseWalletsReturn {
   const { enabled = true, refetchInterval } = options;
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const { handleError } = useErrorHandler();
+  // const { handleError } = useErrorHandler();
 
   const {
     data: wallets = [],
@@ -115,7 +115,9 @@ export function useWallets(options: UseWalletsOptions = {}): UseWalletsReturn {
     wallets,
     loading: isLoading,
     error: error as AppError | null,
-    refetch,
+    refetch: async () => {
+      await refetch();
+    },
     createWallet,
     deleteWallet,
     clearError,
@@ -137,7 +139,7 @@ export interface UseWalletReturn {
 export function useWallet(options: UseWalletOptions): UseWalletReturn {
   const { walletId, enabled = true } = options;
   const { user } = useAuth();
-  const { handleError } = useErrorHandler();
+  // const { handleError } = useErrorHandler();
 
   const {
     data: wallet = null,
@@ -161,7 +163,9 @@ export function useWallet(options: UseWalletOptions): UseWalletReturn {
     wallet,
     loading: isLoading,
     error: error as AppError | null,
-    refetch,
+    refetch: async () => {
+      await refetch();
+    },
   };
 }
 
@@ -180,7 +184,7 @@ export interface UseGuardiansReturn {
 export function useGuardians(options: UseGuardiansOptions): UseGuardiansReturn {
   const { walletId, enabled = true } = options;
   const { user } = useAuth();
-  const { handleError } = useErrorHandler();
+  // const { handleError } = useErrorHandler();
 
   const {
     data: guardians = [],
@@ -204,7 +208,9 @@ export function useGuardians(options: UseGuardiansOptions): UseGuardiansReturn {
     guardians,
     loading: isLoading,
     error: error as AppError | null,
-    refetch,
+    refetch: async () => {
+      await refetch();
+    },
   };
 }
 

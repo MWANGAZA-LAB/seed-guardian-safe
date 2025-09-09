@@ -1,401 +1,517 @@
-# 🌟 Seed Guardian Safe
+# 🏗️ Seed Guardian Safe Protocol
 
-**Secure Bitcoin Inheritance & Social Recovery Platform**
+**Trust-First, Protocol-Style Bitcoin Inheritance & Social Recovery**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Protocol](https://img.shields.io/badge/Protocol-v1.0.0-blue.svg)](https://github.com/MWANGAZA-LAB/seed-guardian-safe)
 
-## 🎯 Overview
+## 🎯 **Protocol Vision**
 
-Seed Guardian Safe is a revolutionary Bitcoin inheritance and social recovery platform that combines **enterprise-grade cryptography** with **social consensus** to ensure your Bitcoin wealth is never lost. Using **Shamir's Secret Sharing** and **multi-guardian verification**, we provide a **secure, decentralized, and production-ready** solution for Bitcoin inheritance planning with **zero-knowledge architecture** and **comprehensive audit trails**.
+Seed Guardian Safe Protocol is a **trust-first, protocol-style architecture** that transforms Bitcoin inheritance from a SaaS application into a **Bitcoin-native, uncustodial standard**. This is the **"PGP for Bitcoin inheritance"** - a protocol, not a product.
 
-### 🌟 Why Seed Guardian Safe?
+## 🔑 **Core Principles**
 
-- **🔐 Never Lose Your Bitcoin**: Advanced cryptographic redundancy ensures your wealth is always recoverable
-- **👥 Social Recovery**: Trusted guardians can help you recover access without compromising security
-- **🛡️ Zero-Knowledge Architecture**: Guardians never see your actual seed or private keys
-- **⚡ Production-Ready**: Enterprise-grade security with comprehensive testing and monitoring
-- **🌍 Decentralized**: No single point of failure, guardians are distributed globally
+### 1. **Client-Side Cryptography Only**
+- All cryptographic operations (seed generation, splitting, encryption, recovery) happen **client-side**
+- Server never sees plaintext seeds or shares
+- Zero cryptographic trust in server infrastructure
 
-### 🔐 Key Features
+### 2. **Shamir's Secret Sharing**
+- Military-grade cryptographic protocol splits master seed
+- Uses audited libraries for production security
+- Threshold-based recovery (e.g., 3 of 5 guardians)
 
-#### **🔑 Advanced Cryptography**
-- **Shamir's Secret Sharing**: Your master seed is cryptographically split into shares using finite field arithmetic
-- **AES-GCM Encryption**: 256-bit encryption with PBKDF2 key derivation for maximum security
-- **RSA-OAEP**: 2048-bit encryption for guardian share protection
-- **Zero-Knowledge Architecture**: Guardians never see your actual seed or private keys
+### 3. **Guardian-Based Recovery**
+- Guardians receive encrypted shares (public key only)
+- Store shares offline (local vault, USB, HSM)
+- Verify recovery requests via MFA + cryptographic signatures
+- Never see seed, only their encrypted fragment
 
-#### **👥 Social Recovery System**
-- **Multi-Guardian System**: Appoint 2-10 trusted guardians for recovery consensus
-- **Configurable Thresholds**: Set how many guardians are required for recovery (2+)
-- **Guardian Verification**: Multi-factor authentication with email and SMS
-- **Recovery Signatures**: Cryptographic signatures ensure authentic guardian approval
+### 4. **Signed Audit Log Protocol**
+- JSON-based audit trail for all events
+- Signed with user's and guardian's private keys
+- Tamper-proof using Merkle trees and hash chains
+- Public transparency for community verification
 
-#### **🛡️ Enterprise Security**
-- **Row-Level Security (RLS)**: Database-level access control with Supabase
-- **CSRF Protection**: Advanced token-based request validation
-- **Rate Limiting**: Automatic protection against brute force attacks
-- **Input Sanitization**: Comprehensive XSS and injection protection
-- **Audit Logging**: Complete trail of all operations and security events
+### 5. **Multi-Client Architecture**
+- **Web App** (React/TypeScript) - onboarding & UX
+- **CLI Client** (Node.js/Go) - hardcore Bitcoiners
+- **Desktop App** (Tauri/Electron) - offline-first inheritance
 
-#### **⚡ Production Features**
-- **Modern Web Interface**: Beautiful, responsive React 18 application with TypeScript
-- **Performance Optimized**: Code splitting, lazy loading, and caching for fast performance
-- **Comprehensive Testing**: 80+ test cases covering security, validation, and integration
-- **Automated Notifications**: Email and SMS alerts for critical events
-- **Bitcoin Integration**: Direct wallet management, transaction creation, and balance tracking
+## 🏛️ **Architecture Overview**
 
-## 🚀 Recent Technical Achievements
-
-### **🔒 Security Hardening (Latest)**
-- **Fixed CSRF Token Generation**: Implemented cryptographically secure random generation
-- **Enhanced Input Validation**: Comprehensive Zod schemas with 30+ validation rules
-- **Rate Limiter Optimization**: Fixed memory leaks with automatic cleanup
-- **DOMPurify Integration**: Secure HTML sanitization with proper async imports
-
-### **⚡ Performance Optimizations**
-- **Bundle Size Reduction**: 20-30% smaller bundles through code splitting
-- **Database Indexing**: 15+ optimized indexes for 50-70% faster queries
-- **React Optimization**: Memoized hooks and lazy loading components
-- **Caching Strategy**: Intelligent query caching with Tanstack Query
-
-### **🧪 Quality Assurance**
-- **Comprehensive Testing**: 80+ test cases covering security, validation, and integration
-- **Error Boundary Consolidation**: Unified error handling across the application
-- **TypeScript Strict Mode**: Enhanced type safety and developer experience
-- **ESLint Security Rules**: Automated vulnerability detection
-
-## 🏗️ Architecture
-
-### **Frontend Stack**
-- **React 18** with TypeScript for type safety and modern development
-- **Vite** for lightning-fast development and optimized builds
-- **Tailwind CSS** with custom Bitcoin-themed design system
-- **shadcn/ui** components for consistent, accessible UI
-- **React Router DOM** for client-side navigation
-- **Tanstack Query** for intelligent data fetching and caching
-- **Performance Monitoring** with custom hooks and optimization utilities
-
-### **Backend Infrastructure**
-- **Supabase** (PostgreSQL) for scalable database and authentication
-- **Edge Functions** (Deno) for serverless API endpoints with global distribution
-- **Row-Level Security (RLS)** for database-level access control
-- **Cryptographic utilities** for secure key management and operations
-- **Bitcoin RPC integration** for direct blockchain operations
-
-### **Security Architecture**
-- **Shamir's Secret Sharing** with finite field arithmetic for cryptographic splitting
-- **RSA-OAEP** (2048-bit) for guardian share encryption
-- **AES-GCM** (256-bit) with PBKDF2 key derivation for data protection
-- **Multi-factor guardian verification** with email and SMS
-- **Comprehensive audit logging** for all operations and security events
-- **Rate limiting and CSRF protection** for API security
-- **Input validation and sanitization** for XSS and injection prevention
-
-### **Performance & Scalability**
-- **Code splitting and lazy loading** for optimal bundle sizes
-- **Database indexing** for fast query performance
-- **Caching strategies** for improved response times
-- **Error boundaries** for graceful failure handling
-- **Monitoring and metrics** for production observability
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+ and npm
-- Supabase account and project
-- Bitcoin Core node (for production)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/MWANGAZA-LAB/seed-guardian-safe.git
-   cd seed-guardian-safe
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp env.example .env.local
-   ```
-   Edit `.env.local` with your configuration (see [Environment Setup](#environment-setup))
-
-4. **Set up Supabase**
-   ```bash
-   # Install Supabase CLI
-   npm install -g supabase
-   
-   # Link to your Supabase project
-   supabase link --project-ref YOUR_PROJECT_REF
-   
-   # Run database migrations
-   supabase db push
-   
-   # Deploy Edge Functions
-   supabase functions deploy
-   ```
-
-5. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-Visit `http://localhost:5173` to see the application.
-
-## 🔧 Environment Setup
-
-Create a `.env.local` file with the following variables:
-
-```env
-# Supabase Configuration
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-
-# Bitcoin RPC Configuration
-BITCOIN_RPC_URL=http://localhost:8332
-BITCOIN_RPC_USERNAME=your_rpc_username
-BITCOIN_RPC_PASSWORD=your_rpc_password
-
-# Email Service (SendGrid)
-SENDGRID_API_KEY=your_sendgrid_api_key
-SENDGRID_FROM_EMAIL=noreply@yourdomain.com
-
-# SMS Service (Twilio)
-TWILIO_ACCOUNT_SID=your_twilio_account_sid
-TWILIO_AUTH_TOKEN=your_twilio_auth_token
-TWILIO_PHONE_NUMBER=your_twilio_phone_number
-
-# Application Configuration
-FRONTEND_URL=http://localhost:5173
-ENCRYPTION_KEY=your_32_byte_encryption_key
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  CLIENT (User's Device)                    │
+│─────────────────────────────────────────────────────────────│
+│  ✅ Generates master seed locally                          │
+│  ✅ Splits seed via Shamir's Secret Sharing                │
+│  ✅ Encrypts each share with Guardian's public key        │
+│  ✅ Builds recovery policies (threshold, guardians, etc.)  │
+│  ✅ Maintains local proof logs & verifiable audit trails   │
+│                                                             │
+│  🔑 CRYPTO LIVES HERE ONLY (browser, CLI, desktop app)     │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              │ (encrypted blobs + signed proofs only)
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  STORAGE & RELAY LAYER                     │
+│        (Supabase/Postgres, IPFS/Arweave optional)          │
+│─────────────────────────────────────────────────────────────│
+│  ✅ Stores only encrypted guardian shares                  │
+│  ✅ Stores metadata: guardians, recovery attempts, logs    │
+│  ✅ No access to seeds or plaintext shares                 │
+│  ✅ Row-level security enforces ownership boundaries       │
+│                                                             │
+│  📦 Dumb storage + message relay, no cryptographic trust   │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              │ (recovery initiated with signed guardian actions)
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  GUARDIANS (Distributed)                   │
+│─────────────────────────────────────────────────────────────│
+│  ✅ Receive encrypted share (public key only)              │
+│  ✅ Store their share offline (local vault, USB, HSM)     │
+│  ✅ Verify recovery requests via MFA + cryptographic sig  │
+│  ✅ Never see seed, only their encrypted fragment         │
+│                                                             │
+│  👥 Guardians = trust anchors, not trusted custodians      │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              │ (threshold signatures reached)
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  RECOVERY ENGINE (Client)                  │
+│─────────────────────────────────────────────────────────────│
+│  ✅ Pulls encrypted guardian shares                        │
+│  ✅ Decrypts locally with guardian private keys           │
+│  ✅ Reconstructs seed entirely client-side                 │
+│  ✅ Provides restored wallet access                        │
+│                                                             │
+│  🔄 All recombination happens OFFLINE on user device       │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              │ (auditable signed logs)
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  PUBLIC AUDIT TRAIL                        │
+│─────────────────────────────────────────────────────────────│
+│  ✅ Immutable logs of guardian verification, recovery      │
+│  ✅ Verifiable proofs (signed JSON / Merkle trees)        │
+│  ✅ Community can confirm legitimacy of recovery actions   │
+│                                                             │
+│  📜 Transparency layer → eliminates hidden operations      │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-## 📖 Usage Guide
+## 🚀 **Quick Start**
 
-### 1. Creating a Wallet
-1. Navigate to the wallet creation page
-2. Enter your master password (used to encrypt your seed)
-3. Set the number of guardians and threshold requirement
-4. Add guardian email addresses
-5. Complete the setup process
-
-### 2. Guardian Onboarding
-1. Guardians receive invitation emails
-2. They verify their email and set up accounts
-3. Guardians download their encrypted share
-4. System confirms guardian verification
-
-### 3. Social Recovery Process
-1. Guardian initiates recovery (if needed)
-2. All guardians are notified via email/SMS
-3. Guardians sign the recovery request
-4. Once threshold is met, recovery is completed
-5. New wallet access is provided to the user
-
-## 🗄️ Database Schema
-
-The application uses the following core tables:
-
-- **`profiles`**: User profile information
-- **`wallets`**: Wallet configurations and encrypted seeds
-- **`guardians`**: Guardian information and verification status
-- **`recovery_attempts`**: Recovery process tracking
-- **`recovery_signatures`**: Guardian signatures for recovery
-- **`proof_of_life`**: Guardian activity verification
-- **`wallet_addresses`**: Generated Bitcoin addresses
-- **`transactions`**: Transaction history
-- **`audit_logs`**: Security audit trail
-
-## 🔌 API Endpoints
-
-### Edge Functions
-- `POST /functions/v1/create-wallet` - Create new wallet
-- `POST /functions/v1/verify-guardian` - Guardian verification
-- `POST /functions/v1/initiate-recovery` - Start recovery process
-- `POST /functions/v1/sign-recovery` - Guardian recovery signature
-- `POST /functions/v1/bitcoin-service` - Bitcoin operations
-
-## 🧪 Testing
-
-### **Comprehensive Test Suite**
-Our test suite includes **80+ test cases** covering all critical functionality:
+### 1. **Install Protocol**
 
 ```bash
-# Run all tests with coverage
-npm run test:coverage
-
-# Run tests in watch mode for development
-npm run test:watch
-
-# Run tests in CI mode
-npm run test:ci
-
-# Run backend tests (Edge Functions)
-supabase functions test
+git clone https://github.com/MWANGAZA-LAB/seed-guardian-safe.git
+cd seed-guardian-safe
+npm install
 ```
 
-### **Test Coverage Areas**
-- **🔒 Security Tests**: Password validation, input sanitization, CSRF protection
-- **✅ Validation Tests**: Email, Bitcoin addresses, guardian data, wallet creation
-- **🔄 API Tests**: All endpoints with comprehensive mocking and error handling
-- **🔗 Integration Tests**: Complete wallet creation and recovery workflows
-- **⚡ Performance Tests**: Component rendering and API response times
+### 2. **Initialize Protocol**
 
-### **Quality Assurance**
-- **80%+ code coverage** requirement
-- **TypeScript strict mode** for type safety
-- **ESLint security rules** for vulnerability prevention
-- **Automated testing** in CI/CD pipeline
+```typescript
+import { createProtocolClient, defaultProtocolConfig } from '@/protocol';
 
-## 🚀 Deployment
+const protocol = createProtocolClient({
+  storage: {
+    baseUrl: 'https://api.seedguardian.safe',
+    apiKey: 'your-api-key',
+    timeout: 30000,
+    retryAttempts: 3
+  },
+  protocol: defaultProtocolConfig
+});
+
+await protocol.initialize();
+```
+
+### 3. **Create Wallet**
+
+```typescript
+import { encryption } from '@/protocol';
+
+// Generate user key pair
+const userKeyPair = await encryption.generateKeyPair();
+
+// Create wallet
+const wallet = await protocol.createWallet({
+  name: 'My Inheritance Wallet',
+  masterSeed: 'your-24-word-mnemonic-seed-phrase',
+  guardians: [
+    { email: 'guardian1@example.com', fullName: 'John Doe' },
+    { email: 'guardian2@example.com', fullName: 'Jane Smith' },
+    { email: 'guardian3@example.com', fullName: 'Bob Johnson' }
+  ],
+  threshold: 2, // Require 2 of 3 guardians
+  userPassword: 'your-secure-password'
+}, userKeyPair.privateKey);
+```
+
+### 4. **Initiate Recovery**
+
+```typescript
+// Guardian initiates recovery
+const recovery = await protocol.initiateRecovery(
+  wallet.id,
+  guardianId,
+  'owner_unavailable',
+  'newowner@example.com',
+  guardianPrivateKey
+);
+
+// Other guardians sign recovery
+const signature = await protocol.signRecovery(
+  wallet.id,
+  recovery.id,
+  guardianId,
+  guardianPrivateKey,
+  'email'
+);
+```
+
+### 5. **Reconstruct Seed**
+
+```typescript
+// When threshold is reached, reconstruct seed
+const reconstructedSeed = await protocol.reconstructSeed(
+  wallet.id,
+  [
+    { shareIndex: 1, shareValue: 'encrypted-share-1', guardianPrivateKey: 'key1' },
+    { shareIndex: 2, shareValue: 'encrypted-share-2', guardianPrivateKey: 'key2' }
+  ]
+);
+```
+
+## 🔧 **Protocol Components**
+
+### **Core Types** (`src/protocol/core/types.ts`)
+- Defines all protocol data structures
+- Event types for audit logging
+- Cryptographic key types
+- Wallet and guardian interfaces
+
+### **Client-Side Cryptography** (`src/protocol/crypto/`)
+- **Shamir's Secret Sharing** (`shamir.ts`)
+- **RSA-OAEP Encryption** (`encryption.ts`)
+- **Digital Signatures** (RSA-PSS)
+- **AES-GCM** for local storage
+
+### **Audit Log Protocol** (`src/protocol/audit/audit-log.ts`)
+- JSON-based event logging
+- Signed entries with private keys
+- Merkle tree verification
+- Hash chain integrity
+
+### **Wallet Manager** (`src/protocol/wallet/wallet-manager.ts`)
+- Client-side wallet operations
+- Guardian management
+- Recovery process orchestration
+- Seed reconstruction
+
+### **Storage Client** (`src/protocol/storage/storage-client.ts`)
+- Interface to dumb storage layer
+- Encrypted blob storage only
+- No plaintext data transmission
+- Row-level security
+
+## 🛡️ **Security Features**
+
+### **Cryptographic Security**
+- **Shamir's Secret Sharing**: Military-grade secret splitting
+- **RSA-OAEP**: 2048-bit encryption for guardian shares
+- **AES-GCM**: Authenticated encryption for local storage
+- **RSA-PSS**: Digital signatures for audit logs
+- **PBKDF2**: Password-based key derivation
+
+### **Zero-Knowledge Architecture**
+- Server never sees plaintext seeds
+- All cryptographic operations client-side
+- Encrypted blobs only in storage
+- No cryptographic trust in server
+
+### **Tamper-Proof Audit Trail**
+- Signed JSON audit logs
+- Merkle tree verification
+- Hash chain integrity
+- Public transparency
+
+### **Guardian Verification**
+- Multi-factor authentication
+- Cryptographic signatures
+- Proof of life monitoring
+- Offline share storage
+
+## 📱 **Multi-Client Support**
+
+### **Web Client** (React/TypeScript)
+```typescript
+import { useProtocol } from '@/hooks/useProtocol';
+
+function WalletManager() {
+  const { createWallet, loadWallet, initiateRecovery } = useProtocol({
+    storage: {
+      baseUrl: process.env.REACT_APP_STORAGE_URL,
+      apiKey: process.env.REACT_APP_STORAGE_KEY
+    }
+  });
+
+  // Use protocol methods...
+}
+```
+
+### **CLI Client** (Node.js)
+```bash
+# Install CLI
+npm install -g @seed-guardian/cli
+
+# Create wallet
+seed-guardian create --name "My Wallet" --threshold 3 --guardians 5
+
+# Initiate recovery
+seed-guardian recover --wallet-id abc123 --reason "owner_unavailable"
+
+# Sign recovery
+seed-guardian sign --recovery-id def456 --verification email
+```
+
+### **Desktop Client** (Tauri/Electron)
+- Offline-first operation
+- Local key storage
+- Hardware security module support
+- Air-gapped recovery
+
+## 🔍 **Audit & Verification**
+
+### **Audit Log Structure**
+```json
+{
+  "id": "audit-entry-id",
+  "eventType": "recovery_initiated",
+  "walletId": "wallet-uuid",
+  "actorId": "guardian-uuid",
+  "timestamp": "2024-01-01T00:00:00Z",
+  "data": {
+    "recoveryId": "recovery-uuid",
+    "reason": "owner_unavailable",
+    "requiredSignatures": 2
+  },
+  "signature": "cryptographic-signature",
+  "previousHash": "hash-of-previous-entry",
+  "merkleRoot": "merkle-tree-root"
+}
+```
+
+### **Verification Process**
+```typescript
+// Verify audit log chain
+const verification = await protocol.verifyAuditLogChain(walletId);
+console.log('Chain valid:', verification.isValid);
+console.log('Merkle root valid:', verification.merkleRootValid);
+console.log('Signatures valid:', verification.signaturesValid);
+
+// Generate Merkle proof
+const proof = await protocol.generateMerkleProof(entryId);
+const isValid = await protocol.verifyMerkleProof(proof);
+```
+
+## 🌐 **Network Support**
+
+### **Bitcoin Networks**
+- **Mainnet**: Production Bitcoin network
+- **Testnet**: Bitcoin test network
+- **Regtest**: Local development network
+
+### **Storage Options**
+- **Supabase**: PostgreSQL with RLS
+- **IPFS**: Decentralized storage
+- **Arweave**: Permanent storage
+- **Local**: File system storage
+
+## 🔄 **Recovery Process**
+
+### **1. Recovery Initiation**
+```typescript
+const recovery = await protocol.initiateRecovery(
+  walletId,
+  guardianId,
+  'owner_unavailable',
+  'newowner@example.com',
+  guardianPrivateKey
+);
+```
+
+### **2. Guardian Verification**
+- Email/SMS verification
+- Hardware token (YubiKey)
+- Biometric authentication
+- Social verification
+
+### **3. Threshold Signatures**
+```typescript
+// Each guardian signs
+const signature = await protocol.signRecovery(
+  walletId,
+  recoveryId,
+  guardianId,
+  guardianPrivateKey,
+  'email'
+);
+```
+
+### **4. Seed Reconstruction**
+```typescript
+// When threshold reached
+const seed = await protocol.reconstructSeed(walletId, guardianShares);
+```
+
+## 🧪 **Testing & Development**
+
+### **Unit Tests**
+```bash
+npm test
+```
+
+### **Integration Tests**
+```bash
+npm run test:integration
+```
+
+### **Protocol Tests**
+```bash
+npm run test:protocol
+```
+
+### **Security Tests**
+```bash
+npm run test:security
+```
+
+## 📚 **API Reference**
+
+### **Protocol Client**
+- `createProtocolClient(config)` - Create protocol instance
+- `protocol.initialize()` - Initialize protocol
+- `protocol.createWallet(request, privateKey)` - Create wallet
+- `protocol.loadWallet(walletId, ownerId)` - Load wallet
+- `protocol.initiateRecovery(...)` - Initiate recovery
+- `protocol.signRecovery(...)` - Sign recovery
+- `protocol.reconstructSeed(...)` - Reconstruct seed
+
+### **Cryptography**
+- `encryption.generateKeyPair()` - Generate RSA key pair
+- `encryption.encryptWithRSA(data, publicKey, keyId)` - Encrypt data
+- `encryption.decryptWithRSA(encryptedData, privateKey, keyId)` - Decrypt data
+- `encryption.signData(data, privateKey)` - Sign data
+- `encryption.verifySignature(data, signature, publicKey)` - Verify signature
+
+### **Shamir's Secret Sharing**
+- `shamir.splitSecret(secret, config)` - Split secret
+- `shamir.reconstructSecret(shares)` - Reconstruct secret
+- `shamir.verifyShares(shares)` - Verify shares
+
+### **Audit Log**
+- `auditLog.addEntry(...)` - Add audit entry
+- `auditLog.verifyChain()` - Verify chain integrity
+- `auditLog.generateMerkleProof(entryId)` - Generate proof
+- `auditLog.verifyMerkleProof(proof)` - Verify proof
+
+## 🚀 **Deployment**
+
+### **Web Client**
+```bash
+npm run build
+npm run deploy
+```
+
+### **CLI Client**
+```bash
+npm run build:cli
+npm run package:cli
+```
+
+### **Desktop Client**
+```bash
+npm run build:desktop
+npm run package:desktop
+```
+
+## 🔒 **Security Considerations**
 
 ### **Production Deployment**
+- Use audited cryptographic libraries
+- Implement hardware security modules
+- Regular security audits
+- Bug bounty program
 
-#### **Frontend Deployment (Railway)**
-```bash
-# Build optimized production bundle
-npm run build
+### **Key Management**
+- Store private keys securely
+- Use hardware wallets when possible
+- Implement key rotation
+- Backup key material
 
-# Deploy to Railway
-# The build includes:
-# - Code splitting for optimal loading
-# - Tree shaking for minimal bundle size
-# - Performance optimizations
-# - Security headers and CSP
+### **Network Security**
+- Use HTTPS/TLS for all communications
+- Implement certificate pinning
+- Rate limiting and DDoS protection
+- Input validation and sanitization
 
-# Railway deployment commands:
-railway login
-railway link
-railway up
+## 📄 **License**
 
-# Or use the automated deployment script:
-npm run deploy:railway
-```
+MIT License - see [LICENSE](LICENSE) file for details.
 
-#### **Backend Deployment (Supabase)**
-```bash
-# Deploy database migrations and indexes
-supabase db push
-
-# Deploy Edge Functions with environment variables
-supabase functions deploy
-
-# Set up production environment variables
-supabase secrets set BITCOIN_RPC_URL=your_production_rpc_url
-supabase secrets set SENDGRID_API_KEY=your_sendgrid_key
-```
-
-### **Railway Deployment Features**
-- **🚀 One-Click Deploy**: Simple deployment with `railway up`
-- **📊 Built-in Monitoring**: Real-time metrics and logs
-- **🔄 Auto-Deploy**: Automatic deployments from Git
-- **🌍 Global CDN**: Fast content delivery worldwide
-- **🔒 SSL/TLS**: Automatic HTTPS certificates
-- **💰 Pay-as-you-go**: Cost-effective pricing model
-
-### **Production Checklist**
-- ✅ **Environment Variables**: All production secrets configured
-- ✅ **Database Migrations**: All indexes and functions deployed
-- ✅ **Security Headers**: CSP and security headers configured
-- ✅ **Monitoring**: Error tracking and performance monitoring enabled
-- ✅ **Backup Strategy**: Database backups and recovery procedures
-- ✅ **SSL/TLS**: HTTPS enabled for all endpoints
-- ✅ **Railway Configuration**: Project linked and configured
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+## 🤝 **Contributing**
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
 
-## 📄 License
+## 📞 **Support**
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🔒 Security
-
-### **Security Features**
-- **🔐 Enterprise-Grade Encryption**: AES-GCM 256-bit with PBKDF2 key derivation
-- **🛡️ Zero-Knowledge Architecture**: Guardians never access your actual seed
-- **🔒 Row-Level Security**: Database-level access control with Supabase RLS
-- **⚡ Rate Limiting**: Protection against brute force and DDoS attacks
-- **🛡️ CSRF Protection**: Advanced token-based request validation
-- **📝 Comprehensive Audit Logging**: Complete trail of all security events
-
-### **Security Best Practices**
-- **Input Validation**: Comprehensive sanitization against XSS and injection attacks
-- **Secure Headers**: CSP, HSTS, and other security headers implemented
-- **Error Handling**: Secure error messages that don't leak sensitive information
-- **Session Management**: Secure session handling with proper expiration
-
-### **Security Reporting**
-- **Vulnerability Reports**: Please email security@yourdomain.com
-- **Security Audit**: This project has not been audited. Use at your own risk.
-- **Cryptographic Review**: The cryptographic implementation should be reviewed by experts before production use.
-
-### **Security Considerations**
-- **Test with Small Amounts**: Always test with small amounts before securing significant Bitcoin
-- **Guardian Selection**: Choose trusted, technically competent guardians
-- **Backup Strategy**: Maintain multiple recovery methods and backup procedures
-- **Regular Updates**: Keep the application and dependencies updated
-
-## 📞 Support
-
-- **Documentation**: [Backend Implementation Guide](BACKEND_README.md)
+- **Documentation**: [Protocol Guide](PROTOCOL_README.md)
 - **Issues**: [GitHub Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
+- **Discord**: [Seed Guardian Safe Discord](https://discord.gg/seedguardian)
+- **Email**: support@seedguardian.safe
 
-## 🙏 Acknowledgments
+## 🎯 **Roadmap**
 
-### **Core Technologies**
-- **Bitcoin Core** for the Bitcoin protocol and blockchain integration
-- **Supabase** for the scalable backend infrastructure and authentication
-- **Shamir's Secret Sharing** for the cryptographic foundation of social recovery
-- **React & Vite** for the modern frontend framework and build system
-- **Tailwind CSS** for the beautiful, responsive styling system
+### **Phase 1: Core Protocol** ✅
+- [x] Client-side cryptography
+- [x] Shamir's Secret Sharing
+- [x] Audit log protocol
+- [x] Storage layer
 
-### **Security & Cryptography**
-- **Web Crypto API** for secure cryptographic operations
-- **DOMPurify** for XSS protection and input sanitization
-- **bcryptjs** for secure password hashing
-- **jsonwebtoken** for secure authentication tokens
+### **Phase 2: Multi-Client** 🚧
+- [ ] CLI client (Node.js/Go)
+- [ ] Desktop client (Tauri/Electron)
+- [ ] Mobile client (React Native)
 
-### **Development Tools**
-- **TypeScript** for type safety and developer experience
-- **Jest & Testing Library** for comprehensive testing
-- **ESLint** for code quality and security linting
-- **shadcn/ui** for accessible, beautiful UI components
+### **Phase 3: Ecosystem** 📋
+- [ ] Wallet integrations (Sparrow, Electrum, Specter)
+- [ ] Hardware wallet support
+- [ ] Estate planning partnerships
+- [ ] Community audits
 
----
-
-## ⚠️ Important Disclaimers
-
-### **Security Notice**
-This software is **experimental** and should not be used to secure significant amounts of Bitcoin without thorough testing and security review. Always test with small amounts first.
-
-### **Cryptographic Review**
-The cryptographic implementation should be reviewed by security experts before production use. While we've implemented industry-standard practices, this is a complex system that requires careful evaluation.
-
-### **Guardian Responsibility**
-Guardians play a critical role in the security of your Bitcoin. Choose trusted, technically competent individuals who understand the responsibility involved.
-
-### **Backup Strategy**
-Always maintain multiple recovery methods and backup procedures. This system is designed to be one layer of your overall Bitcoin security strategy.
+### **Phase 4: Standardization** 🔮
+- [ ] BIP proposal for Bitcoin inheritance
+- [ ] Industry partnerships
+- [ ] Regulatory compliance
+- [ ] Global adoption
 
 ---
 
-**Made with ❤️ for the Bitcoin community**
+**Seed Guardian Safe Protocol** - Building the future of Bitcoin inheritance, one protocol at a time. 🚀
 
 *Empowering Bitcoin holders with secure, decentralized inheritance solutions.*

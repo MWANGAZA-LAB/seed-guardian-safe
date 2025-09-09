@@ -1,5 +1,5 @@
 // Custom authentication hook with proper state management and security
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabaseClient } from '@/integrations/supabase/client';
 import { logger } from '@/lib/logger';
@@ -265,25 +265,25 @@ export function useAuth(): AuthState & AuthActions {
 }
 
 // Hook for checking if user is authenticated
-export const useIsAuthenticated = React.memo((): boolean => {
+export const useIsAuthenticated = (): boolean => {
   const { user, loading } = useAuth();
   return !loading && !!user;
-});
+};
 
 // Hook for getting current user
-export const useCurrentUser = React.memo((): User | null => {
+export const useCurrentUser = (): User | null => {
   const { user } = useAuth();
   return user;
-});
+};
 
 // Hook for getting current session
-export const useCurrentSession = React.memo((): Session | null => {
+export const useCurrentSession = (): Session | null => {
   const { session } = useAuth();
   return session;
-});
+};
 
 // Hook for checking if auth is loading
-export const useAuthLoading = React.memo((): boolean => {
+export const useAuthLoading = (): boolean => {
   const { loading } = useAuth();
   return loading;
-});
+};

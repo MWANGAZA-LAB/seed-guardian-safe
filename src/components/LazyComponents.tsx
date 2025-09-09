@@ -1,42 +1,120 @@
-// Lazy-loaded components for better performance
 import { lazy } from 'react';
 
-// Lazy load heavy components
-export const WalletDashboard = lazy(() => import('./WalletDashboard'));
-export const GuardianManagement = lazy(() => import('./GuardianManagement'));
-export const RecoveryProcess = lazy(() => import('./RecoveryProcess'));
-export const TransactionHistory = lazy(() => import('./TransactionHistory'));
-export const SettingsPanel = lazy(() => import('./SettingsPanel'));
-export const SecuritySettings = lazy(() => import('./SecuritySettings'));
-export const BackupRestore = lazy(() => import('./BackupRestore'));
-export const AuditLogs = lazy(() => import('./AuditLogs'));
+// Lazy load main dashboard components
+// Note: These components will be created as part of the protocol implementation
+export const WalletDashboard = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Wallet Dashboard - Coming Soon</div> 
+}));
 
-// Lazy load UI components that are not immediately needed
-export const AdvancedSettings = lazy(() => import('./AdvancedSettings'));
-export const HelpDocumentation = lazy(() => import('./HelpDocumentation'));
-export const ContactSupport = lazy(() => import('./ContactSupport'));
+export const GuardianManagement = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Guardian Management - Coming Soon</div> 
+}));
 
-// Lazy load modals and overlays
-export const CreateWalletModal = lazy(() => import('./modals/CreateWalletModal'));
-export const AddGuardianModal = lazy(() => import('./modals/AddGuardianModal'));
-export const RecoveryModal = lazy(() => import('./modals/RecoveryModal'));
-export const TransactionModal = lazy(() => import('./modals/TransactionModal'));
-export const ConfirmationModal = lazy(() => import('./modals/ConfirmationModal'));
+export const RecoveryProcess = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Recovery Process - Coming Soon</div> 
+}));
 
-// Lazy load charts and visualizations
-export const BalanceChart = lazy(() => import('./charts/BalanceChart'));
-export const TransactionChart = lazy(() => import('./charts/TransactionChart'));
-export const GuardianStatusChart = lazy(() => import('./charts/GuardianStatusChart'));
+export const TransactionHistory = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Transaction History - Coming Soon</div> 
+}));
 
-// Lazy load forms
-export const WalletCreationForm = lazy(() => import('./forms/WalletCreationForm'));
-export const GuardianInvitationForm = lazy(() => import('./forms/GuardianInvitationForm'));
-export const RecoveryInitiationForm = lazy(() => import('./forms/RecoveryInitiationForm'));
-export const TransactionForm = lazy(() => import('./forms/TransactionForm'));
-export const ProfileUpdateForm = lazy(() => import('./forms/ProfileUpdateForm'));
+export const SettingsPanel = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Settings Panel - Coming Soon</div> 
+}));
 
-// Lazy load utilities
-export const QRCodeGenerator = lazy(() => import('./utilities/QRCodeGenerator'));
-export const AddressValidator = lazy(() => import('./utilities/AddressValidator'));
-export const PasswordStrengthMeter = lazy(() => import('./utilities/PasswordStrengthMeter'));
-export const SecurityAuditReport = lazy(() => import('./utilities/SecurityAuditReport'));
+export const SecuritySettings = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Security Settings - Coming Soon</div> 
+}));
+
+export const BackupRestore = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Backup Restore - Coming Soon</div> 
+}));
+
+export const AuditLogs = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Audit Logs - Coming Soon</div> 
+}));
+
+// Lazy load advanced components
+export const AdvancedSettings = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Advanced Settings - Coming Soon</div> 
+}));
+
+export const HelpDocumentation = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Help Documentation - Coming Soon</div> 
+}));
+
+export const ContactSupport = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Contact Support - Coming Soon</div> 
+}));
+
+// Lazy load modal components
+export const CreateWalletModal = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Create Wallet Modal - Coming Soon</div> 
+}));
+
+export const AddGuardianModal = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Add Guardian Modal - Coming Soon</div> 
+}));
+
+export const RecoveryModal = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Recovery Modal - Coming Soon</div> 
+}));
+
+export const TransactionModal = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Transaction Modal - Coming Soon</div> 
+}));
+
+export const ConfirmationModal = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Confirmation Modal - Coming Soon</div> 
+}));
+
+// Lazy load chart components
+export const BalanceChart = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Balance Chart - Coming Soon</div> 
+}));
+
+export const TransactionChart = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Transaction Chart - Coming Soon</div> 
+}));
+
+export const GuardianStatusChart = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Guardian Status Chart - Coming Soon</div> 
+}));
+
+// Lazy load form components
+export const WalletCreationForm = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Wallet Creation Form - Coming Soon</div> 
+}));
+
+export const GuardianInvitationForm = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Guardian Invitation Form - Coming Soon</div> 
+}));
+
+export const RecoveryInitiationForm = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Recovery Initiation Form - Coming Soon</div> 
+}));
+
+export const TransactionForm = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Transaction Form - Coming Soon</div> 
+}));
+
+export const ProfileUpdateForm = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Profile Update Form - Coming Soon</div> 
+}));
+
+// Lazy load utility components
+export const QRCodeGenerator = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">QR Code Generator - Coming Soon</div> 
+}));
+
+export const AddressValidator = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Address Validator - Coming Soon</div> 
+}));
+
+export const PasswordStrengthMeter = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Password Strength Meter - Coming Soon</div> 
+}));
+
+export const SecurityAuditReport = lazy(() => Promise.resolve({ 
+  default: () => <div className="p-4">Security Audit Report - Coming Soon</div> 
+}));

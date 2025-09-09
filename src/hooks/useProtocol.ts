@@ -9,16 +9,23 @@ import {
   SeedGuardianProtocol,
   createProtocolClient,
   defaultProtocolConfig,
-  ProtocolStatus,
   ClientWallet,
   CreateWalletRequest,
   CreateWalletResponse,
   RecoveryAttempt,
   GuardianSignature,
   KeyPair,
-  AuditLogChain,
-  ProtocolError
+  AuditLogChain
 } from '@/protocol';
+
+// Define ProtocolStatus interface locally
+export interface ProtocolStatus {
+  version: string;
+  initialized: boolean;
+  storageConnected: boolean;
+  lastSync: string;
+  walletCount: number;
+}
 
 export interface UseProtocolConfig {
   storage: {

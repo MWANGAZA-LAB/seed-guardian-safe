@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ErrorBoundary, useErrorHandler } from "@/components/ErrorBoundary";
+import { AppError } from "@/lib/errors";
 import { logger } from "@/lib/logger";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -40,8 +41,12 @@ const queryClient = new QueryClient({
 const App = () => {
   const { handleError } = useErrorHandler();
 
+  const onError = (error: AppError, errorInfo: React.ErrorInfo) => {
+    handleError(error, { errorInfo });
+  };
+
   return (
-    <ErrorBoundary onError={handleError}>
+    <ErrorBoundary onError={onError}>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />

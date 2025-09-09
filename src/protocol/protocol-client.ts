@@ -155,7 +155,7 @@ export class SeedGuardianProtocol {
       this.ensureInitialized();
 
       // Get wallet from local manager first
-      let wallet = walletManager.getWallet(walletId);
+      const wallet = walletManager.getWallet(walletId);
       if (wallet) {
         walletManager.updateLastAccessed(walletId);
         return wallet;

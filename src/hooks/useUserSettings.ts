@@ -117,7 +117,7 @@ export function useUserSettings() {
   };
 
   // Update specific setting
-  const updateSetting = async (key: keyof UserSettings, value: any) => {
+  const updateSetting = async (key: keyof UserSettings, value: UserSettings[keyof UserSettings]) => {
     return await saveSettings({ [key]: value });
   };
 
@@ -125,7 +125,7 @@ export function useUserSettings() {
   const updateNestedSetting = async (
     category: keyof UserSettings,
     key: string,
-    value: any
+    value: unknown
   ) => {
     const updatedSettings = {
       ...settings,

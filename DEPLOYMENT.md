@@ -8,7 +8,7 @@ Before setting up deployment, ensure you have:
 
 - [GitHub repository](https://github.com/MWANGAZA-LAB/seed-guardian-safe) with the project code
 - [Supabase account](https://supabase.com/) with projects for staging and production
-- [Vercel account](https://vercel.com/) for frontend hosting
+- [Railway account](https://railway.app/) for frontend hosting
 - [SendGrid account](https://sendgrid.com/) for email services
 - [Twilio account](https://twilio.com/) for SMS services (optional)
 
@@ -29,11 +29,11 @@ VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-### Vercel Configuration
+### Railway Configuration
 ```
-VERCEL_TOKEN=your_vercel_token
-VERCEL_ORG_ID=your_vercel_org_id
-VERCEL_PROJECT_ID=your_vercel_project_id
+RAILWAY_TOKEN=your_railway_token
+RAILWAY_PROJECT_ID=your_railway_project_id
+RAILWAY_SERVICE_ID=your_railway_service_id
 ```
 
 ### Email & SMS Services
@@ -64,7 +64,7 @@ The project includes three main GitHub Actions workflows:
 
 ### 1. Frontend CI/CD (`frontend-deploy.yml`)
 - **Triggers**: Changes to frontend files, pull requests
-- **Actions**: Testing, building, deployment to Vercel
+- **Actions**: Testing, building, deployment to Railway
 - **Environments**: Preview (PR), Production (main branch)
 
 ### 2. Backend CI/CD (`backend-deploy.yml`)
@@ -116,7 +116,7 @@ The project includes three main GitHub Actions workflows:
 - Environment variable injection
 
 ### 4. Frontend Deployment
-- Vercel deployment
+- Railway deployment
 - URL generation
 - Status reporting
 
@@ -198,7 +198,7 @@ supabase db reset
 ## 🔄 Rollback Procedures
 
 ### Frontend Rollback
-1. Navigate to Vercel dashboard
+1. Navigate to Railway dashboard
 2. Select project
 3. Go to Deployments tab
 4. Find previous deployment

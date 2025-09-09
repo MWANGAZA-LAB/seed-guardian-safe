@@ -259,17 +259,25 @@ supabase functions test
 
 ### **Production Deployment**
 
-#### **Frontend Deployment (Vercel/Netlify)**
+#### **Frontend Deployment (Railway)**
 ```bash
 # Build optimized production bundle
 npm run build
 
-# Deploy the dist/ folder to your hosting provider
+# Deploy to Railway
 # The build includes:
 # - Code splitting for optimal loading
 # - Tree shaking for minimal bundle size
 # - Performance optimizations
 # - Security headers and CSP
+
+# Railway deployment commands:
+railway login
+railway link
+railway up
+
+# Or use the automated deployment script:
+npm run deploy:railway
 ```
 
 #### **Backend Deployment (Supabase)**
@@ -285,6 +293,14 @@ supabase secrets set BITCOIN_RPC_URL=your_production_rpc_url
 supabase secrets set SENDGRID_API_KEY=your_sendgrid_key
 ```
 
+### **Railway Deployment Features**
+- **🚀 One-Click Deploy**: Simple deployment with `railway up`
+- **📊 Built-in Monitoring**: Real-time metrics and logs
+- **🔄 Auto-Deploy**: Automatic deployments from Git
+- **🌍 Global CDN**: Fast content delivery worldwide
+- **🔒 SSL/TLS**: Automatic HTTPS certificates
+- **💰 Pay-as-you-go**: Cost-effective pricing model
+
 ### **Production Checklist**
 - ✅ **Environment Variables**: All production secrets configured
 - ✅ **Database Migrations**: All indexes and functions deployed
@@ -292,6 +308,7 @@ supabase secrets set SENDGRID_API_KEY=your_sendgrid_key
 - ✅ **Monitoring**: Error tracking and performance monitoring enabled
 - ✅ **Backup Strategy**: Database backups and recovery procedures
 - ✅ **SSL/TLS**: HTTPS enabled for all endpoints
+- ✅ **Railway Configuration**: Project linked and configured
 
 ## 🤝 Contributing
 

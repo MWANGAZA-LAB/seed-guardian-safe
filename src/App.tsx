@@ -3,13 +3,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ErrorBoundary } from "@/lib/errorBoundary";
+import { ErrorBoundary, useErrorHandler } from "@/components/ErrorBoundary";
 import { logger } from "@/lib/logger";
-import { useErrorHandler } from "@/lib/errorBoundary";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
-// Configure QueryClient with proper error handling and caching
+// Configure QueryClient with optimized caching and performance
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -25,11 +24,15 @@ const queryClient = new QueryClient({
         }
         return failureCount < 3;
       },
+      refetchOnWindowFocus: false, // Disable refetch on window focus for better performance
+      refetchOnMount: true, // Only refetch on mount if data is stale
+      refetchOnReconnect: true, // Refetch when network reconnects
     },
     mutations: {
       onError: (error: unknown) => {
         logger.error('Mutation error', error as Error);
       },
+      retry: 1, // Retry mutations once on failure
     },
   },
 });

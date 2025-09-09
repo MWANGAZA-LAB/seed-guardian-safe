@@ -133,19 +133,21 @@ export class Validator {
   }
 }
 
-// Common validation schemas
+// Enhanced validation schemas
 export const createWalletSchema: ValidationSchema = {
   name: {
     required: true,
     type: 'string',
-    minLength: 1,
-    maxLength: 100,
+    minLength: 3,
+    maxLength: 50,
+    pattern: /^[a-zA-Z0-9\s\-_]+$/,
   },
   masterSeed: {
     required: true,
     type: 'string',
-    minLength: 64,
+    minLength: 128,
     maxLength: 512,
+    pattern: /^[a-fA-F0-9]+$/,
   },
   guardians: {
     required: true,
@@ -162,8 +164,21 @@ export const createWalletSchema: ValidationSchema = {
   userPassword: {
     required: true,
     type: 'string',
-    minLength: 8,
+    minLength: 12,
     maxLength: 128,
+    custom: (password: string) => {
+      const hasUpper = /[A-Z]/.test(password);
+      const hasLower = /[a-z]/.test(password);
+      const hasNumber = /\d/.test(password);
+      const hasSpecial = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+      
+      if (!hasUpper) return 'Password must contain at least one uppercase letter';
+      if (!hasLower) return 'Password must contain at least one lowercase letter';
+      if (!hasNumber) return 'Password must contain at least one number';
+      if (!hasSpecial) return 'Password must contain at least one special character';
+      
+      return true;
+    },
   },
 };
 
@@ -171,18 +186,21 @@ export const guardianSchema: ValidationSchema = {
   email: {
     required: true,
     type: 'string',
+    minLength: 5,
+    maxLength: 254,
     pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   fullName: {
     required: true,
     type: 'string',
-    minLength: 1,
+    minLength: 2,
     maxLength: 100,
+    pattern: /^[a-zA-Z\s\-'\.]+$/,
   },
   phoneNumber: {
     required: false,
     type: 'string',
-    pattern: /^\+?[\d\s\-\(\)]+$/,
+    pattern: /^[\+]?[1-9][\d]{0,15}$/,
   },
 };
 
@@ -209,12 +227,13 @@ export const transactionSchema: ValidationSchema = {
   toAddress: {
     required: true,
     type: 'string',
-    pattern: /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/,
+    pattern: /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$/,
   },
   amountSatoshis: {
     required: true,
     type: 'number',
     min: 546, // Dust limit
+    max: 2100000000000000, // Max Bitcoin supply
   },
   feeRate: {
     required: false,
@@ -225,7 +244,8 @@ export const transactionSchema: ValidationSchema = {
   userPassword: {
     required: true,
     type: 'string',
-    minLength: 1,
+    minLength: 12,
+    maxLength: 128,
   },
 };
 
@@ -246,9 +266,14 @@ export const validateUUID = (uuid: string): boolean => {
 };
 
 export const validatePassword = (password: string): boolean => {
-  // At least 8 characters, 1 uppercase, 1 lowercase, 1 number
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/;
-  return passwordRegex.test(password);
+  // At least 12 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
+  const hasUpper = /[A-Z]/.test(password);
+  const hasLower = /[a-z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecial = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+  const hasMinLength = password.length >= 12;
+  
+  return hasUpper && hasLower && hasNumber && hasSpecial && hasMinLength;
 };
 
 // Sanitization functions

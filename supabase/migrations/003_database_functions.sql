@@ -166,3 +166,92 @@ BEGIN
     RETURN NOW() > expires_at;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Function to get wallet guardian statistics
+CREATE OR REPLACE FUNCTION public.get_wallet_guardians_status(p_wallet_id UUID)
+RETURNS TABLE(
+    total_guardians INTEGER,
+    active_guardians INTEGER,
+    pending_guardians INTEGER,
+    declined_guardians INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        COUNT(*)::INTEGER as total_guardians,
+        COUNT(*) FILTER (WHERE status = 'accepted')::INTEGER as active_guardians,
+        COUNT(*) FILTER (WHERE status = 'invited')::INTEGER as pending_guardians,
+        COUNT(*) FILTER (WHERE status = 'declined')::INTEGER as declined_guardians
+    FROM public.guardians 
+    WHERE wallet_id = p_wallet_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Function to clean up expired recovery attempts
+CREATE OR REPLACE FUNCTION public.cleanup_expired_recovery_attempts()
+RETURNS INTEGER AS $$
+DECLARE
+    cleaned_count INTEGER;
+BEGIN
+    UPDATE public.recovery_attempts
+    SET status = 'expired'
+    WHERE status IN ('pending', 'collecting')
+    AND expires_at < NOW();
+    
+    GET DIAGNOSTICS cleaned_count = ROW_COUNT;
+    RETURN cleaned_count;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Function to get recent wallet activity
+CREATE OR REPLACE FUNCTION public.get_wallet_activity(p_wallet_id UUID, p_limit INTEGER DEFAULT 50)
+RETURNS TABLE(
+    activity_type TEXT,
+    activity_data JSONB,
+    created_at TIMESTAMP WITH TIME ZONE
+) AS $$
+BEGIN
+    RETURN QUERY
+    (
+        SELECT 
+            'transaction'::TEXT as activity_type,
+            jsonb_build_object(
+                'txid', txid,
+                'amount_satoshis', amount_satoshis,
+                'status', status,
+                'transaction_type', transaction_type
+            ) as activity_data,
+            created_at
+        FROM public.transactions
+        WHERE wallet_id = p_wallet_id
+        
+        UNION ALL
+        
+        SELECT 
+            'recovery_attempt'::TEXT as activity_type,
+            jsonb_build_object(
+                'recovery_reason', recovery_reason,
+                'status', status,
+                'required_signatures', required_signatures,
+                'current_signatures', current_signatures
+            ) as activity_data,
+            created_at
+        FROM public.recovery_attempts
+        WHERE wallet_id = p_wallet_id
+        
+        UNION ALL
+        
+        SELECT 
+            'proof_of_life'::TEXT as activity_type,
+            jsonb_build_object(
+                'proof_type', proof_type,
+                'ip_address', ip_address
+            ) as activity_data,
+            verified_at as created_at
+        FROM public.proof_of_life
+        WHERE wallet_id = p_wallet_id
+    )
+    ORDER BY created_at DESC
+    LIMIT p_limit;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

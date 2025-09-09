@@ -209,12 +209,34 @@ export class InputSanitizer {
   }
 
   // Enhanced HTML sanitization using DOMPurify
-  static sanitizeHtml(html: string, options?: {
+  static async sanitizeHtml(html: string, options?: {
+    allowedTags?: string[];
+    allowedAttributes?: string[];
+  }): Promise<string> {
+    if (typeof window !== 'undefined') {
+      // Client-side DOMPurify - proper dynamic import
+      try {
+        const { default: DOMPurify } = await import('dompurify');
+        return DOMPurify.sanitize(html, {
+          ALLOWED_TAGS: options?.allowedTags || ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li'],
+          ALLOWED_ATTR: options?.allowedAttributes || []
+        });
+      } catch {
+        // Fallback if DOMPurify is not available
+        return this.sanitizeString(html, { allowHtml: false });
+      }
+    } else {
+      // Server-side fallback
+      return this.sanitizeString(html, { allowHtml: false });
+    }
+  }
+
+  // Synchronous version for backward compatibility
+  static sanitizeHtmlSync(html: string, options?: {
     allowedTags?: string[];
     allowedAttributes?: string[];
   }): string {
     if (typeof window !== 'undefined') {
-      // Client-side DOMPurify - dynamic import to avoid SSR issues
       try {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const DOMPurify = require('dompurify');
@@ -233,9 +255,35 @@ export class InputSanitizer {
   }
 }
 
-// Rate limiter for security
+// Rate limiter for security with automatic cleanup
 export class RateLimiter {
   private attempts: Map<string, { count: number; firstAttempt: number; blockedUntil?: number }> = new Map();
+  private cleanupInterval: NodeJS.Timeout | null = null;
+  private readonly CLEANUP_INTERVAL = 5 * 60 * 1000; // 5 minutes
+
+  constructor() {
+    // Start automatic cleanup
+    this.startCleanup();
+  }
+
+  private startCleanup(): void {
+    if (this.cleanupInterval) return;
+    
+    this.cleanupInterval = setInterval(() => {
+      this.cleanupExpiredEntries();
+    }, this.CLEANUP_INTERVAL);
+  }
+
+  private cleanupExpiredEntries(): void {
+    const now = Date.now();
+    for (const [identifier, record] of this.attempts.entries()) {
+      // Remove expired entries (older than 24 hours or expired blocks)
+      if (now - record.firstAttempt > 24 * 60 * 60 * 1000 || 
+          (record.blockedUntil && now >= record.blockedUntil)) {
+        this.attempts.delete(identifier);
+      }
+    }
+  }
 
   isBlocked(identifier: string): boolean {
     const record = this.attempts.get(identifier);
@@ -293,6 +341,32 @@ export class RateLimiter {
     const record = this.attempts.get(identifier);
     return record ? record.count : 0;
   }
+
+  // Cleanup method for manual cleanup or shutdown
+  destroy(): void {
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = null;
+    }
+    this.attempts.clear();
+  }
+
+  // Get statistics for monitoring
+  getStats(): { totalEntries: number; blockedEntries: number } {
+    const now = Date.now();
+    let blockedEntries = 0;
+    
+    for (const record of this.attempts.values()) {
+      if (record.blockedUntil && now < record.blockedUntil) {
+        blockedEntries++;
+      }
+    }
+    
+    return {
+      totalEntries: this.attempts.size,
+      blockedEntries
+    };
+  }
 }
 
 // Enhanced CSRF protection
@@ -343,12 +417,10 @@ export class CSRFProtection {
   }
 
   private static generateRandomToken(length: number): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
+    // Use cryptographically secure random generation
+    const array = new Uint8Array(length);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
   }
 
   private static cleanup(): void {

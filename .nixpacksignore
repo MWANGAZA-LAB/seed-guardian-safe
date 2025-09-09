@@ -1,0 +1,14 @@
+node_modules
+coverage
+dist
+.git
+*.log
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~

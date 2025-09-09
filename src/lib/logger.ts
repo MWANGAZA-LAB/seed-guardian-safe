@@ -15,12 +15,14 @@ export interface LogEntry {
   error?: Error;
 }
 
+import { isDevelopment } from './env';
+
 class Logger {
   private logLevel: LogLevel;
   private isDevelopment: boolean;
 
   constructor() {
-    this.isDevelopment = import.meta.env.DEV;
+    this.isDevelopment = isDevelopment();
     this.logLevel = this.isDevelopment ? LogLevel.DEBUG : LogLevel.INFO;
   }
 

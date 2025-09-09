@@ -10,10 +10,11 @@ import {
 } from '@/lib/errors';
 import { measureApiCall } from '@/lib/performance';
 import { CSRFProtection, InputSanitizer, SecurityAudit } from '@/lib/security';
+import { getEnvVar } from '@/lib/env';
 
 // API configuration
 const API_CONFIG = {
-  baseURL: import.meta.env.VITE_SUPABASE_URL,
+  baseURL: getEnvVar('VITE_SUPABASE_URL'),
   timeout: 30000, // 30 seconds
   retryAttempts: 3,
   retryDelay: 1000, // 1 second

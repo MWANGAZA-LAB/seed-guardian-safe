@@ -1,4 +1,6 @@
 // Environment configuration with proper validation
+import { getEnvVar, getMode } from '@/lib/env';
+
 export interface EnvironmentConfig {
   supabase: {
     url: string;
@@ -23,13 +25,13 @@ export interface EnvironmentConfig {
 
 function validateEnvironment(): EnvironmentConfig {
   const requiredEnvVars = {
-    VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
-    VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
-    VITE_BITCOIN_RPC_HOST: import.meta.env.VITE_BITCOIN_RPC_HOST,
-    VITE_BITCOIN_RPC_PORT: import.meta.env.VITE_BITCOIN_RPC_PORT,
-    VITE_BITCOIN_RPC_USERNAME: import.meta.env.VITE_BITCOIN_RPC_USERNAME,
-    VITE_SENDGRID_API_KEY: import.meta.env.VITE_SENDGRID_API_KEY,
-    VITE_FROM_EMAIL: import.meta.env.VITE_FROM_EMAIL,
+    VITE_SUPABASE_URL: getEnvVar('VITE_SUPABASE_URL'),
+    VITE_SUPABASE_ANON_KEY: getEnvVar('VITE_SUPABASE_ANON_KEY'),
+    VITE_BITCOIN_RPC_HOST: getEnvVar('VITE_BITCOIN_RPC_HOST'),
+    VITE_BITCOIN_RPC_PORT: getEnvVar('VITE_BITCOIN_RPC_PORT'),
+    VITE_BITCOIN_RPC_USERNAME: getEnvVar('VITE_BITCOIN_RPC_USERNAME'),
+    VITE_SENDGRID_API_KEY: getEnvVar('VITE_SENDGRID_API_KEY'),
+    VITE_FROM_EMAIL: getEnvVar('VITE_FROM_EMAIL'),
   };
 
   // Validate required environment variables
@@ -50,7 +52,7 @@ function validateEnvironment(): EnvironmentConfig {
       rpcHost: requiredEnvVars.VITE_BITCOIN_RPC_HOST!,
       rpcPort: parseInt(requiredEnvVars.VITE_BITCOIN_RPC_PORT!, 10),
       rpcUsername: requiredEnvVars.VITE_BITCOIN_RPC_USERNAME!,
-      rpcPassword: import.meta.env.VITE_BITCOIN_RPC_PASSWORD || '',
+      rpcPassword: getEnvVar('VITE_BITCOIN_RPC_PASSWORD', ''),
     },
     email: {
       sendGridApiKey: requiredEnvVars.VITE_SENDGRID_API_KEY!,
@@ -59,7 +61,7 @@ function validateEnvironment(): EnvironmentConfig {
     app: {
       name: 'Seed Guardian Safe',
       version: '1.0.0',
-      environment: (import.meta.env.MODE as EnvironmentConfig['app']['environment']) || 'development',
+      environment: (getMode() as EnvironmentConfig['app']['environment']) || 'development',
     },
   };
 }

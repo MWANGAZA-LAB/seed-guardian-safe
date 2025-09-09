@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { AppError, ErrorBoundaryProps, ErrorBoundaryState } from '@/lib/errors';
 import { logger } from '@/lib/logger';
+import { isDevelopment } from '@/lib/env';
 
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
@@ -70,7 +71,7 @@ interface DefaultErrorFallbackProps {
 }
 
 const DefaultErrorFallback: React.FC<DefaultErrorFallbackProps> = ({ error, resetError }) => {
-  const isDevelopment = import.meta.env.DEV;
+  const isDev = isDevelopment();
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">

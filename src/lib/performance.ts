@@ -1,5 +1,6 @@
 // Performance monitoring and optimization utilities
 import React from 'react';
+import { isDevelopment } from './env';
 
 export interface PerformanceMetric {
   name: string;
@@ -22,7 +23,7 @@ class PerformanceMonitor {
   private isEnabled: boolean;
 
   constructor() {
-    this.isEnabled = import.meta.env.DEV || localStorage.getItem('performance_monitoring') === 'true';
+    this.isEnabled = isDevelopment() || (typeof localStorage !== 'undefined' && localStorage.getItem('performance_monitoring') === 'true');
   }
 
   startTimer(name: string, metadata?: Record<string, unknown>): void {

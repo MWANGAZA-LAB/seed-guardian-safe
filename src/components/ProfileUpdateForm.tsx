@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { 
   User, 
   Mail, 
@@ -12,9 +14,13 @@ import {
   Save,
   Loader2,
   Eye,
-  EyeOff
+  EyeOff,
+  Settings,
+  Key,
+  Bell
 } from 'lucide-react';
 import { useProtocol } from '@/hooks/useProtocol';
+import { useUserSettings } from '@/hooks/useUserSettings';
 import { logger } from '@/lib/logger';
 import { toast } from '@/hooks/use-toast';
 
@@ -70,6 +76,7 @@ export default function ProfileUpdateForm({
   onCancel 
 }: ProfileUpdateFormProps) {
   useProtocol();
+  const { settings, isLoading, isSaving, updateSetting, updateNestedSetting } = useUserSettings();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'preferences' | 'password'>('profile');
   const [showPasswords, setShowPasswords] = useState({
@@ -78,35 +85,36 @@ export default function ProfileUpdateForm({
     confirm: false
   });
   
-  const [profileForm, setProfileForm] = useState<ProfileForm>({
-    username: '',
-    email: '',
+  // Extended profile form with additional fields
+  const [profileForm, setProfileForm] = useState({
+    username: settings.displayName,
+    email: settings.email,
     phone: '',
     firstName: '',
     lastName: '',
     bio: '',
     timezone: 'UTC',
-    language: 'en',
+    language: settings.language,
     notifications: {
-      email: true,
+      email: settings.notifications.email,
       sms: false,
       push: true,
-      recovery: true,
-      security: true,
+      recovery: settings.notifications.recoveryRequests,
+      security: settings.notifications.securityAlerts,
       transactions: true
     },
     security: {
-      twoFactorEnabled: false,
-      backupCodesGenerated: false,
-      lastPasswordChange: '',
-      loginNotifications: true,
-      deviceTrust: false
+      twoFactorEnabled: settings.security.twoFactorEnabled,
+      backupCodesGenerated: settings.security.backupCodesGenerated,
+      lastPasswordChange: settings.security.lastPasswordChange,
+      loginNotifications: settings.security.loginNotifications,
+      deviceTrust: settings.security.deviceTrust
     },
     preferences: {
-      theme: 'system',
-      currency: 'BTC',
-      dateFormat: 'MM/DD/YYYY',
-      timeFormat: '12h',
+      theme: settings.theme,
+      currency: 'BTC' as const,
+      dateFormat: 'MM/DD/YYYY' as const,
+      timeFormat: '12h' as const,
       autoLock: 30,
       sessionTimeout: 120
     }
@@ -724,8 +732,8 @@ export default function ProfileUpdateForm({
   const tabs = [
     { id: 'profile', label: 'Profile', icon: <User className="h-4 w-4" /> },
     { id: 'security', label: 'Security', icon: <Shield className="h-4 w-4" /> },
-    { id: 'preferences', label: 'Preferences', icon: <Mail className="h-4 w-4" /> },
-    { id: 'password', label: 'Password', icon: <Shield className="h-4 w-4" /> }
+    { id: 'preferences', label: 'Preferences', icon: <Settings className="h-4 w-4" /> },
+    { id: 'password', label: 'Password', icon: <Key className="h-4 w-4" /> }
   ];
 
   return (

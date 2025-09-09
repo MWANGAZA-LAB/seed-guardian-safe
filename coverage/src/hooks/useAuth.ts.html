@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/117</span>
+                <span class='fraction'>0/111</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/97</span>
+                <span class='fraction'>0/91</span>
             </div>
         
             
@@ -353,12 +353,6 @@
 <a name='L288'></a><a href='#L288'>288</a>
 <a name='L289'></a><a href='#L289'>289</a>
 <a name='L290'></a><a href='#L290'>290</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -377,7 +371,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -642,12 +642,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Custom authentication hook with proper state management and security
-<span class="cstat-no" title="statement not covered" >import { useState, useEffect, useCallback } from 'react';</span>
+import { useState, useEffect, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-<span class="cstat-no" title="statement not covered" >import { supabaseClient } from '@/integrations/supabase/client';</span>
-<span class="cstat-no" title="statement not covered" >import { logger } from '@/lib/logger';</span>
-<span class="cstat-no" title="statement not covered" >import { AuthenticationError, AppError } from '@/lib/errors';</span>
-<span class="cstat-no" title="statement not covered" >import { useErrorHandler } from '@/components/ErrorBoundary';</span>
+import { supabaseClient } from '@/integrations/supabase/client';
+import { logger } from '@/lib/logger';
+import { AuthenticationError, AppError } from '@/lib/errors';
+import { useErrorHandler } from '@/components/ErrorBoundary';
 &nbsp;
 export interface AuthState {
   user: User | null;
@@ -666,7 +666,7 @@ export interface AuthActions {
   clearError: () =&gt; void;
 }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export function <span class="fstat-no" title="function not covered" >u</span>seAuth(</span>): AuthState &amp; AuthActions {
+export function <span class="fstat-no" title="function not covered" >useAuth(</span>): AuthState &amp; AuthActions {
   const [state, setState] = <span class="cstat-no" title="statement not covered" >useState&lt;AuthState&gt;({</span>
     user: null,
     session: null,
@@ -908,28 +908,28 @@ export interface AuthActions {
 }
 &nbsp;
 // Hook for checking if user is authenticated
-<span class="cstat-no" title="statement not covered" >export function <span class="fstat-no" title="function not covered" >u</span>seIsAuthenticated(</span>): boolean {
+export const useIsAuthenticated = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(): boolean =</span>&gt; {</span>
   const { user, loading } = <span class="cstat-no" title="statement not covered" >useAuth();</span>
 <span class="cstat-no" title="statement not covered" >  return !loading &amp;&amp; !!user;</span>
-}
+};
 &nbsp;
 // Hook for getting current user
-<span class="cstat-no" title="statement not covered" >export function <span class="fstat-no" title="function not covered" >u</span>seCurrentUser(</span>): User | null {
+export const useCurrentUser = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(): User | null =</span>&gt; {</span>
   const { user } = <span class="cstat-no" title="statement not covered" >useAuth();</span>
 <span class="cstat-no" title="statement not covered" >  return user;</span>
-}
+};
 &nbsp;
 // Hook for getting current session
-<span class="cstat-no" title="statement not covered" >export function <span class="fstat-no" title="function not covered" >u</span>seCurrentSession(</span>): Session | null {
+export const useCurrentSession = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(): Session | null =</span>&gt; {</span>
   const { session } = <span class="cstat-no" title="statement not covered" >useAuth();</span>
 <span class="cstat-no" title="statement not covered" >  return session;</span>
-}
+};
 &nbsp;
 // Hook for checking if auth is loading
-<span class="cstat-no" title="statement not covered" >export function <span class="fstat-no" title="function not covered" >u</span>seAuthLoading(</span>): boolean {
+export const useAuthLoading = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(): boolean =</span>&gt; {</span>
   const { loading } = <span class="cstat-no" title="statement not covered" >useAuth();</span>
 <span class="cstat-no" title="statement not covered" >  return loading;</span>
-}
+};
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -937,7 +937,7 @@ export interface AuthActions {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-26T16:04:04.976Z
+                at 2025-09-09T21:03:15.715Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

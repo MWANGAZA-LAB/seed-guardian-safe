@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/93</span>
+                <span class='fraction'>0/88</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/93</span>
+                <span class='fraction'>0/88</span>
             </div>
         
             
@@ -310,29 +310,6 @@
 <a name='L245'></a><a href='#L245'>245</a>
 <a name='L246'></a><a href='#L246'>246</a>
 <a name='L247'></a><a href='#L247'>247</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -341,6 +318,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -556,17 +556,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Supabase client with proper configuration and error handling
-<span class="cstat-no" title="statement not covered" >import { createClient } from '@supabase/supabase-js';</span>
+import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
-<span class="cstat-no" title="statement not covered" >import { getSupabaseConfig } from '@/config/environment';</span>
-<span class="cstat-no" title="statement not covered" >import { logger } from '@/lib/logger';</span>
-<span class="cstat-no" title="statement not covered" >import { AuthenticationError, NetworkError } from '@/lib/errors';</span>
+import { getSupabaseConfig } from '@/config/environment';
+import { logger } from '@/lib/logger';
+import { AuthenticationError, NetworkError } from '@/lib/errors';
 &nbsp;
 // Get configuration from environment
 const config = <span class="cstat-no" title="statement not covered" >getSupabaseConfig();</span>
 &nbsp;
 // Create Supabase client with proper configuration
-export const <span class="cstat-no" title="statement not covered" >supabase = createClient&lt;Database&gt;(config.url, config.anonKey, {</span>
+export const supabase = <span class="cstat-no" title="statement not covered" >createClient&lt;Database&gt;(config.url, config.anonKey, {</span>
   auth: {
     storage: localStorage,
     persistSession: true,
@@ -586,7 +586,7 @@ export const <span class="cstat-no" title="statement not covered" >supabase = cr
 });
 &nbsp;
 // Enhanced client with error handling and logging
-<span class="cstat-no" title="statement not covered" >export class S</span>upabaseClient {
+export class SupabaseClient {
   private static instance: SupabaseClient;
   private <span class="cstat-no" title="statement not covered" >client = supabase;</span>
 &nbsp;
@@ -718,7 +718,7 @@ export const <span class="cstat-no" title="statement not covered" >supabase = cr
   }
 &nbsp;
   // Enhanced database methods with error handling
-<span class="fstat-no" title="function not covered" >  async </span>query&lt;T = any&gt;(table: string, query: any) {
+<span class="fstat-no" title="function not covered" >  async </span>query&lt;T = unknown&gt;(table: string, query: Record&lt;string, unknown&gt;) {
 <span class="cstat-no" title="statement not covered" >    try {</span>
       const { data, error } = <span class="cstat-no" title="statement not covered" >await this.client</span>
         .from(table)
@@ -736,7 +736,7 @@ export const <span class="cstat-no" title="statement not covered" >supabase = cr
     }
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  async </span>insert&lt;T = any&gt;(table: string, data: any) {
+<span class="fstat-no" title="function not covered" >  async </span>insert&lt;T = unknown&gt;(table: string, data: Record&lt;string, unknown&gt;) {
 <span class="cstat-no" title="statement not covered" >    try {</span>
       const { data: result, error } = <span class="cstat-no" title="statement not covered" >await this.client</span>
         .from(table)
@@ -756,11 +756,11 @@ export const <span class="cstat-no" title="statement not covered" >supabase = cr
     }
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  async </span>update&lt;T = any&gt;(table: string, data: Record&lt;string, any&gt;, match: Record&lt;string, any&gt;) {
+<span class="fstat-no" title="function not covered" >  async </span>update&lt;T = unknown&gt;(table: string, data: Record&lt;string, unknown&gt;, match: Record&lt;string, unknown&gt;) {
 <span class="cstat-no" title="statement not covered" >    try {</span>
       const { data: result, error } = <span class="cstat-no" title="statement not covered" >await this.client</span>
         .from(table)
-        .update(data as any)
+        .update(data)
         .match(match)
         .select()
         .single();
@@ -777,7 +777,7 @@ export const <span class="cstat-no" title="statement not covered" >supabase = cr
     }
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  async </span>delete(table: string, match: any) {
+<span class="fstat-no" title="function not covered" >  async </span>delete(table: string, match: Record&lt;string, unknown&gt;) {
 <span class="cstat-no" title="statement not covered" >    try {</span>
       const { error } = <span class="cstat-no" title="statement not covered" >await this.client</span>
         .from(table)
@@ -801,14 +801,14 @@ export const <span class="cstat-no" title="statement not covered" >supabase = cr
 }
 &nbsp;
 // Export singleton instance
-export const <span class="cstat-no" title="statement not covered" >supabaseClient = SupabaseClient.getInstance();</span></pre></td></tr></table></pre>
+export const supabaseClient = <span class="cstat-no" title="statement not covered" >SupabaseClient.getInstance();</span></pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-26T16:04:04.563Z
+                at 2025-09-09T21:03:14.963Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

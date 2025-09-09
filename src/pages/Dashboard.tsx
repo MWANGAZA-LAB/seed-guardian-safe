@@ -2,13 +2,17 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Plus, Settings, Shield, Users, Wallet } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { ArrowLeft, Plus, Settings, Shield, Users, Wallet, TrendingUp, AlertTriangle, Clock } from 'lucide-react';
 import WalletDashboard from '@/components/WalletDashboard';
+import { useWalletData } from '@/hooks/useWalletData';
 import { toast } from '@/hooks/use-toast';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [activeWallet, setActiveWallet] = useState<string | null>(null);
+  const { wallets, isLoading, getWalletStats } = useWalletData();
+  const stats = getWalletStats();
 
   const handleCreateWallet = () => {
     navigate('/create-wallet');
@@ -91,6 +95,57 @@ const Dashboard = () => {
               </p>
             </div>
 
+            {/* Statistics */}
+            <div className="grid md:grid-cols-4 gap-6 mb-12">
+              <Card className="bg-gradient-card border-primary/10">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Total Balance</p>
+                      <p className="text-2xl font-bold">{(stats.totalBalance / 100000000).toFixed(4)} BTC</p>
+                    </div>
+                    <TrendingUp className="h-8 w-8 text-bitcoin" />
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-card border-primary/10">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Active Wallets</p>
+                      <p className="text-2xl font-bold">{stats.activeWallets}</p>
+                    </div>
+                    <Wallet className="h-8 w-8 text-bitcoin" />
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-card border-primary/10">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Total Guardians</p>
+                      <p className="text-2xl font-bold">{stats.totalGuardians}</p>
+                    </div>
+                    <Users className="h-8 w-8 text-bitcoin" />
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-gradient-card border-primary/10">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Pending Recoveries</p>
+                      <p className="text-2xl font-bold">{stats.pendingRecoveries}</p>
+                    </div>
+                    <AlertTriangle className="h-8 w-8 text-orange-500" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
             {/* Quick Actions */}
             <div className="grid md:grid-cols-3 gap-6 mb-12">
               <Card className="bg-gradient-card border-primary/10 hover:border-primary/20 transition-smooth cursor-pointer">
@@ -133,27 +188,71 @@ const Dashboard = () => {
               </Card>
             </div>
 
-            {/* Demo Wallet */}
+            {/* Wallet List */}
             <Card className="bg-gradient-card border-primary/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Wallet className="w-5 h-5" />
-                  Demo Wallet
+                  Your Wallets
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-4">
-                    Click below to view a demo wallet dashboard
-                  </p>
-                  <Button
-                    variant="hero"
-                    onClick={() => handleWalletSelect('demo-wallet-1')}
-                    className="px-8"
-                  >
-                    View Demo Wallet
-                  </Button>
-                </div>
+                {isLoading ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-bitcoin mx-auto mb-4"></div>
+                    <p className="text-muted-foreground">Loading wallets...</p>
+                  </div>
+                ) : wallets.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Wallet className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground mb-4">
+                      You don't have any wallets yet. Create your first wallet to get started.
+                    </p>
+                    <Button
+                      variant="hero"
+                      onClick={handleCreateWallet}
+                      className="px-8"
+                    >
+                      Create Your First Wallet
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {wallets.map((wallet) => (
+                      <div
+                        key={wallet.id}
+                        className="flex items-center justify-between p-4 border border-border/50 rounded-lg hover:border-primary/20 transition-colors cursor-pointer"
+                        onClick={() => handleWalletSelect(wallet.id)}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-bitcoin/10 rounded-full flex items-center justify-center">
+                            <Wallet className="w-5 h-5 text-bitcoin" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold">{wallet.name}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              {(wallet.balance / 100000000).toFixed(4)} BTC
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge 
+                            variant={wallet.status === 'active' ? 'default' : 'secondary'}
+                            className="capitalize"
+                          >
+                            {wallet.status}
+                          </Badge>
+                          {wallet.recoveryRequests.length > 0 && (
+                            <Badge variant="destructive" className="flex items-center gap-1">
+                              <AlertTriangle className="w-3 h-3" />
+                              {wallet.recoveryRequests.length} Recovery
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

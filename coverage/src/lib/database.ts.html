@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/110</span>
+                <span class='fraction'>0/106</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/105</span>
+                <span class='fraction'>0/101</span>
             </div>
         
             
@@ -681,11 +681,11 @@
 <a name='L616'></a><a href='#L616'>616</a>
 <a name='L617'></a><a href='#L617'>617</a>
 <a name='L618'></a><a href='#L618'>618</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -955,7 +955,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1298,9 +1298,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Database optimization utilities and query performance monitoring
-<span class="cstat-no" title="statement not covered" >import { supabaseClient } from '@/integrations/supabase/client';</span>
-<span class="cstat-no" title="statement not covered" >import { logger } from './logger';</span>
-<span class="cstat-no" title="statement not covered" >import { measureApiCall } from './performance';</span>
+import { supabaseClient } from '@/integrations/supabase/client';
+import { logger } from './logger';
+import { measureApiCall } from './performance';
 &nbsp;
 // Database configuration
 const DB_CONFIG = <span class="cstat-no" title="statement not covered" >{</span>
@@ -1335,9 +1335,9 @@ interface QueryMetrics {
 &nbsp;
 // Database query cache
 <span class="fstat-no" title="function not covered" >class Q</span>ueryCache {
-  private <span class="cstat-no" title="statement not covered" >cache = new Map&lt;string, { data: any; timestamp: number; ttl: number }&gt;();</span>
+  private <span class="cstat-no" title="statement not covered" >cache = new Map&lt;string, { data: unknown; timestamp: number; ttl: number }&gt;();</span>
 &nbsp;
-<span class="fstat-no" title="function not covered" >  set(</span>key: string, data: any, ttl: number = <span class="branch-0 cbranch-no" title="branch not covered" >DB_CONFIG.cache.ttl)</span>: void {
+<span class="fstat-no" title="function not covered" >  set(</span>key: string, data: unknown, ttl: number = <span class="branch-0 cbranch-no" title="branch not covered" >DB_CONFIG.cache.ttl)</span>: void {
 <span class="cstat-no" title="statement not covered" >    this.cache.set(key, {</span>
       data,
       timestamp: Date.now(),
@@ -1348,7 +1348,7 @@ interface QueryMetrics {
 <span class="cstat-no" title="statement not covered" >    this.cleanup();</span>
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  get(</span>key: string): any | null {
+<span class="fstat-no" title="function not covered" >  get&lt;</span>T&gt;(key: string): T | null {
     const entry = <span class="cstat-no" title="statement not covered" >this.cache.get(key);</span>
 <span class="cstat-no" title="statement not covered" >    if (!entry) <span class="cstat-no" title="statement not covered" >return null;</span></span>
 &nbsp;
@@ -1357,7 +1357,7 @@ interface QueryMetrics {
 <span class="cstat-no" title="statement not covered" >      return null;</span>
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return entry.data;</span>
+<span class="cstat-no" title="statement not covered" >    return entry.data as T;</span>
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  clear(</span>): void {
@@ -1394,7 +1394,7 @@ interface QueryMetrics {
   // Optimized query execution with caching and metrics
 <span class="fstat-no" title="function not covered" >  async </span>executeQuery&lt;T&gt;(
     query: string,
-    params?: any[],
+    params?: unknown[],
     options: {
       cache?: boolean;
       cacheKey?: string;
@@ -1462,7 +1462,7 @@ interface QueryMetrics {
   // Execute query with timeout
   private <span class="fstat-no" title="function not covered" >async </span>executeWithTimeout&lt;T&gt;(
     query: string,
-    params?: any[],
+    params?: unknown[],
     timeout: number = <span class="branch-0 cbranch-no" title="branch not covered" >DB_CONFIG.queryTimeout</span>
   ): Promise&lt;T&gt; {
 <span class="cstat-no" title="statement not covered" >    return new Promise(<span class="fstat-no" title="function not covered" >(r</span>esolve, reject) =&gt; {</span>
@@ -1484,7 +1484,7 @@ interface QueryMetrics {
   }
 &nbsp;
   // Execute raw query using Supabase
-  private <span class="fstat-no" title="function not covered" >async </span>executeRawQuery&lt;T&gt;(query: string, params?: any[]): Promise&lt;T&gt; {
+  private <span class="fstat-no" title="function not covered" >async </span>executeRawQuery&lt;T&gt;(query: string, params?: unknown[]): Promise&lt;T&gt; {
     const { data, error } = <span class="cstat-no" title="statement not covered" >await supabaseClient.getClient().rpc('execute_sql', {</span>
       sql_query: query,
       sql_params: params || [],
@@ -1498,7 +1498,7 @@ interface QueryMetrics {
   }
 &nbsp;
   // Generate cache key from query and parameters
-  private <span class="fstat-no" title="function not covered" >generateCacheKey(</span>query: string, params?: any[]): string {
+  private <span class="fstat-no" title="function not covered" >generateCacheKey(</span>query: string, params?: unknown[]): string {
     const paramString = <span class="cstat-no" title="statement not covered" >params ? JSON.stringify(params) : '';</span>
 <span class="cstat-no" title="statement not covered" >    return `${query}:${paramString}`;</span>
   }
@@ -1572,7 +1572,7 @@ interface QueryMetrics {
 }
 &nbsp;
 // Database schema optimization recommendations
-<span class="cstat-no" title="statement not covered" >export class D</span>atabaseOptimizer {
+export class DatabaseOptimizer {
   // Recommended indexes for common queries
 <span class="fstat-no" title="function not covered" >  static </span>getRecommendedIndexes(): Array&lt;{
     table: string;
@@ -1912,8 +1912,8 @@ interface QueryMetrics {
 }
 &nbsp;
 // Export database utilities
-export const <span class="cstat-no" title="statement not covered" >dbOptimizer = QueryOptimizer.getInstance();</span>
-export const <span class="cstat-no" title="statement not covered" >databaseOptimizer = DatabaseOptimizer;</span>
+export const dbOptimizer = <span class="cstat-no" title="statement not covered" >QueryOptimizer.getInstance();</span>
+export const databaseOptimizer = <span class="cstat-no" title="statement not covered" >DatabaseOptimizer;</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -1921,7 +1921,7 @@ export const <span class="cstat-no" title="statement not covered" >databaseOptim
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-26T16:04:04.976Z
+                at 2025-09-09T21:03:15.715Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/20</span>
+                <span class='fraction'>0/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
@@ -136,7 +136,11 @@
 <a name='L71'></a><a href='#L71'>71</a>
 <a name='L72'></a><a href='#L72'>72</a>
 <a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -210,6 +214,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Environment configuration with proper validation
+import { getEnvVar, getMode } from '@/lib/env';
+&nbsp;
 export interface EnvironmentConfig {
   supabase: {
     url: string;
@@ -234,13 +240,13 @@ export interface EnvironmentConfig {
 &nbsp;
 function <span class="fstat-no" title="function not covered" >validateEnvironment(</span>): EnvironmentConfig {
   const requiredEnvVars = <span class="cstat-no" title="statement not covered" >{</span>
-    VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
-    VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
-    VITE_BITCOIN_RPC_HOST: import.meta.env.VITE_BITCOIN_RPC_HOST,
-    VITE_BITCOIN_RPC_PORT: import.meta.env.VITE_BITCOIN_RPC_PORT,
-    VITE_BITCOIN_RPC_USERNAME: import.meta.env.VITE_BITCOIN_RPC_USERNAME,
-    VITE_SENDGRID_API_KEY: import.meta.env.VITE_SENDGRID_API_KEY,
-    VITE_FROM_EMAIL: import.meta.env.VITE_FROM_EMAIL,
+    VITE_SUPABASE_URL: getEnvVar('VITE_SUPABASE_URL'),
+    VITE_SUPABASE_ANON_KEY: getEnvVar('VITE_SUPABASE_ANON_KEY'),
+    VITE_BITCOIN_RPC_HOST: getEnvVar('VITE_BITCOIN_RPC_HOST'),
+    VITE_BITCOIN_RPC_PORT: getEnvVar('VITE_BITCOIN_RPC_PORT'),
+    VITE_BITCOIN_RPC_USERNAME: getEnvVar('VITE_BITCOIN_RPC_USERNAME'),
+    VITE_SENDGRID_API_KEY: getEnvVar('VITE_SENDGRID_API_KEY'),
+    VITE_FROM_EMAIL: getEnvVar('VITE_FROM_EMAIL'),
   };
 &nbsp;
   // Validate required environment variables
@@ -261,7 +267,7 @@ function <span class="fstat-no" title="function not covered" >validateEnvironmen
       rpcHost: requiredEnvVars.VITE_BITCOIN_RPC_HOST!,
       rpcPort: parseInt(requiredEnvVars.VITE_BITCOIN_RPC_PORT!, 10),
       rpcUsername: requiredEnvVars.VITE_BITCOIN_RPC_USERNAME!,
-      rpcPassword: import.meta.env.VITE_BITCOIN_RPC_PASSWORD || '',
+      rpcPassword: getEnvVar('VITE_BITCOIN_RPC_PASSWORD', ''),
     },
     email: {
       sendGridApiKey: requiredEnvVars.VITE_SENDGRID_API_KEY!,
@@ -270,18 +276,18 @@ function <span class="fstat-no" title="function not covered" >validateEnvironmen
     app: {
       name: 'Seed Guardian Safe',
       version: '1.0.0',
-      environment: (import.meta.env.MODE as EnvironmentConfig['app']['environment']) || 'development',
+      environment: (getMode() as EnvironmentConfig['app']['environment']) || 'development',
     },
   };
 }
 &nbsp;
-export const <span class="cstat-no" title="statement not covered" >config = validateEnvironment();</span>
+export const config = <span class="cstat-no" title="statement not covered" >validateEnvironment();</span>
 &nbsp;
 // Type-safe environment getters
-export const <span class="cstat-no" title="statement not covered" >getSupabaseConfig = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span>) =</span>&gt; <span class="cstat-no" title="statement not covered" >config.supabase;</span></span>
-export const <span class="cstat-no" title="statement not covered" >getBitcoinConfig = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span>) =</span>&gt; <span class="cstat-no" title="statement not covered" >config.bitcoin;</span></span>
-export const <span class="cstat-no" title="statement not covered" >getEmailConfig = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span>) =</span>&gt; <span class="cstat-no" title="statement not covered" >config.email;</span></span>
-export const <span class="cstat-no" title="statement not covered" >getAppConfig = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span>) =</span>&gt; <span class="cstat-no" title="statement not covered" >config.app;</span></span>
+export const getSupabaseConfig = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >config.supabase;</span></span>
+export const getBitcoinConfig = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >config.bitcoin;</span></span>
+export const getEmailConfig = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >config.email;</span></span>
+export const getAppConfig = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >config.app;</span></span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -289,7 +295,7 @@ export const <span class="cstat-no" title="statement not covered" >getAppConfig 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-26T16:04:04.976Z
+                at 2025-09-09T21:03:15.715Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

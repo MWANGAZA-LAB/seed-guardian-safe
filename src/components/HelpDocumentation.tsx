@@ -63,7 +63,15 @@ Trusted individuals who hold encrypted shares of your wallet. They can help you 
 A secure process that requires approval from a threshold number of guardians to restore wallet access.
 
 ### Audit Logs
-Cryptographically signed records of all wallet activities, ensuring transparency and security.`,
+Cryptographically signed records of all wallet activities, ensuring transparency and security.
+
+## Quick Start Guide
+
+1. **Create Your Wallet** - Set up your first Bitcoin wallet with strong security
+2. **Add Guardians** - Invite trusted individuals to help secure your inheritance
+3. **Test Recovery** - Verify the recovery process works correctly
+4. **Fund Your Wallet** - Start with small amounts and gradually increase
+5. **Monitor Activity** - Keep track of all wallet activities through audit logs`,
       subsections: [
         {
           id: 'creating-wallet',

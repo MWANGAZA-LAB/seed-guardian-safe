@@ -2,13 +2,20 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Settings as SettingsIcon, Shield, Users, Bell, Globe } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { ArrowLeft, Settings as SettingsIcon, Shield, Users, Bell, Globe, Save, Loader2 } from 'lucide-react';
 import AdvancedSettings from '@/components/AdvancedSettings';
 import SecuritySettings from '@/components/SecuritySettings';
+import { useUserSettings } from '@/hooks/useUserSettings';
+import { toast } from '@/hooks/use-toast';
 
 const Settings = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'general' | 'security' | 'advanced'>('general');
+  const { settings, isLoading, isSaving, updateSetting, updateNestedSetting } = useUserSettings();
 
   const tabs = [
     { id: 'general', label: 'General', icon: SettingsIcon },
@@ -72,47 +79,92 @@ const Settings = () => {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Display Name</label>
-                      <input
+                    <div className="space-y-2">
+                      <Label htmlFor="displayName">Display Name</Label>
+                      <Input
+                        id="displayName"
                         type="text"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Your display name"
-                        defaultValue="Bitcoin Holder"
+                        value={settings.displayName}
+                        onChange={(e) => updateSetting('displayName', e.target.value)}
+                        disabled={isLoading}
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Email Address</label>
-                      <input
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email Address</Label>
+                      <Input
+                        id="email"
                         type="email"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="your@email.com"
-                        defaultValue="user@example.com"
+                        value={settings.email}
+                        onChange={(e) => updateSetting('email', e.target.value)}
+                        disabled={isLoading}
                       />
                     </div>
                   </div>
                   
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Theme</label>
-                    <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option value="dark">Dark</option>
-                      <option value="light">Light</option>
-                      <option value="system">System</option>
-                    </select>
+                  <div className="space-y-2">
+                    <Label htmlFor="theme">Theme</Label>
+                    <Select
+                      value={settings.theme}
+                      onValueChange={(value: 'light' | 'dark' | 'system') => updateSetting('theme', value)}
+                      disabled={isLoading}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select theme" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="dark">Dark</SelectItem>
+                        <SelectItem value="light">Light</SelectItem>
+                        <SelectItem value="system">System</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Language</label>
-                    <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option value="en">English</option>
-                      <option value="es">Español</option>
-                      <option value="fr">Français</option>
-                      <option value="de">Deutsch</option>
-                    </select>
+                  <div className="space-y-2">
+                    <Label htmlFor="language">Language</Label>
+                    <Select
+                      value={settings.language}
+                      onValueChange={(value: 'en' | 'es' | 'fr' | 'de') => updateSetting('language', value)}
+                      disabled={isLoading}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select language" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="en">English</SelectItem>
+                        <SelectItem value="es">Español</SelectItem>
+                        <SelectItem value="fr">Français</SelectItem>
+                        <SelectItem value="de">Deutsch</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   
-                  <Button variant="hero" className="w-full">
-                    Save General Settings
+                  <Button 
+                    variant="hero" 
+                    className="w-full"
+                    onClick={async () => {
+                      const success = await updateSetting('displayName', settings.displayName);
+                      if (success) {
+                        toast({
+                          title: "Settings Saved",
+                          description: "Your general settings have been updated successfully.",
+                        });
+                      }
+                    }}
+                    disabled={isSaving || isLoading}
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4 mr-2" />
+                        Save General Settings
+                      </>
+                    )}
                   </Button>
                 </CardContent>
               </Card>
@@ -130,7 +182,11 @@ const Settings = () => {
                       <div className="font-medium">Email Notifications</div>
                       <div className="text-sm text-muted-foreground">Receive important updates via email</div>
                     </div>
-                    <input type="checkbox" defaultChecked className="w-4 h-4" />
+                    <Switch
+                      checked={settings.notifications.email}
+                      onCheckedChange={(checked) => updateNestedSetting('notifications', 'email', checked)}
+                      disabled={isLoading}
+                    />
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -138,7 +194,11 @@ const Settings = () => {
                       <div className="font-medium">Guardian Alerts</div>
                       <div className="text-sm text-muted-foreground">Notifications about guardian activities</div>
                     </div>
-                    <input type="checkbox" defaultChecked className="w-4 h-4" />
+                    <Switch
+                      checked={settings.notifications.guardianAlerts}
+                      onCheckedChange={(checked) => updateNestedSetting('notifications', 'guardianAlerts', checked)}
+                      disabled={isLoading}
+                    />
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -146,7 +206,11 @@ const Settings = () => {
                       <div className="font-medium">Security Alerts</div>
                       <div className="text-sm text-muted-foreground">Critical security notifications</div>
                     </div>
-                    <input type="checkbox" defaultChecked className="w-4 h-4" />
+                    <Switch
+                      checked={settings.notifications.securityAlerts}
+                      onCheckedChange={(checked) => updateNestedSetting('notifications', 'securityAlerts', checked)}
+                      disabled={isLoading}
+                    />
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -154,7 +218,11 @@ const Settings = () => {
                       <div className="font-medium">Recovery Requests</div>
                       <div className="text-sm text-muted-foreground">Notifications for recovery processes</div>
                     </div>
-                    <input type="checkbox" defaultChecked className="w-4 h-4" />
+                    <Switch
+                      checked={settings.notifications.recoveryRequests}
+                      onCheckedChange={(checked) => updateNestedSetting('notifications', 'recoveryRequests', checked)}
+                      disabled={isLoading}
+                    />
                   </div>
                 </CardContent>
               </Card>

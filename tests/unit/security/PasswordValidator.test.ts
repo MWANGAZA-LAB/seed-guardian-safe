@@ -137,11 +137,11 @@ describe('PasswordValidator', () => {
     });
 
     it('should handle null input', () => {
-      expect(() => PasswordValidator.validate(null as any)).toThrow();
+      expect(() => PasswordValidator.validate(null as unknown)).toThrow();
     });
 
     it('should handle undefined input', () => {
-      expect(() => PasswordValidator.validate(undefined as any)).toThrow();
+      expect(() => PasswordValidator.validate(undefined as unknown)).toThrow();
     });
 
     it('should handle very long passwords', () => {

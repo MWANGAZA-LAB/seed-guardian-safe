@@ -108,7 +108,7 @@ export function useWallets(options: UseWalletsOptions = {}): UseWalletsReturn {
   }, [deleteWalletMutation]);
 
   const clearError = useCallback(() => {
-    queryClient.setQueryData(WALLET_KEYS.lists(), (old: any) => old);
+    queryClient.setQueryData(WALLET_KEYS.lists(), (old: unknown) => old);
   }, [queryClient]);
 
   return {

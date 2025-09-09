@@ -10,7 +10,7 @@ export interface ValidationRule {
   max?: number;
   pattern?: RegExp;
   enum?: string[];
-  custom?: (value: any) => boolean | string;
+  custom?: (value: unknown) => boolean | string;
 }
 
 export interface ValidationSchema {
@@ -24,8 +24,8 @@ export class Validator {
     this.schema = schema;
   }
 
-  validate(data: any): any {
-    const result: any = {};
+  validate(data: unknown): unknown {
+    const result: Record<string, unknown> = {};
     const errors: string[] = [];
 
     for (const [field, rules] of Object.entries(this.schema)) {
@@ -46,7 +46,7 @@ export class Validator {
     return result;
   }
 
-  private validateField(field: string, value: any, rules: ValidationRule): { value?: any; error?: string } {
+  private validateField(field: string, value: unknown, rules: ValidationRule): { value?: unknown; error?: string } {
     // Check if required
     if (rules.required && (value === undefined || value === null || value === '')) {
       return { error: `${field} is required` };
@@ -115,7 +115,7 @@ export class Validator {
     return { value };
   }
 
-  private validateType(value: any, type: string): boolean {
+  private validateType(value: unknown, type: string): boolean {
     switch (type) {
       case 'string':
         return typeof value === 'string';
@@ -195,12 +195,12 @@ export const guardianSchema: ValidationSchema = {
     type: 'string',
     minLength: 2,
     maxLength: 100,
-    pattern: /^[a-zA-Z\s\-'\.]+$/,
+    pattern: /^[a-zA-Z\s\-'.]+$/,
   },
   phoneNumber: {
     required: false,
     type: 'string',
-    pattern: /^[\+]?[1-9][\d]{0,15}$/,
+    pattern: /^[+]?[1-9][\d]{0,15}$/,
   },
 };
 
@@ -286,5 +286,5 @@ export const sanitizeEmail = (email: string): string => {
 };
 
 export const sanitizePhoneNumber = (phone: string): string => {
-  return phone.replace(/[^\d+\-\(\)\s]/g, '');
+  return phone.replace(/[^\d+\-()\s]/g, '');
 };

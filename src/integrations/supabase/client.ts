@@ -199,11 +199,11 @@ export class SupabaseClient {
     }
   }
 
-  async update<T = any>(table: string, data: Record<string, any>, match: Record<string, any>) {
+  async update<T = unknown>(table: string, data: Record<string, unknown>, match: Record<string, unknown>) {
     try {
       const { data: result, error } = await this.client
         .from(table)
-        .update(data as any)
+        .update(data)
         .match(match)
         .select()
         .single();

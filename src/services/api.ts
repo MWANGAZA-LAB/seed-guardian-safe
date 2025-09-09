@@ -31,7 +31,7 @@ interface RequestConfig {
 }
 
 // Response interface
-interface ApiResponse<T = any> {
+interface ApiResponse<T = unknown> {
   data: T;
   status: number;
   statusText: string;

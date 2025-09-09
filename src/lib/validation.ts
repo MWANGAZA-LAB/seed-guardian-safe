@@ -18,14 +18,14 @@ export const passwordSchema = z.string()
   .regex(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/, 'Password must contain at least one special character');
 
 export const phoneNumberSchema = z.string()
-  .regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number format')
+  .regex(/^[+]?[1-9][\d]{0,15}$/, 'Invalid phone number format')
   .transform(phone => InputSanitizer.sanitizePhoneNumber(phone))
   .optional();
 
 export const nameSchema = z.string()
   .min(2, 'Name must be at least 2 characters')
   .max(100, 'Name must be less than 100 characters')
-  .regex(/^[a-zA-Z\s\-'\.]+$/, 'Name can only contain letters, spaces, hyphens, apostrophes, and periods')
+  .regex(/^[a-zA-Z\s\-'.]+$/, 'Name can only contain letters, spaces, hyphens, apostrophes, and periods')
   .transform(name => InputSanitizer.sanitizeString(name));
 
 export const walletNameSchema = z.string()

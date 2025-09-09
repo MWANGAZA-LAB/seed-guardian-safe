@@ -203,7 +203,7 @@ describe('API Service', () => {
         }))
       };
 
-      const { supabaseClient } = require('@/integrations/supabase/client');
+      const { supabaseClient } = await import('@/integrations/supabase/client');
       supabaseClient.getClient.mockReturnValue(mockSupabaseClient);
 
       const result = await WalletApi.getWallets();
@@ -222,7 +222,7 @@ describe('API Service', () => {
         }))
       };
 
-      const { supabaseClient } = require('@/integrations/supabase/client');
+      const { supabaseClient } = await import('@/integrations/supabase/client');
       supabaseClient.getClient.mockReturnValue(mockSupabaseClient);
 
       await expect(WalletApi.getWallets()).rejects.toThrow(AppError);
@@ -268,7 +268,7 @@ describe('API Service', () => {
         }))
       };
 
-      const { supabaseClient } = require('@/integrations/supabase/client');
+      const { supabaseClient } = await import('@/integrations/supabase/client');
       supabaseClient.getClient.mockReturnValue(mockSupabaseClient);
 
       const result = await RecoveryApi.getRecoveryRequests('test-wallet-id');
@@ -384,7 +384,7 @@ describe('API Service', () => {
         }))
       };
 
-      const { supabaseClient } = require('@/integrations/supabase/client');
+      const { supabaseClient } = await import('@/integrations/supabase/client');
       supabaseClient.getClient.mockReturnValue(mockSupabaseClient);
 
       const result = await GuardianApi.getGuardianByToken('test-token');

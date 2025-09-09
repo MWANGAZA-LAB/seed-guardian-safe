@@ -86,7 +86,7 @@ describe('CSRFProtection', () => {
 
     it('should reject null token', () => {
       const sessionId = 'test-session';
-      const isValid = CSRFProtection.validateToken(sessionId, null as any);
+      const isValid = CSRFProtection.validateToken(sessionId, null as unknown);
       expect(isValid).toBe(false);
     });
   });

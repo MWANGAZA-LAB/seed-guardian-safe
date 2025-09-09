@@ -159,7 +159,7 @@ export const createErrorResponse = (error: AppError): Response => {
 };
 
 // Success response helper
-export const createSuccessResponse = (data: any, statusCode: number = 200): Response => {
+export const createSuccessResponse = (data: unknown, statusCode: number = 200): Response => {
   return new Response(JSON.stringify(data), {
     status: statusCode,
     headers: {

@@ -181,7 +181,7 @@ describe('InputSanitizer', () => {
     it('should fallback to string sanitization on server side', () => {
       // Mock window as undefined to simulate server-side environment
       const originalWindow = global.window;
-      delete (global as any).window;
+      delete (global as Record<string, unknown>).window;
 
       const input = '<p>Hello <script>alert("xss")</script></p>';
       const sanitized = InputSanitizer.sanitizeHtml(input);
@@ -196,11 +196,11 @@ describe('InputSanitizer', () => {
 
   describe('edge cases', () => {
     it('should handle null input', () => {
-      expect(() => InputSanitizer.sanitizeString(null as any)).toThrow();
+      expect(() => InputSanitizer.sanitizeString(null as unknown)).toThrow();
     });
 
     it('should handle undefined input', () => {
-      expect(() => InputSanitizer.sanitizeString(undefined as any)).toThrow();
+      expect(() => InputSanitizer.sanitizeString(undefined as unknown)).toThrow();
     });
 
     it('should handle empty string', () => {

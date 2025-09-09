@@ -160,12 +160,13 @@ export class InputSanitizer {
       sanitized = sanitized.replace(/<[^>]*>/g, '');
     } else if (allowedTags.length > 0) {
       // Allow only specific tags
-      const allowedTagsRegex = new RegExp(`<(?!\/?(?:${allowedTags.join('|')})\b)[^>]+>`, 'gi');
+      const allowedTagsRegex = new RegExp(`<(?!\\/?(?:${allowedTags.join('|')})\\b)[^>]+>`, 'gi');
       sanitized = sanitized.replace(allowedTagsRegex, '');
     }
 
-    // Remove null bytes and control characters
-    sanitized = sanitized.replace(/[\u0000-\u001F\u007F]/g, '');
+    // Remove null bytes and control characters (excluding common whitespace)
+    // eslint-disable-next-line no-control-regex
+    sanitized = sanitized.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '');
 
     // Normalize unicode
     sanitized = sanitized.normalize('NFC');
@@ -184,7 +185,7 @@ export class InputSanitizer {
   }
 
   static sanitizePhoneNumber(phone: string): string {
-    return this.sanitizeString(phone.replace(/[^\d+\-\(\)\s]/g, ''), { maxLength: 20 });
+    return this.sanitizeString(phone.replace(/[^\d+\-()\s]/g, ''), { maxLength: 20 });
   }
 
   static sanitizeUrl(url: string): string {
@@ -238,7 +239,8 @@ export class InputSanitizer {
   }): string {
     if (typeof window !== 'undefined') {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        // Use require for synchronous operation in sync function
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const DOMPurify = require('dompurify');
         return DOMPurify.sanitize(html, {
           ALLOWED_TAGS: options?.allowedTags || ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li'],
@@ -456,11 +458,11 @@ export class SensitiveDataHandler {
         );
         
         if (isSensitive && typeof value === 'string') {
-          (masked as any)[key] = this.maskString(value);
+          (masked as Record<string, unknown>)[key] = this.maskString(value);
         } else if (typeof value === 'object' && value !== null) {
-          (masked as any)[key] = this.maskSensitiveData(value, fields);
+          (masked as Record<string, unknown>)[key] = this.maskSensitiveData(value, fields);
         } else {
-          (masked as any)[key] = value;
+          (masked as Record<string, unknown>)[key] = value;
         }
       }
       
@@ -528,7 +530,7 @@ export class SecurityHeaders {
 
 // Security audit logger
 export class SecurityAudit {
-  static logSecurityEvent(event: string, details: Record<string, any> = {}): void {
+  static logSecurityEvent(event: string, details: Record<string, unknown> = {}): void {
     const auditEntry = {
       timestamp: new Date().toISOString(),
       event,
@@ -552,7 +554,7 @@ export class SecurityAudit {
     this.logSecurityEvent('password_changed', { userId });
   }
 
-  static logSuspiciousActivity(activity: string, details: Record<string, any>): void {
+  static logSuspiciousActivity(activity: string, details: Record<string, unknown>): void {
     this.logSecurityEvent('suspicious_activity', { activity, ...details });
   }
 

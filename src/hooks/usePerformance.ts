@@ -53,11 +53,13 @@ export function usePerformanceMonitoring(componentName: string) {
   // Monitor memory usage if available
   useEffect(() => {
     if ('memory' in performance) {
-      const memory = (performance as any).memory;
-      setMetrics(prev => ({
-        ...prev,
-        memoryUsage: memory.usedJSHeapSize,
-      }));
+      const memory = (performance as Performance & { memory?: { usedJSHeapSize: number } }).memory;
+      if (memory) {
+        setMetrics(prev => ({
+          ...prev,
+          memoryUsage: memory.usedJSHeapSize,
+        }));
+      }
     }
   }, []);
 
@@ -80,7 +82,7 @@ export function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
-export function useThrottle<T extends (...args: any[]) => any>(
+export function useThrottle<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number
 ): T {
@@ -156,7 +158,7 @@ export function useVirtualization<T>(
 
 export function useLazyLoading<T>(
   loadFunction: () => Promise<T[]>,
-  dependencies: any[] = []
+  dependencies: unknown[] = []
 ) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
@@ -182,7 +184,7 @@ export function useLazyLoading<T>(
 
   useEffect(() => {
     loadMore();
-  }, dependencies);
+  }, [loadMore]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     data,
@@ -193,10 +195,11 @@ export function useLazyLoading<T>(
   };
 }
 
-export function useOptimizedCallback<T extends (...args: any[]) => any>(
+export function useOptimizedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
   deps: React.DependencyList
 ): T {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   return useCallback(callback, deps);
 }
 
@@ -204,6 +207,7 @@ export function useOptimizedMemo<T>(
   factory: () => T,
   deps: React.DependencyList
 ): T {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   return useMemo(factory, deps);
 }
 

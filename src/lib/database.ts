@@ -95,7 +95,7 @@ class QueryOptimizer {
   // Optimized query execution with caching and metrics
   async executeQuery<T>(
     query: string,
-    params?: any[],
+    params?: unknown[],
     options: {
       cache?: boolean;
       cacheKey?: string;
@@ -163,7 +163,7 @@ class QueryOptimizer {
   // Execute query with timeout
   private async executeWithTimeout<T>(
     query: string,
-    params?: any[],
+    params?: unknown[],
     timeout: number = DB_CONFIG.queryTimeout
   ): Promise<T> {
     return new Promise((resolve, reject) => {
@@ -185,7 +185,7 @@ class QueryOptimizer {
   }
 
   // Execute raw query using Supabase
-  private async executeRawQuery<T>(query: string, params?: any[]): Promise<T> {
+  private async executeRawQuery<T>(query: string, params?: unknown[]): Promise<T> {
     const { data, error } = await supabaseClient.getClient().rpc('execute_sql', {
       sql_query: query,
       sql_params: params || [],
@@ -199,7 +199,7 @@ class QueryOptimizer {
   }
 
   // Generate cache key from query and parameters
-  private generateCacheKey(query: string, params?: any[]): string {
+  private generateCacheKey(query: string, params?: unknown[]): string {
     const paramString = params ? JSON.stringify(params) : '';
     return `${query}:${paramString}`;
   }

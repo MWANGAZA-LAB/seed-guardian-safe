@@ -8,7 +8,7 @@ export const apiService = {
 };
 
 export class WalletApi {
-  async createWallet(data: any) {
+  async createWallet(data: Record<string, unknown>) {
     return { success: true, data };
   }
   
@@ -26,7 +26,7 @@ export class WalletApi {
 }
 
 export class RecoveryApi {
-  async initiateRecovery(data: any) {
+  async initiateRecovery(data: Record<string, unknown>) {
     return { success: true, data };
   }
   
@@ -48,7 +48,7 @@ export class BitcoinApi {
     return { success: true, data: { balance: 0 } };
   }
   
-  async sendTransaction(data: any) {
+  async sendTransaction(data: Record<string, unknown>) {
     return { success: true, data };
   }
 }

@@ -25,12 +25,27 @@ const Contact = () => {
     setIsSubmitting(true);
     
     try {
-      // Simulate form submission
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Create mailto link with form data
+      const subject = encodeURIComponent(`${formData.inquiryType} Inquiry from ${formData.name}`);
+      const body = encodeURIComponent(`
+Name: ${formData.name}
+Email: ${formData.email}
+Company: ${formData.company}
+Phone: ${formData.phone}
+Inquiry Type: ${formData.inquiryType}
+
+Message:
+${formData.message}
+      `);
+      
+      const mailtoLink = `mailto:seedguardiansafe@gmail.com?subject=${subject}&body=${body}`;
+      
+      // Open email client
+      window.open(mailtoLink, '_blank');
       
       toast({
-        title: "Message Sent Successfully!",
-        description: "Our team will get back to you within 24 hours.",
+        title: "Email Client Opened!",
+        description: "Your email client has opened with the message pre-filled. Please send the email to complete your inquiry.",
         variant: "default",
       });
       
@@ -45,8 +60,8 @@ const Contact = () => {
       });
     } catch (error) {
       toast({
-        title: "Failed to Send Message",
-        description: "Please try again or contact us directly.",
+        title: "Failed to Open Email Client",
+        description: "Please contact us directly at seedguardiansafe@gmail.com",
         variant: "destructive",
       });
     } finally {
@@ -224,7 +239,7 @@ const Contact = () => {
                     className="w-full"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Sending..." : "Send Message"}
+                    {isSubmitting ? "Opening Email..." : "Send Message"}
                   </Button>
                 </form>
               </CardContent>
@@ -241,7 +256,7 @@ const Contact = () => {
                     <Mail className="w-5 h-5 text-bitcoin" />
                     <div>
                       <div className="font-medium">Email</div>
-                      <div className="text-sm text-muted-foreground">enterprise@seedguardian.safe</div>
+                      <div className="text-sm text-muted-foreground">seedguardiansafe@gmail.com</div>
                     </div>
                   </div>
                   
@@ -249,7 +264,7 @@ const Contact = () => {
                     <Phone className="w-5 h-5 text-bitcoin" />
                     <div>
                       <div className="font-medium">Phone</div>
-                      <div className="text-sm text-muted-foreground">+1 (555) 123-BTC</div>
+                      <div className="text-sm text-muted-foreground">+254 712 826 551</div>
                     </div>
                   </div>
                   
@@ -258,8 +273,8 @@ const Contact = () => {
                     <div>
                       <div className="font-medium">Office</div>
                       <div className="text-sm text-muted-foreground">
-                        Seed Guardian Safe HQ<br />
-                        Bitcoin City, BC 12345
+                        OHNBO Westlands<br />
+                        Nairobi, Kenya
                       </div>
                     </div>
                   </div>

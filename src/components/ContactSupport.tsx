@@ -184,7 +184,7 @@ export default function ContactSupport({ onNavigate }: ContactSupportProps) {
               <Mail className="h-5 w-5 text-blue-500" />
               <div>
                 <p className="font-medium">Email Support</p>
-                <p className="text-sm text-muted-foreground">support@seedguardian.safe</p>
+                <p className="text-sm text-muted-foreground">seedguardiansafe@gmail.com</p>
               </div>
             </div>
           </CardContent>
@@ -406,7 +406,7 @@ export default function ContactSupport({ onNavigate }: ContactSupportProps) {
               <h4 className="font-medium text-red-900">Security Emergency</h4>
               <p className="text-sm text-red-700 mt-1">
                 If you suspect unauthorized access to your wallet or have a security concern, 
-                contact us immediately at security@seedguardian.safe or call our emergency line.
+                contact us immediately at seedguardiansafe@gmail.com or call our emergency line.
               </p>
               <div className="flex gap-2 mt-3">
                 <Button variant="destructive" size="sm">

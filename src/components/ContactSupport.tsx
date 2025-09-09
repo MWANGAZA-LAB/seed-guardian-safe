@@ -196,7 +196,7 @@ export default function ContactSupport({ onNavigate }: ContactSupportProps) {
               <Phone className="h-5 w-5 text-green-500" />
               <div>
                 <p className="font-medium">Phone Support</p>
-                <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+                <p className="text-sm text-muted-foreground">+254 1234567890</p>
               </div>
             </div>
           </CardContent>

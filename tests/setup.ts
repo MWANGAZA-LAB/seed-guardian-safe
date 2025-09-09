@@ -5,6 +5,23 @@ import '@testing-library/jest-dom';
 process.env.VITE_SUPABASE_URL = 'https://test.supabase.co';
 process.env.VITE_SUPABASE_ANON_KEY = 'test-anon-key';
 
+// Mock import.meta for Vite environment variables (if needed)
+if (typeof global.import === 'undefined') {
+  Object.defineProperty(global, 'import', {
+    value: {
+      meta: {
+        env: {
+          VITE_SUPABASE_URL: 'https://test.supabase.co',
+          VITE_SUPABASE_ANON_KEY: 'test-anon-key',
+          DEV: true,
+          PROD: false,
+          MODE: 'test'
+        }
+      }
+    }
+  });
+}
+
 // Mock crypto for CSRF token generation
 Object.defineProperty(global, 'crypto', {
   value: {

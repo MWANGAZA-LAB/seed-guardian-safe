@@ -9,7 +9,6 @@ interface PhoneNumberInputProps {
   onChange: (phoneNumber: string) => void;
   onCountryCodeChange?: (countryCode: string) => void;
   label?: string;
-  placeholder?: string;
   required?: boolean;
   disabled?: boolean;
   className?: string;
@@ -23,7 +22,6 @@ export default function PhoneNumberInput({
   onChange,
   onCountryCodeChange,
   label = "Phone Number",
-  placeholder = "Enter phone number",
   required = false,
   disabled = false,
   className = "",

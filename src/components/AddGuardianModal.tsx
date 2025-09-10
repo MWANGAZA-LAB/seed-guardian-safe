@@ -250,16 +250,15 @@ export default function AddGuardianModal({ isOpen, onClose, onSuccess }: AddGuar
             </div>
 
             {(form.verificationMethod === 'sms' || form.verificationMethod === 'both') && (
-              <PhoneNumberInput
-                value={form.phone}
-                onChange={(phone) => setForm({ ...form, phone })}
-                label="Phone Number"
-                placeholder="Enter guardian's phone number"
-                error={errors.phone}
-                required={form.verificationMethod === 'sms' || form.verificationMethod === 'both'}
-                showCountrySelector={true}
-                defaultCountryCode="+1"
-              />
+            <PhoneNumberInput
+              value={form.phone}
+              onChange={(phone) => setForm({ ...form, phone })}
+              label="Phone Number"
+              error={errors.phone}
+              required={form.verificationMethod === 'sms' || form.verificationMethod === 'both'}
+              showCountrySelector={true}
+              defaultCountryCode="+1"
+            />
             )}
 
             <div>

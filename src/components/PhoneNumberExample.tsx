@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import PhoneNumberInput from './PhoneNumberInput';
 import CountryCodeSelector from './CountryCodeSelector';
 
 export default function PhoneNumberExample() {
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [countryCode, setCountryCode] = useState('+1');
   const [selectedCountry, setSelectedCountry] = useState('+1');
 
   return (
@@ -35,7 +33,6 @@ export default function PhoneNumberExample() {
               value={phoneNumber}
               onChange={setPhoneNumber}
               label="Guardian Phone Number"
-              placeholder="Enter phone number"
               showCountrySelector={true}
               defaultCountryCode="+1"
             />

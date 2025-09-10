@@ -1,5 +1,4 @@
-import React from 'react';
-import { render, screen, act, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { SecureContent, SecureInput, SecureTextarea, SecureForm } from '@/components/SecureContent';
 
 describe('SecureContent', () => {

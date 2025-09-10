@@ -181,7 +181,8 @@ export class SupabaseClient {
 
   async insert<T = unknown>(table: string, data: Record<string, unknown>) {
     try {
-      const { data: result, error } = await this.client
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: result, error } = await (this.client as any)
         .from(table)
         .insert(data)
         .select()

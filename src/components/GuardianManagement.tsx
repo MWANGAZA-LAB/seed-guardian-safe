@@ -86,10 +86,10 @@ export default function GuardianManagement({ walletId, onNavigate }: GuardianMan
         
         // Load guardians
         const guardianData = await protocolClient.getWalletGuardians(walletId);
-        setGuardians(guardianData);
+        setGuardians(guardianData as Guardian[]);
         
         // Load guardian shares
-        const shares = await loadGuardianShares(walletId, guardianData);
+        const shares = await loadGuardianShares(walletId, guardianData as Guardian[]);
         setGuardianShares(shares);
       }
     } catch (err) {
@@ -111,10 +111,11 @@ export default function GuardianManagement({ walletId, onNavigate }: GuardianMan
       try {
         const share = await protocolClient?.getGuardianShare(walletId, guardian.id);
         if (share) {
+          const shareData = share as { shareIndex: number; encryptedShare: string };
           shares.push({
             guardianId: guardian.id,
-            shareIndex: share.shareIndex,
-            encryptedShare: share.encryptedShare,
+            shareIndex: shareData.shareIndex,
+            encryptedShare: shareData.encryptedShare,
             publicKey: guardian.publicKey || ''
           });
         }

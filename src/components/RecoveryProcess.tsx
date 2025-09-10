@@ -107,12 +107,12 @@ export default function RecoveryProcess({ walletId, onNavigate }: RecoveryProces
       
       // Load guardians
       const guardianData = await protocolClient.getWalletGuardians(walletId);
-      setGuardians(guardianData);
+      setGuardians(guardianData as Guardian[]);
       
       // Check for existing recovery attempts
       const recoveryAttempts = await protocolClient.getWalletRecoveryAttempts(walletId);
       if (recoveryAttempts.length > 0) {
-        const latestAttempt = recoveryAttempts[0];
+        const latestAttempt = recoveryAttempts[0] as RecoveryAttempt;
         setRecoveryAttempt(latestAttempt);
         
         // Load signatures for this attempt
@@ -232,9 +232,10 @@ export default function RecoveryProcess({ walletId, onNavigate }: RecoveryProces
             recoveryAttempt.walletId,
             signature.guardianId
           );
+          const shareData = share as { shareIndex: number; encryptedShare: string } | null;
           return {
-            shareIndex: share?.shareIndex || 0,
-            shareValue: share?.encryptedShare || '',
+            shareIndex: shareData?.shareIndex || 0,
+            shareValue: shareData?.encryptedShare || '',
             guardianPrivateKey: signatureForm.privateKey
           };
         })

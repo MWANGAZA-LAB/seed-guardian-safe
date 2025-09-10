@@ -54,7 +54,7 @@ export default function WalletDashboard({ walletId, onNavigate }: WalletDashboar
         
         // Load guardians
         const guardianData = await protocolClient.getWalletGuardians(walletId);
-        setGuardians(guardianData);
+        setGuardians(guardianData as Guardian[]);
         
         // Load balance (mock for now - would integrate with Bitcoin RPC)
         setBalance(0.00123456); // Mock balance

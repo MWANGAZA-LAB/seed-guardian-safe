@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { InputSanitizer } from '@/lib/security';
 
 describe('InputSanitizer', () => {

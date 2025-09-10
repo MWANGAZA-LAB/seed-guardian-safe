@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import { apiService, WalletApi, RecoveryApi, BitcoinApi, GuardianApi } from '@/services/api';
 import { AppError, AuthenticationError, ValidationError } from '@/lib/errors';

@@ -6,6 +6,7 @@ process.env.VITE_SUPABASE_URL = 'https://test.supabase.co';
 process.env.VITE_SUPABASE_ANON_KEY = 'test-anon-key';
 
 // Mock import.meta for Vite environment variables (if needed)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 if (typeof (global as any).import === 'undefined') {
   Object.defineProperty(global, 'import', {
     value: {
@@ -111,6 +112,7 @@ const localStorageMock = {
   length: 0,
   key: jest.fn(),
 };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 global.localStorage = localStorageMock as any;
 
 // Mock sessionStorage
@@ -122,4 +124,5 @@ const sessionStorageMock = {
   length: 0,
   key: jest.fn(),
 };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 global.sessionStorage = sessionStorageMock as any;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PasswordValidator } from '@/lib/security';
 
 describe('PasswordValidator', () => {

@@ -468,7 +468,7 @@ export class SeedGuardianProtocol {
   /**
    * Get wallet guardians
    */
-  async getWalletGuardians(walletId: string): Promise<any[]> {
+  async getWalletGuardians(walletId: string): Promise<unknown[]> {
     try {
       this.ensureInitialized();
       // Mock implementation - would load from storage
@@ -484,7 +484,7 @@ export class SeedGuardianProtocol {
   /**
    * Get wallet recovery attempts
    */
-  async getWalletRecoveryAttempts(walletId: string): Promise<any[]> {
+  async getWalletRecoveryAttempts(walletId: string): Promise<unknown[]> {
     try {
       this.ensureInitialized();
       // Mock implementation - would load from storage
@@ -517,7 +517,7 @@ export class SeedGuardianProtocol {
   /**
    * Get guardian share
    */
-  async getGuardianShare(walletId: string, guardianId: string): Promise<any> {
+  async getGuardianShare(walletId: string, guardianId: string): Promise<unknown> {
     try {
       this.ensureInitialized();
       // Mock implementation - would load from storage
@@ -534,7 +534,7 @@ export class SeedGuardianProtocol {
   /**
    * Add guardian to wallet
    */
-  async addGuardian(walletId: string, guardianData: any): Promise<void> {
+  async addGuardian(walletId: string, guardianData: unknown): Promise<void> {
     try {
       this.ensureInitialized();
       // Mock implementation - would add to storage
@@ -566,7 +566,7 @@ export class SeedGuardianProtocol {
   /**
    * Create audit log entry
    */
-  async createAuditLog(logData: any): Promise<void> {
+  async createAuditLog(logData: unknown): Promise<void> {
     try {
       this.ensureInitialized();
       // Mock implementation - would create audit log

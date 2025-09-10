@@ -208,6 +208,7 @@ export function memoize<T extends (...args: unknown[]) => unknown>(
     }
     
     const result = func(...args);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     cache.set(key, result as any);
     return result;
   }) as T;

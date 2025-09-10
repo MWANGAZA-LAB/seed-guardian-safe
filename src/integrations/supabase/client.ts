@@ -179,7 +179,7 @@ export class SupabaseClient {
     }
   }
 
-  async insert<T = unknown>(table: string, data: any) {
+  async insert<T = unknown>(table: string, data: Record<string, unknown>) {
     try {
       const { data: result, error } = await this.client
         .from(table)
@@ -199,8 +199,9 @@ export class SupabaseClient {
     }
   }
 
-  async update<T = unknown>(table: string, data: any, match: any) {
+  async update<T = unknown>(table: string, data: Record<string, unknown>, match: Record<string, unknown>) {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data: result, error } = await (this.client as any)
         .from(table)
         .update(data)

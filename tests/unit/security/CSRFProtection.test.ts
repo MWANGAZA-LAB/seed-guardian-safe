@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CSRFProtection } from '@/lib/security';
 
 describe('CSRFProtection', () => {

@@ -189,7 +189,7 @@ class QueryOptimizer {
     const { data, error } = await supabaseClient.getClient().rpc('execute_sql', {
       sql_query: query,
       sql_params: params || [],
-    } as any);
+    } as unknown);
 
     if (error) {
       throw new Error(`Database query failed: ${error.message}`);

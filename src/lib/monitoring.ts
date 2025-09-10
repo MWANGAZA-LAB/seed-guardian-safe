@@ -84,7 +84,9 @@ class MetricsCollector {
   private async collectSystemMetrics(): Promise<void> {
     try {
       // Memory usage
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (typeof performance !== 'undefined' && (performance as any).memory) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const memory = (performance as any).memory;
         const memoryUsagePercent = (memory.usedJSHeapSize / memory.totalJSHeapSize) * 100;
 
@@ -574,7 +576,9 @@ healthChecker.registerCheck('database', async () => {
 });
 
 healthChecker.registerCheck('memory', async () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (typeof performance !== 'undefined' && (performance as any).memory) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const memory = (performance as any).memory;
     const usagePercent = (memory.usedJSHeapSize / memory.totalJSHeapSize) * 100;
     return usagePercent < MONITORING_CONFIG.thresholds.memoryUsage;

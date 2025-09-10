@@ -1,5 +1,11 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -42,7 +48,6 @@ app.listen(port, '0.0.0.0', () => {
     console.log(`Port: ${port}`);
     
     // Check if dist directory exists
-    const fs = require('fs');
     const distPath = path.join(__dirname, 'dist');
     if (!fs.existsSync(distPath)) {
       throw new Error('Dist directory not found. Build may have failed.');

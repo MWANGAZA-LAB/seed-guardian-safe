@@ -16,8 +16,8 @@ describe('CSRFProtection', () => {
       expect(token1).toBeDefined();
       expect(token2).toBeDefined();
       expect(token1).not.toBe(token2);
-      expect(token1.length).toBe(32);
-      expect(token2.length).toBe(32);
+      expect(token1.length).toBe(64); // 32 bytes = 64 hex characters
+      expect(token2.length).toBe(64);
     });
 
     it('should generate different tokens for different sessions', () => {
@@ -34,7 +34,7 @@ describe('CSRFProtection', () => {
       const sessionId = 'test-session';
       const token = CSRFProtection.generateToken(sessionId);
 
-      expect(token.length).toBe(32);
+      expect(token.length).toBe(64); // 32 bytes = 64 hex characters
     });
   });
 

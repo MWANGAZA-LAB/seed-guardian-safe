@@ -2,7 +2,7 @@
 
 **Trust-First, Protocol-Style Bitcoin Inheritance & Social Recovery**
 
-<!-- Deployment trigger: Updated for GitHub Pages deployment fix -->
+<!-- Deployment trigger: Updated for GitHub Pages deployment fix - v1.0.1 -->
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)

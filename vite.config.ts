@@ -9,6 +9,11 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  preview: {
+    host: "0.0.0.0",
+    port: 3000,
+    strictPort: false,
+  },
   plugins: [
     react(),
   ],

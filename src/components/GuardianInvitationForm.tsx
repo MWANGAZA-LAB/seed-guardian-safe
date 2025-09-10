@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import PhoneNumberInput from './PhoneNumberInput';
 import { 
   Users, 
   Send, 
@@ -327,21 +328,16 @@ export default function GuardianInvitationForm({
             </div>
 
             {(form.verificationMethod === 'sms' || form.verificationMethod === 'both') && (
-              <div>
-                <Label htmlFor="guardianPhone">Phone Number</Label>
-                <Input
-                  id="guardianPhone"
-                  type="tel"
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  placeholder="Enter guardian's phone number"
-                  className={errors.phone ? 'border-red-500' : ''}
-                />
-                {errors.phone && <p className="text-sm text-red-500 mt-1">{errors.phone}</p>}
-                <p className="text-xs text-muted-foreground mt-1">
-                  Include country code (e.g., +1 for US)
-                </p>
-              </div>
+              <PhoneNumberInput
+                value={form.phone}
+                onChange={(phone) => setForm({ ...form, phone })}
+                label="Phone Number"
+                placeholder="Enter guardian's phone number"
+                error={errors.phone}
+                required={form.verificationMethod === 'sms' || form.verificationMethod === 'both'}
+                showCountrySelector={true}
+                defaultCountryCode="+1"
+              />
             )}
 
             <div>

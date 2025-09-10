@@ -26,7 +26,13 @@ if (typeof (global as any).import === 'undefined') {
 // Mock crypto for CSRF token generation
 Object.defineProperty(global, 'crypto', {
   value: {
-    randomUUID: () => 'test-uuid-' + Math.random().toString(36).substr(2, 9)
+    randomUUID: () => 'test-uuid-' + Math.random().toString(36).substr(2, 9),
+    getRandomValues: (array: Uint8Array) => {
+      for (let i = 0; i < array.length; i++) {
+        array[i] = Math.floor(Math.random() * 256);
+      }
+      return array;
+    }
   }
 });
 
@@ -34,7 +40,13 @@ Object.defineProperty(global, 'crypto', {
 if (typeof window !== 'undefined') {
   Object.defineProperty(window, 'crypto', {
     value: {
-      randomUUID: () => 'test-uuid-' + Math.random().toString(36).substr(2, 9)
+      randomUUID: () => 'test-uuid-' + Math.random().toString(36).substr(2, 9),
+      getRandomValues: (array: Uint8Array) => {
+        for (let i = 0; i < array.length; i++) {
+          array[i] = Math.floor(Math.random() * 256);
+        }
+        return array;
+      }
     }
   });
 }

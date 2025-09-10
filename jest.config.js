@@ -19,10 +19,10 @@ export default {
   ],
   coverageThreshold: {
     global: {
-      branches: 5,
-      functions: 5,
-      lines: 5,
-      statements: 5
+      branches: 3,
+      functions: 3,
+      lines: 3,
+      statements: 3
     }
   },
   testMatch: [

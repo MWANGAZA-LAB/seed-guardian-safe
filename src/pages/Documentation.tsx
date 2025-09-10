@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, BookOpen, Code, Shield, Users, Zap, ExternalLink } from 'lucide-react';
+import { ArrowLeft, BookOpen, Code, Shield, Zap, ExternalLink } from 'lucide-react';
 import HelpDocumentation from '@/components/HelpDocumentation';
 
 const Documentation = () => {

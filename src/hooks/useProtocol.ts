@@ -82,10 +82,10 @@ export function useProtocol(config?: UseProtocolConfig): UseProtocolReturn {
 
       const protocolConfig = {
         storage: {
-          baseUrl: config.storage.baseUrl,
-          apiKey: config.storage.apiKey,
-          timeout: config.storage.timeout || 30000,
-          retryAttempts: config.storage.retryAttempts || 3
+          baseUrl: config?.storage?.baseUrl || 'https://api.seedguardian.safe',
+          apiKey: config?.storage?.apiKey || '',
+          timeout: config?.storage?.timeout || 30000,
+          retryAttempts: config?.storage?.retryAttempts || 3
         },
         protocol: defaultProtocolConfig
       };

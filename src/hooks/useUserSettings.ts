@@ -80,7 +80,7 @@ export function useUserSettings() {
       
       logger.info('User settings loaded successfully');
     } catch (error) {
-      logger.error('Failed to load user settings:', error);
+      logger.error('Failed to load user settings:', error instanceof Error ? error : new Error(String(error)));
       setSettings(defaultSettings);
     } finally {
       setIsLoading(false);
@@ -98,18 +98,20 @@ export function useUserSettings() {
       setSettings(updatedSettings);
       
       // Log the settings update
-      await protocol.protocolClient?.createAuditLog({
-        action: 'settings_updated',
-        details: {
-          updatedFields: Object.keys(newSettings),
-          timestamp: new Date().toISOString(),
-        },
-      });
+      if (protocol.protocolClient && typeof protocol.protocolClient.createAuditLog === 'function') {
+        await protocol.protocolClient.createAuditLog({
+          action: 'settings_updated',
+          details: {
+            updatedFields: Object.keys(newSettings),
+            timestamp: new Date().toISOString(),
+          },
+        });
+      }
       
       logger.info('User settings saved successfully');
       return true;
     } catch (error) {
-      logger.error('Failed to save user settings:', error);
+      logger.error('Failed to save user settings:', error instanceof Error ? error : new Error(String(error)));
       return false;
     } finally {
       setIsSaving(false);
@@ -130,7 +132,7 @@ export function useUserSettings() {
     const updatedSettings = {
       ...settings,
       [category]: {
-        ...settings[category],
+        ...(settings[category] as Record<string, unknown>),
         [key]: value,
       },
     };

@@ -11,7 +11,6 @@ export const getEnvVar = (key: string, defaultValue?: string): string => {
   // In browser (Vite) environment, use import.meta.env
   // Use dynamic import to avoid TypeScript errors in Jest
   try {
-    // @ts-expect-error - import.meta is available in Vite but not in Jest
     const importMeta = (globalThis as { import?: { meta?: { env?: Record<string, string> } } }).import?.meta;
     if (importMeta && importMeta.env) {
       return importMeta.env[key] || defaultValue || '';
@@ -36,7 +35,6 @@ export const isDevelopment = (): boolean => {
   
   // In browser (Vite) environment
   try {
-    // @ts-expect-error - import.meta is available in Vite but not in Jest
     const importMeta = (globalThis as { import?: { meta?: { env?: { DEV?: boolean } } } }).import?.meta;
     if (importMeta && importMeta.env) {
       return importMeta.env.DEV || false;
@@ -61,7 +59,6 @@ export const isProduction = (): boolean => {
   
   // In browser (Vite) environment
   try {
-    // @ts-expect-error - import.meta is available in Vite but not in Jest
     const importMeta = (globalThis as { import?: { meta?: { env?: { PROD?: boolean } } } }).import?.meta;
     if (importMeta && importMeta.env) {
       return importMeta.env.PROD || false;
@@ -86,7 +83,6 @@ export const getMode = (): string => {
   
   // In browser (Vite) environment
   try {
-    // @ts-expect-error - import.meta is available in Vite but not in Jest
     const importMeta = (globalThis as { import?: { meta?: { env?: { MODE?: string } } } }).import?.meta;
     if (importMeta && importMeta.env) {
       return importMeta.env.MODE || 'development';

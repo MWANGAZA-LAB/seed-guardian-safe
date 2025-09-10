@@ -122,7 +122,7 @@ export default function WalletCreationForm({
 
     try {
       if (onSubmit) {
-        await onSubmit(formData as Record<string, unknown>);
+        await onSubmit(formData as unknown as Record<string, unknown>);
       } else {
         // Default submission logic
         await createWallet(formData);

@@ -35,15 +35,15 @@ interface SupportForm {
   includeLogs: boolean;
 }
 
-interface SupportTicket {
-  id: string;
-  status: 'open' | 'in-progress' | 'resolved' | 'closed';
-  createdAt: string;
-  lastUpdated: string;
-  subject: string;
-  category: string;
-  priority: string;
-}
+// interface SupportTicket {
+//   id: string;
+//   status: 'open' | 'in-progress' | 'resolved' | 'closed';
+//   createdAt: string;
+//   lastUpdated: string;
+//   subject: string;
+//   category: string;
+//   priority: string;
+// }
 
 export default function ContactSupport({ onNavigate }: ContactSupportProps) {
   useProtocol();

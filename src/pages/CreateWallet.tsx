@@ -10,7 +10,7 @@ const CreateWallet = () => {
   const navigate = useNavigate();
   const [isCreating, setIsCreating] = useState(false);
 
-  const handleWalletCreation = async (formData: Record<string, unknown>) => {
+  const handleWalletCreation = async (_formData: Record<string, unknown>) => {
     setIsCreating(true);
     try {
       // Simulate wallet creation process

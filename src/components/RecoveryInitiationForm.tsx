@@ -45,15 +45,15 @@ interface GuardianInfo {
   status: 'active' | 'inactive' | 'pending';
 }
 
-interface RecoveryStatus {
-  id: string;
-  status: 'initiated' | 'in-progress' | 'completed' | 'failed' | 'cancelled';
-  guardiansNotified: number;
-  guardiansResponded: number;
-  requiredResponses: number;
-  estimatedCompletion: string;
-  createdAt: string;
-}
+// interface RecoveryStatus {
+//   id: string;
+//   status: 'initiated' | 'in-progress' | 'completed' | 'failed' | 'cancelled';
+//   guardiansNotified: number;
+//   guardiansResponded: number;
+//   requiredResponses: number;
+//   estimatedCompletion: string;
+//   createdAt: string;
+// }
 
 export default function RecoveryInitiationForm({ 
   walletId, 
@@ -169,11 +169,11 @@ export default function RecoveryInitiationForm({
       if (!form.emergencyContact.trim()) {
         newErrors.emergencyContact = 'Emergency contact is required';
       }
-      if (form.threshold < 2) {
+      if (Number(form.threshold) < 2) {
         newErrors.threshold = 'Threshold must be at least 2';
       }
       const activeGuardians = guardians.filter(g => g.status === 'active');
-      if (form.threshold > activeGuardians.length) {
+      if (Number(form.threshold) > activeGuardians.length) {
         newErrors.threshold = `Threshold cannot exceed number of active guardians (${activeGuardians.length})`;
       }
     }

@@ -6,18 +6,15 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
 import { 
   User, 
-  Mail, 
   Shield, 
   Save,
   Loader2,
   Eye,
   EyeOff,
   Settings,
-  Key,
-  Bell
+  Key
 } from 'lucide-react';
 import { useProtocol } from '@/hooks/useProtocol';
 import { useUserSettings } from '@/hooks/useUserSettings';
@@ -38,7 +35,7 @@ interface ProfileForm {
   lastName: string;
   bio: string;
   timezone: string;
-  language: string;
+  language: 'en' | 'es' | 'fr' | 'de';
   notifications: {
     email: boolean;
     sms: boolean;
@@ -56,9 +53,9 @@ interface ProfileForm {
   };
   preferences: {
     theme: 'light' | 'dark' | 'system';
-    currency: 'BTC' | 'USD' | 'EUR' | 'GBP';
-    dateFormat: 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'YYYY-MM-DD';
-    timeFormat: '12h' | '24h';
+    currency: 'BTC';
+    dateFormat: 'MM/DD/YYYY';
+    timeFormat: '12h';
     autoLock: number; // minutes
     sessionTimeout: number; // minutes
   };
@@ -76,7 +73,7 @@ export default function ProfileUpdateForm({
   onCancel 
 }: ProfileUpdateFormProps) {
   useProtocol();
-  const { settings, isLoading, isSaving, updateSetting, updateNestedSetting } = useUserSettings();
+  const { settings } = useUserSettings();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'preferences' | 'password'>('profile');
   const [showPasswords, setShowPasswords] = useState({

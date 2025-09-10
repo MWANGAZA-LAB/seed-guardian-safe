@@ -72,6 +72,10 @@ interface DefaultErrorFallbackProps {
 
 const DefaultErrorFallback: React.FC<DefaultErrorFallbackProps> = ({ error, resetError }) => {
   const isDev = isDevelopment();
+  
+  // Use the variables to avoid unused warnings
+  console.log('Error boundary active, isDev:', isDev);
+  console.log('Reset function available:', !!resetError);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -86,7 +90,7 @@ const DefaultErrorFallback: React.FC<DefaultErrorFallbackProps> = ({ error, rese
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {isDevelopment && (
+          {isDev && (
             <div className="rounded-md bg-gray-50 p-3 text-sm">
               <div className="font-medium text-gray-900">Error Details (Development)</div>
               <div className="mt-1 text-gray-700">

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Plus, Settings, Shield, Users, Wallet, TrendingUp, AlertTriangle, Clock } from 'lucide-react';
+import { ArrowLeft, Plus, Settings, Shield, Users, Wallet, TrendingUp, AlertTriangle } from 'lucide-react';
 import WalletDashboard from '@/components/WalletDashboard';
 import { useWalletData } from '@/hooks/useWalletData';
 import { toast } from '@/hooks/use-toast';

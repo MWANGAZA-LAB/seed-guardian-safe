@@ -1,10 +1,10 @@
 // Custom hook for wallet management with caching and real-time updates
-import { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { WalletApi, Wallet, Guardian, CreateWalletRequest } from '@/services/api';
 import { logger } from '@/lib/logger';
 import { AppError } from '@/lib/errors';
-import { useErrorHandler } from '@/components/ErrorBoundary';
+// import { useErrorHandler } from '@/components/ErrorBoundary';
 import { useAuth } from './useAuth';
 
 // Query keys for caching
@@ -75,7 +75,7 @@ export function useWallets(options: UseWalletsOptions = {}): UseWalletsReturn {
       logger.info('Wallet created successfully', { walletId: newWallet.id });
     },
     onError: (error) => {
-      const appError = handleError(error, { context: 'create_wallet' });
+      const appError = new AppError('Failed to create wallet', 'WALLET_CREATION_ERROR', 500, { originalError: error });
       logger.error('Failed to create wallet', appError);
     },
   });
@@ -94,7 +94,7 @@ export function useWallets(options: UseWalletsOptions = {}): UseWalletsReturn {
       logger.info('Wallet deleted successfully', { walletId });
     },
     onError: (error) => {
-      const appError = handleError(error, { context: 'delete_wallet' });
+      const appError = new AppError('Failed to delete wallet', 'WALLET_DELETION_ERROR', 500, { originalError: error });
       logger.error('Failed to delete wallet', appError);
     },
   });
@@ -242,8 +242,8 @@ export function useWalletStats() {
 
 // Hook for filtering and searching wallets
 export function useWalletFilters(wallets: Wallet[]) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'secure' | 'incomplete'>('all');
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [statusFilter, setStatusFilter] = React.useState<'all' | 'secure' | 'incomplete'>('all');
 
   const filteredWallets = useMemo(() => {
     return wallets.filter(wallet => {

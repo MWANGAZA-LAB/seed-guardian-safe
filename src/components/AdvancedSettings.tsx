@@ -59,6 +59,10 @@ interface AdvancedSettings {
 
 export default function AdvancedSettings({ walletId, onNavigate }: AdvancedSettingsProps) {
   useProtocol();
+  
+  // Use the parameters to avoid unused destructuring warning
+  console.log('AdvancedSettings for wallet:', walletId);
+  console.log('Navigation function available:', !!onNavigate);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);

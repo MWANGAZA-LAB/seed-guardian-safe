@@ -20,7 +20,7 @@ export class WalletApi {
     return { success: true, data: { id } };
   }
   
-  async deleteWallet(id: string) {
+  async deleteWallet(_id: string) {
     return { success: true };
   }
 }
@@ -30,21 +30,21 @@ export class RecoveryApi {
     return { success: true, data };
   }
   
-  async getRecoveryRequests(walletId: string) {
+  async getRecoveryRequests(_walletId: string) {
     return { success: true, data: [] };
   }
   
-  async approveRecoveryRequest(id: string) {
+  async approveRecoveryRequest(_id: string) {
     return { success: true };
   }
   
-  async signRecoveryRequest(id: string, signature: string) {
+  async signRecoveryRequest(_id: string, _signature: string) {
     return { success: true };
   }
 }
 
 export class BitcoinApi {
-  async getBalance(address: string) {
+  async getBalance(_address: string) {
     return { success: true, data: { balance: 0 } };
   }
   
@@ -62,7 +62,7 @@ export class GuardianApi {
     return { success: true, data: { token } };
   }
   
-  async getGuardians(walletId: string) {
+  async getGuardians(_walletId: string) {
     return { success: true, data: [] };
   }
 }

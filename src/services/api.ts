@@ -195,7 +195,7 @@ class ApiService {
     }
   }
 
-  private createApiError(errorData: ApiErrorResponse, status: number, statusText: string): AppError {
+  private createApiError(errorData: ApiErrorResponse, status: number, _statusText: string): AppError {
     const { error } = errorData;
     
     switch (error.code) {

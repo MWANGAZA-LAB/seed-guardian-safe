@@ -158,7 +158,7 @@ export function useVirtualization<T>(
 
 export function useLazyLoading<T>(
   loadFunction: () => Promise<T[]>,
-  dependencies: unknown[] = []
+  _dependencies: unknown[] = []
 ) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);

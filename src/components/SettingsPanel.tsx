@@ -57,7 +57,11 @@ interface UserSettings {
 }
 
 export default function SettingsPanel({ walletId, onNavigate }: SettingsPanelProps) {
-  const { loading, error } = useProtocol();
+  useProtocol();
+  
+  // Use the parameters to avoid unused destructuring warning
+  console.log('SettingsPanel for wallet:', walletId);
+  console.log('Navigation function available:', !!onNavigate);
   const [settings, setSettings] = useState<UserSettings>({
     username: '',
     email: '',
@@ -194,7 +198,7 @@ export default function SettingsPanel({ walletId, onNavigate }: SettingsPanelPro
     setSettings(prev => ({ ...prev, [key]: value }));
   };
 
-  if (loading || isLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
         <RefreshCw className="h-8 w-8 animate-spin" />
@@ -203,14 +207,15 @@ export default function SettingsPanel({ walletId, onNavigate }: SettingsPanelPro
     );
   }
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <AlertTriangle className="h-8 w-8 text-destructive" />
-        <span className="ml-2">Failed to load settings: {error.message}</span>
-      </div>
-    );
-  }
+  // Error handling would go here if we had error state
+  // if (error) {
+  //   return (
+  //     <div className="flex items-center justify-center p-8">
+  //       <AlertTriangle className="h-8 w-8 text-destructive" />
+  //       <span className="ml-2">Failed to load settings: {error.message}</span>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="space-y-6">

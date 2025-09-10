@@ -205,7 +205,7 @@ export function useWalletData() {
       
       logger.info('Wallets loaded successfully');
     } catch (error) {
-      logger.error('Failed to load wallets:', error);
+      logger.error('Failed to load wallets:', error instanceof Error ? error : new Error(String(error)));
       setWallets(mockWallets);
     } finally {
       setIsLoading(false);
@@ -241,19 +241,21 @@ export function useWalletData() {
       localStorage.setItem('wallets', JSON.stringify(updatedWallets));
 
       // Log wallet creation
-      await protocol.protocolClient?.createAuditLog({
-        action: 'wallet_created',
-        details: {
-          walletId: newWallet.id,
-          walletName: newWallet.name,
-          timestamp: new Date().toISOString(),
-        },
-      });
+      if (protocol.protocolClient && typeof protocol.protocolClient.createAuditLog === 'function') {
+        await protocol.protocolClient.createAuditLog({
+          action: 'wallet_created',
+          details: {
+            walletId: newWallet.id,
+            walletName: newWallet.name,
+            timestamp: new Date().toISOString(),
+          },
+        });
+      }
 
-      logger.info('Wallet created successfully:', newWallet.id);
+      logger.info('Wallet created successfully:', { walletId: newWallet.id });
       return newWallet;
     } catch (error) {
-      logger.error('Failed to create wallet:', error);
+      logger.error('Failed to create wallet:', error instanceof Error ? error : new Error(String(error)));
       throw error;
     }
   };
@@ -268,19 +270,21 @@ export function useWalletData() {
       localStorage.setItem('wallets', JSON.stringify(updatedWallets));
 
       // Log wallet update
-      await protocol.protocolClient?.createAuditLog({
-        action: 'wallet_updated',
-        details: {
-          walletId,
-          updatedFields: Object.keys(updates),
-          timestamp: new Date().toISOString(),
-        },
-      });
+      if (protocol.protocolClient && typeof protocol.protocolClient.createAuditLog === 'function') {
+        await protocol.protocolClient.createAuditLog({
+          action: 'wallet_updated',
+          details: {
+            walletId,
+            updatedFields: Object.keys(updates),
+            timestamp: new Date().toISOString(),
+          },
+        });
+      }
 
-      logger.info('Wallet updated successfully:', walletId);
+      logger.info('Wallet updated successfully:', { walletId });
       return true;
     } catch (error) {
-      logger.error('Failed to update wallet:', error);
+      logger.error('Failed to update wallet:', error instanceof Error ? error : new Error(String(error)));
       return false;
     }
   };
@@ -302,7 +306,7 @@ export function useWalletData() {
 
       return await updateWallet(walletId, updatedWallet);
     } catch (error) {
-      logger.error('Failed to add transaction:', error);
+      logger.error('Failed to add transaction:', error instanceof Error ? error : new Error(String(error)));
       return false;
     }
   };

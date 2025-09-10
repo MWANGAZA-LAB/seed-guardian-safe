@@ -69,13 +69,13 @@ export default function CreateWalletModal({ isOpen, onClose, onSuccess }: Create
       if (!form.name.trim()) {
         newErrors.name = 'Wallet name is required';
       }
-      if (form.threshold < 2) {
+      if (Number(form.threshold) < 2) {
         newErrors.threshold = 'Threshold must be at least 2';
       }
-      if (form.totalGuardians < form.threshold) {
+      if (Number(form.totalGuardians) < Number(form.threshold)) {
         newErrors.totalGuardians = 'Total guardians must be at least the threshold';
       }
-      if (form.totalGuardians > 10) {
+      if (Number(form.totalGuardians) > 10) {
         newErrors.totalGuardians = 'Maximum 10 guardians allowed';
       }
     }

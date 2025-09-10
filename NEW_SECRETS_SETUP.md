@@ -15,19 +15,19 @@ Navigate to: `https://github.com/MWANGAZA-LAB/seed-guardian-safe/settings/secret
 
 ### **2. SUPABASE_DB_URL_STAGING**
 - **Purpose**: Direct database connection string for staging environment
-- **Value**: `postgresql://postgres:Kryshevin%402025@aws-1-eu-north-1.supabase.com:5432/postgres`
+- **Value**: `postgresql://postgres:[YOUR-PASSWORD]@db.gwizmwhxbvayhebbyvql.supabase.co:5432/postgres`
 - **Notes**: 
   - Use URL-encoded password (`@` becomes `%40`)
   - Use direct connection (port 5432, not pooler)
-  - Replace with your actual staging project host
+  - Replace [YOUR-PASSWORD] with your actual database password
 
 ### **3. SUPABASE_DB_URL_PROD**
 - **Purpose**: Direct database connection string for production environment
-- **Value**: `postgresql://postgres:Kryshevin%402025@aws-1-eu-north-1.supabase.com:5432/postgres`
+- **Value**: `postgresql://postgres:[YOUR-PASSWORD]@db.gwizmwhxbvayhebbyvql.supabase.co:5432/postgres`
 - **Notes**: 
   - Use URL-encoded password (`@` becomes `%40`)
   - Use direct connection (port 5432, not pooler)
-  - Replace with your actual production project host
+  - Replace [YOUR-PASSWORD] with your actual database password
 
 ### **4. SUPABASE_PROJECT_REF_STAGING**
 - **Purpose**: Project reference ID for staging environment
@@ -63,8 +63,8 @@ Navigate to: `https://github.com/MWANGAZA-LAB/seed-guardian-safe/settings/secret
 ### **For Current Setup (Single Environment)**
 ```
 SUPABASE_ACCESS_TOKEN=sbp_your_token_here
-SUPABASE_DB_URL_STAGING=postgresql://postgres:Kryshevin%402025@aws-1-eu-north-1.supabase.com:5432/postgres
-SUPABASE_DB_URL_PROD=postgresql://postgres:Kryshevin%402025@aws-1-eu-north-1.supabase.com:5432/postgres
+SUPABASE_DB_URL_STAGING=postgresql://postgres:[YOUR-PASSWORD]@db.gwizmwhxbvayhebbyvql.supabase.co:5432/postgres
+SUPABASE_DB_URL_PROD=postgresql://postgres:[YOUR-PASSWORD]@db.gwizmwhxbvayhebbyvql.supabase.co:5432/postgres
 SUPABASE_PROJECT_REF_STAGING=gwizmwhxbvayhebbyvql
 SUPABASE_PROJECT_REF_PROD=gwizmwhxbvayhebbyvql
 ```

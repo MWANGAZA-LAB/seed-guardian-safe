@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => ({
     host: "0.0.0.0",
     port: 3000,
     strictPort: false,
-    base: "/",
+    base: process.env.NODE_ENV === 'production' ? '/seed-guardian-safe/' : '/',
   },
   plugins: [
     react(),

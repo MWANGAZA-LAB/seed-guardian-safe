@@ -29,14 +29,9 @@ describe('SecureContent', () => {
       
       // Wait for async sanitization to complete
       await waitFor(() => {
-        // Check that the content is rendered (might be combined text)
-        const containers = screen.getAllByRole('generic');
-        const contentContainer = containers.find(container => 
-          container.innerHTML.includes('Hello') && container.innerHTML.includes('World')
-        );
-        expect(contentContainer).toBeInTheDocument();
-        expect(contentContainer?.innerHTML).toContain('Hello');
-        expect(contentContainer?.innerHTML).toContain('World');
+        // Check that the content is rendered - look for the text directly
+        expect(screen.getByText(/Hello/)).toBeInTheDocument();
+        expect(screen.getByText(/World/)).toBeInTheDocument();
       });
     });
 

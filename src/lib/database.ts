@@ -186,10 +186,10 @@ class QueryOptimizer {
 
   // Execute raw query using Supabase
   private async executeRawQuery<T>(query: string, params?: unknown[]): Promise<T> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await supabaseClient.getClient().rpc('execute_sql', {
       sql_query: query,
       sql_params: params || [],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
     if (error) {

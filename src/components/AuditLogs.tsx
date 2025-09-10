@@ -113,7 +113,8 @@ export default function AuditLogs({ walletId }: AuditLogsProps) {
         merkleRoot: 'merkle-root-1',
         metadata: {
           version: '1.0.0',
-          clientType: 'web'
+          clientType: 'web',
+          clientVersion: '1.0.0'
         }
       },
       {
@@ -132,7 +133,8 @@ export default function AuditLogs({ walletId }: AuditLogsProps) {
         merkleRoot: 'merkle-root-2',
         metadata: {
           version: '1.0.0',
-          clientType: 'web'
+          clientType: 'web',
+          clientVersion: '1.0.0'
         }
       },
       {
@@ -151,7 +153,8 @@ export default function AuditLogs({ walletId }: AuditLogsProps) {
         merkleRoot: 'merkle-root-3',
         metadata: {
           version: '1.0.0',
-          clientType: 'web'
+          clientType: 'web',
+          clientVersion: '1.0.0'
         }
       },
       {
@@ -170,7 +173,8 @@ export default function AuditLogs({ walletId }: AuditLogsProps) {
         merkleRoot: 'merkle-root-4',
         metadata: {
           version: '1.0.0',
-          clientType: 'web'
+          clientType: 'web',
+          clientVersion: '1.0.0'
         }
       },
       {
@@ -189,7 +193,8 @@ export default function AuditLogs({ walletId }: AuditLogsProps) {
         merkleRoot: 'merkle-root-5',
         metadata: {
           version: '1.0.0',
-          clientType: 'web'
+          clientType: 'web',
+          clientVersion: '1.0.0'
         }
       }
     ];
@@ -597,14 +602,14 @@ export default function AuditLogs({ walletId }: AuditLogsProps) {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => handleCopyHash(selectedLog.previousHash)}
+                  onClick={() => handleCopyHash(selectedLog.previousHash || '')}
                 >
                   <Copy className="h-4 w-4 mr-2" />
                   Copy Hash
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => handleCopyHash(selectedLog.merkleRoot)}
+                  onClick={() => handleCopyHash(selectedLog.merkleRoot || '')}
                 >
                   <Copy className="h-4 w-4 mr-2" />
                   Copy Merkle Root

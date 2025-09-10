@@ -75,7 +75,7 @@ export function useWallets(options: UseWalletsOptions = {}): UseWalletsReturn {
       logger.info('Wallet created successfully', { walletId: newWallet.id });
     },
     onError: (error) => {
-      const appError = new AppError('Failed to create wallet', 'WALLET_CREATION_ERROR', 500, { originalError: error });
+      const appError = new AppError('Failed to create wallet', 'WALLET_CREATION_ERROR', 500, true, { originalError: error });
       logger.error('Failed to create wallet', appError);
     },
   });
@@ -94,7 +94,7 @@ export function useWallets(options: UseWalletsOptions = {}): UseWalletsReturn {
       logger.info('Wallet deleted successfully', { walletId });
     },
     onError: (error) => {
-      const appError = new AppError('Failed to delete wallet', 'WALLET_DELETION_ERROR', 500, { originalError: error });
+      const appError = new AppError('Failed to delete wallet', 'WALLET_DELETION_ERROR', 500, true, { originalError: error });
       logger.error('Failed to delete wallet', appError);
     },
   });

@@ -216,7 +216,7 @@ export function memoize<T extends (...args: unknown[]) => unknown>(
 // Lazy loading utility
 export function lazyLoad<T>(
   importFn: () => Promise<{ default: T }>,
-  fallback?: T
+  _fallback?: T
 ): () => Promise<T> {
   let cached: T | null = null;
   let loading: Promise<T> | null = null;

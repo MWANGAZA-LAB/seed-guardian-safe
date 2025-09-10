@@ -76,7 +76,7 @@ export default function RecoveryInitiationForm({
     requireAllGuardians: false
   });
 
-  const [errors, setErrors] = useState<Partial<RecoveryForm>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof RecoveryForm, string>>>({});
   const [guardians, setGuardians] = useState<GuardianInfo[]>([]);
 
   useEffect(() => {
@@ -149,7 +149,7 @@ export default function RecoveryInitiationForm({
   };
 
   const validateStep = (step: number): boolean => {
-    const newErrors: Partial<RecoveryForm> = {};
+    const newErrors: Partial<Record<keyof RecoveryForm, string>> = {};
 
     if (step === 1) {
       if (!form.reason.trim()) {

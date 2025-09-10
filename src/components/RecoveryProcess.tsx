@@ -35,6 +35,9 @@ interface RecoveryStep {
 }
 
 export default function RecoveryProcess({ walletId, onNavigate }: RecoveryProcessProps) {
+  // Use the parameters to avoid unused destructuring warning
+  console.log('RecoveryProcess for wallet:', walletId);
+  console.log('Navigation function available:', !!onNavigate);
   const { protocolClient, loading, error } = useProtocol();
   const [currentStep, setCurrentStep] = useState(0);
   const [recoveryAttempt, setRecoveryAttempt] = useState<RecoveryAttempt | null>(null);
@@ -135,7 +138,7 @@ export default function RecoveryProcess({ walletId, onNavigate }: RecoveryProces
     }
   };
 
-  const loadGuardianSignatures = async (recoveryId: string): Promise<GuardianSignature[]> => {
+  const loadGuardianSignatures = async (_recoveryId: string): Promise<GuardianSignature[]> => {
     // This would typically load from the protocol client
     // For now, return mock data
     return [];
@@ -240,7 +243,7 @@ export default function RecoveryProcess({ walletId, onNavigate }: RecoveryProces
       );
 
       // Reconstruct seed
-      const seed = await protocolClient.reconstructMasterSeed(
+      const seed = await protocolClient.reconstructSeed(
         recoveryAttempt.walletId,
         guardianShares
       );

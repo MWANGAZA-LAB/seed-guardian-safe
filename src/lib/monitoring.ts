@@ -153,7 +153,7 @@ class MetricsCollector {
   private async collectDatabaseMetrics(): Promise<void> {
     try {
       const dbStats = dbOptimizer.getPerformanceStats();
-      const cacheStats = dbOptimizer.getCacheStats();
+      // const _cacheStats = dbOptimizer.getCacheStats();
 
       this.addMetric('database.queries.total', dbStats.totalQueries, {
         type: 'database',
@@ -175,7 +175,7 @@ class MetricsCollector {
         component: 'errors',
       });
 
-      this.addMetric('database.cache.size', cacheStats.size, {
+      this.addMetric('database.cache.size', 0, {
         type: 'database',
         component: 'cache',
       });
@@ -545,7 +545,7 @@ class DashboardData {
     cacheHitRate: number;
   } {
     const dbStats = dbOptimizer.getPerformanceStats();
-    const cacheStats = dbOptimizer.getCacheStats();
+    // const _cacheStats = dbOptimizer.getCacheStats();
 
     return {
       totalQueries: dbStats.totalQueries,

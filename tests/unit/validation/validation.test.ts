@@ -9,9 +9,9 @@ import {
 } from '@/lib/validation';
 import { 
   emailSchema, 
-  passwordSchema, 
-  guardianSchema, 
-  createWalletSchema,
+  // passwordSchema,
+  // guardianSchema,
+  // createWalletSchema,
   bitcoinAddressSchema,
   satoshiAmountSchema 
 } from '@/lib/validation';

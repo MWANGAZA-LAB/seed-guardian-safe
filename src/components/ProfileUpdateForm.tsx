@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   User, 
   Shield, 
@@ -53,9 +53,9 @@ interface ProfileForm {
   };
   preferences: {
     theme: 'light' | 'dark' | 'system';
-    currency: 'BTC';
-    dateFormat: 'MM/DD/YYYY';
-    timeFormat: '12h';
+    currency: 'BTC' | 'USD' | 'EUR' | 'GBP';
+    dateFormat: 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'YYYY-MM-DD';
+    timeFormat: '12h' | '24h';
     autoLock: number; // minutes
     sessionTimeout: number; // minutes
   };
@@ -109,9 +109,9 @@ export default function ProfileUpdateForm({
     },
     preferences: {
       theme: settings.theme,
-      currency: 'BTC' as const,
-      dateFormat: 'MM/DD/YYYY' as const,
-      timeFormat: '12h' as const,
+      currency: 'BTC' as 'BTC' | 'USD' | 'EUR' | 'GBP',
+      dateFormat: 'MM/DD/YYYY' as 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'YYYY-MM-DD',
+      timeFormat: '12h' as '12h' | '24h',
       autoLock: 30,
       sessionTimeout: 120
     }
@@ -394,7 +394,7 @@ export default function ProfileUpdateForm({
           <select
             id="language"
             value={profileForm.language}
-            onChange={(e) => setProfileForm({ ...profileForm, language: e.target.value })}
+            onChange={(e) => setProfileForm({ ...profileForm, language: e.target.value as 'fr' | 'en' | 'es' | 'de' })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="en">English</option>

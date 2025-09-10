@@ -60,10 +60,10 @@ export default function CreateWalletModal({ isOpen, onClose, onSuccess }: Create
     recoveryPhone: ''
   });
 
-  const [errors, setErrors] = useState<Partial<WalletForm>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof WalletForm, string>>>({});
 
   const validateStep = (step: number): boolean => {
-    const newErrors: Partial<WalletForm> = {};
+    const newErrors: Partial<Record<keyof WalletForm, string>> = {};
 
     if (step === 1) {
       if (!form.name.trim()) {

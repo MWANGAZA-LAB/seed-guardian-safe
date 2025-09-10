@@ -208,7 +208,7 @@ export default function GuardianInvitationForm({
     }
   };
 
-  const resendInvitationViaSupabase = async (invitationId: string): Promise<void> => {
+  const resendInvitationViaSupabase = async (_invitationId: string): Promise<void> => {
     // Mock implementation - would call Supabase function
     await new Promise(resolve => setTimeout(resolve, 1000));
   };

@@ -139,8 +139,7 @@ export class InputSanitizer {
       maxLength = SECURITY_CONFIG.sanitization.maxLength, 
       allowHtml = false, 
       trim = true,
-      allowedTags = [],
-      allowedAttributes = []
+      allowedTags = []
     } = options;
     
     let sanitized = input;
@@ -562,7 +561,7 @@ export class SecurityAudit {
     this.logSecurityEvent('xss_attempt', { payload, source });
   }
 
-  static logCSRFAttempt(token: string, sessionId: string): void {
+  static logCSRFAttempt(_token: string, _sessionId: string): void {
     this.logSecurityEvent('csrf_attempt', { token: '***', sessionId: '***' });
   }
 }

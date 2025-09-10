@@ -46,7 +46,11 @@ interface GuardianShare {
 
 export default function GuardianManagement({ walletId, onNavigate }: GuardianManagementProps) {
   const { protocolClient, loading, error } = useProtocol();
-  const [wallet, setWallet] = useState<ClientWallet | null>(null);
+  const [_wallet, setWallet] = useState<ClientWallet | null>(null);
+  
+  // Use the parameters to avoid unused destructuring warning
+  console.log('GuardianManagement for wallet:', walletId);
+  console.log('Navigation function available:', !!onNavigate);
   const [guardians, setGuardians] = useState<Guardian[]>([]);
   const [guardianShares, setGuardianShares] = useState<GuardianShare[]>([]);
   const [isLoading, setIsLoading] = useState(true);

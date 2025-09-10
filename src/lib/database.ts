@@ -186,10 +186,11 @@ class QueryOptimizer {
 
   // Execute raw query using Supabase
   private async executeRawQuery<T>(query: string, params?: unknown[]): Promise<T> {
-    const { data, error } = await supabaseClient.getClient().rpc('execute_sql', {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabaseClient.getClient() as any).rpc('execute_sql', {
       sql_query: query,
       sql_params: params || [],
-    } as { sql_query: string; sql_params: unknown[] });
+    });
 
     if (error) {
       throw new Error(`Database query failed: ${error.message}`);

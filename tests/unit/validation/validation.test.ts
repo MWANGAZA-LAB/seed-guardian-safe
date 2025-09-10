@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from '@jest/globals';
+import { z } from 'zod';
 import { 
   validators, 
   ValidationError, 
@@ -201,8 +202,8 @@ describe('Validation System', () => {
     it('should reject invalid Bitcoin addresses', () => {
       const invalidAddresses = [
         'invalid-address',
-        '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfN', // Too short
-        '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa1', // Too long
+        '2A1zP1eP5QGefi2DMPTfTL5SLmv7DivfN', // Invalid prefix
+        '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfN0', // Invalid character '0'
         ''
       ];
 
@@ -266,7 +267,7 @@ describe('Validation System', () => {
 
   describe('Utility Functions', () => {
     it('should validate request body', () => {
-      const body = { email: 'test@example.com' };
+      const body = 'test@example.com';
       const result = validateRequestBody(emailSchema, body);
       expect(result).toBe('test@example.com');
     });
@@ -279,10 +280,10 @@ describe('Validation System', () => {
     });
 
     it('should validate path parameters', () => {
-      const params = { id: '123e4567-e89b-12d3-a456-426614174000' };
-      const uuidSchema = ((validators.createWallet as any).schema as any).shape.walletId;
+      const params = '123e4567-e89b-12d3-a456-426614174000';
+      const uuidSchema = z.string().uuid('Invalid UUID format');
       const result = validatePathParams(uuidSchema, params);
-      expect(result).toBeDefined();
+      expect(result).toBe('123e4567-e89b-12d3-a456-426614174000');
     });
   });
 

@@ -19,15 +19,41 @@ export const SecureContent: React.FC<SecureContentProps> = ({
   className,
   children
 }) => {
-  const sanitizedContent = React.useMemo(() => {
-    if (allowHtml) {
-      return InputSanitizer.sanitizeHtml(content, {
-        allowedTags,
-        allowedAttributes
-      });
-    }
-    return InputSanitizer.sanitizeString(content);
+  const [sanitizedContent, setSanitizedContent] = React.useState<string>('');
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const sanitizeContent = async () => {
+      setIsLoading(true);
+      try {
+        if (allowHtml) {
+          const result = await InputSanitizer.sanitizeHtml(content, {
+            allowedTags,
+            allowedAttributes
+          });
+          setSanitizedContent(result);
+        } else {
+          const result = InputSanitizer.sanitizeString(content);
+          setSanitizedContent(result);
+        }
+      } catch (error) {
+        // Fallback to string sanitization if HTML sanitization fails
+        setSanitizedContent(InputSanitizer.sanitizeString(content));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    sanitizeContent();
   }, [content, allowHtml, allowedTags, allowedAttributes]);
+
+  if (isLoading) {
+    return (
+      <div className={className}>
+        {children}
+      </div>
+    );
+  }
 
   if (allowHtml) {
     return (
@@ -141,7 +167,7 @@ export const SecureTextarea: React.FC<SecureTextareaProps> = ({
 };
 
 // Secure form component
-interface SecureFormProps extends React.FormHTMLAttributes<HTMLFormElement> {
+interface SecureFormProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   onSubmit?: (data: FormData) => void;
   children: React.ReactNode;
 }

@@ -162,7 +162,7 @@ describe('InputSanitizer', () => {
     it('should sanitize JSON with XSS attempts', () => {
       const maliciousJson = '{"name": "<script>alert(\'xss\')</script>", "email": "john@example.com"}';
       const sanitized = InputSanitizer.sanitizeJson(maliciousJson);
-      expect(sanitized.name).not.toContain('<script>');
+      expect((sanitized as any).name).not.toContain('<script>');
     });
   });
 
@@ -196,11 +196,11 @@ describe('InputSanitizer', () => {
 
   describe('edge cases', () => {
     it('should handle null input', () => {
-      expect(() => InputSanitizer.sanitizeString(null as unknown)).toThrow();
+      expect(() => InputSanitizer.sanitizeString(null as any)).toThrow();
     });
 
     it('should handle undefined input', () => {
-      expect(() => InputSanitizer.sanitizeString(undefined as unknown)).toThrow();
+      expect(() => InputSanitizer.sanitizeString(undefined as any)).toThrow();
     });
 
     it('should handle empty string', () => {

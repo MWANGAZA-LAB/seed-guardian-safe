@@ -138,7 +138,7 @@ describe('SecureInput', () => {
       input.dispatchEvent(new Event('change', { bubbles: true }));
       
       expect(handleChange).toHaveBeenCalled();
-      expect(input.value).not.toContain('<script>');
+      expect((input as HTMLInputElement).value).not.toContain('<script>');
     });
 
     it('should sanitize input on blur', () => {
@@ -154,7 +154,7 @@ describe('SecureInput', () => {
       input.dispatchEvent(new Event('blur', { bubbles: true }));
       
       expect(handleBlur).toHaveBeenCalled();
-      expect(input.value).not.toContain('javascript:');
+      expect((input as HTMLInputElement).value).not.toContain('javascript:');
     });
 
     it('should call onValueChange with sanitized value', () => {
@@ -210,7 +210,7 @@ describe('SecureInput', () => {
       
       expect(handleBlur).toHaveBeenCalled();
       // Value should remain unchanged since sanitization is disabled
-      expect(input.value).toBe(originalValue);
+      expect((input as HTMLInputElement).value).toBe(originalValue);
     });
   });
 });
@@ -230,8 +230,8 @@ describe('SecureTextarea', () => {
       textarea.dispatchEvent(new Event('change', { bubbles: true }));
       
       expect(handleChange).toHaveBeenCalled();
-      expect(textarea.value).not.toContain('<iframe>');
-      expect(textarea.value).not.toContain('javascript:');
+      expect((textarea as HTMLTextAreaElement).value).not.toContain('<iframe>');
+      expect((textarea as HTMLTextAreaElement).value).not.toContain('javascript:');
     });
 
     it('should handle multiline content', () => {

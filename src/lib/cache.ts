@@ -478,4 +478,4 @@ export const apiCache = new ApiCache();
 export const queryCache = new QueryCache();
 
 // Export cache manager for custom use
-export { CacheManager };
+// export { CacheManager };

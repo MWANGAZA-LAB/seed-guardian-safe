@@ -466,6 +466,119 @@ export class SeedGuardianProtocol {
   }
 
   /**
+   * Get wallet guardians
+   */
+  async getWalletGuardians(walletId: string): Promise<any[]> {
+    try {
+      this.ensureInitialized();
+      // Mock implementation - would load from storage
+      return [];
+    } catch (error) {
+      throw new ProtocolError('Failed to get wallet guardians', 'GUARDIAN_LOAD_ERROR', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        walletId
+      });
+    }
+  }
+
+  /**
+   * Get wallet recovery attempts
+   */
+  async getWalletRecoveryAttempts(walletId: string): Promise<any[]> {
+    try {
+      this.ensureInitialized();
+      // Mock implementation - would load from storage
+      return [];
+    } catch (error) {
+      throw new ProtocolError('Failed to get recovery attempts', 'RECOVERY_LOAD_ERROR', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        walletId
+      });
+    }
+  }
+
+  /**
+   * Sign recovery attempt
+   */
+  async signRecoveryAttempt(recoveryId: string, guardianId: string, signature: string): Promise<void> {
+    try {
+      this.ensureInitialized();
+      // Mock implementation - would store signature
+      console.log('Signing recovery attempt:', { recoveryId, guardianId, signature: signature.substring(0, 10) + '...' });
+    } catch (error) {
+      throw new ProtocolError('Failed to sign recovery attempt', 'RECOVERY_SIGN_ERROR', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        recoveryId,
+        guardianId
+      });
+    }
+  }
+
+  /**
+   * Get guardian share
+   */
+  async getGuardianShare(walletId: string, guardianId: string): Promise<any> {
+    try {
+      this.ensureInitialized();
+      // Mock implementation - would load from storage
+      return null;
+    } catch (error) {
+      throw new ProtocolError('Failed to get guardian share', 'SHARE_LOAD_ERROR', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        walletId,
+        guardianId
+      });
+    }
+  }
+
+  /**
+   * Add guardian to wallet
+   */
+  async addGuardian(walletId: string, guardianData: any): Promise<void> {
+    try {
+      this.ensureInitialized();
+      // Mock implementation - would add to storage
+      console.log('Adding guardian to wallet:', { walletId, guardianData });
+    } catch (error) {
+      throw new ProtocolError('Failed to add guardian', 'GUARDIAN_ADD_ERROR', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        walletId
+      });
+    }
+  }
+
+  /**
+   * Remove guardian from wallet
+   */
+  async removeGuardian(walletId: string, guardianId: string): Promise<void> {
+    try {
+      this.ensureInitialized();
+      // Mock implementation - would remove from storage
+    } catch (error) {
+      throw new ProtocolError('Failed to remove guardian', 'GUARDIAN_REMOVE_ERROR', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        walletId,
+        guardianId
+      });
+    }
+  }
+
+  /**
+   * Create audit log entry
+   */
+  async createAuditLog(logData: any): Promise<void> {
+    try {
+      this.ensureInitialized();
+      // Mock implementation - would create audit log
+      console.log('Creating audit log:', logData);
+    } catch (error) {
+      throw new ProtocolError('Failed to create audit log', 'AUDIT_LOG_ERROR', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  }
+
+  /**
    * Test storage connection
    */
   private async testStorageConnection(): Promise<void> {

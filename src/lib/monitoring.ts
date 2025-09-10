@@ -84,8 +84,8 @@ class MetricsCollector {
   private async collectSystemMetrics(): Promise<void> {
     try {
       // Memory usage
-      if (typeof performance !== 'undefined' && performance.memory) {
-        const memory = performance.memory;
+      if (typeof performance !== 'undefined' && (performance as any).memory) {
+        const memory = (performance as any).memory;
         const memoryUsagePercent = (memory.usedJSHeapSize / memory.totalJSHeapSize) * 100;
 
         this.addMetric('memory.usage.percent', memoryUsagePercent, {
@@ -122,7 +122,7 @@ class MetricsCollector {
         }
       }
     } catch (error) {
-      logger.error('Failed to collect system metrics', { error });
+      logger.error('Failed to collect system metrics', error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -146,7 +146,7 @@ class MetricsCollector {
         component: 'users',
       });
     } catch (error) {
-      logger.error('Failed to collect application metrics', { error });
+      logger.error('Failed to collect application metrics', error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -185,7 +185,7 @@ class MetricsCollector {
         component: 'cache',
       });
     } catch (error) {
-      logger.error('Failed to collect database metrics', { error });
+      logger.error('Failed to collect database metrics', error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -295,7 +295,7 @@ class AlertManager {
     try {
       await Promise.allSettled(promises);
     } catch (error) {
-      logger.error('Failed to send alert', { alert, error });
+      logger.error('Failed to send alert', error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -342,7 +342,7 @@ class AlertManager {
         body: JSON.stringify(payload),
       });
     } catch (error) {
-      logger.error('Failed to send Slack alert', { alert, error });
+      logger.error('Failed to send Slack alert', error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -367,7 +367,7 @@ class AlertManager {
         body: JSON.stringify(payload),
       });
     } catch (error) {
-      logger.error('Failed to send PagerDuty alert', { alert, error });
+      logger.error('Failed to send PagerDuty alert', error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -574,8 +574,8 @@ healthChecker.registerCheck('database', async () => {
 });
 
 healthChecker.registerCheck('memory', async () => {
-  if (typeof performance !== 'undefined' && performance.memory) {
-    const memory = performance.memory;
+  if (typeof performance !== 'undefined' && (performance as any).memory) {
+    const memory = (performance as any).memory;
     const usagePercent = (memory.usedJSHeapSize / memory.totalJSHeapSize) * 100;
     return usagePercent < MONITORING_CONFIG.thresholds.memoryUsage;
   }

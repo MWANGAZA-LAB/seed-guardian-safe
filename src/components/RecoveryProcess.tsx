@@ -199,11 +199,9 @@ export default function RecoveryProcess({ walletId, onNavigate }: RecoveryProces
 
       // Sign recovery
       await protocolClient.signRecoveryAttempt(
-        recoveryAttempt.walletId,
         recoveryAttempt.id,
         signatureForm.guardianId,
-        signatureForm.privateKey,
-        signatureForm.verificationMethod
+        signatureForm.privateKey
       );
 
       // Reload data

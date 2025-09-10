@@ -3,7 +3,7 @@ import { apiService, WalletApi, RecoveryApi, BitcoinApi, GuardianApi } from '@/s
 import { AppError, AuthenticationError, ValidationError } from '@/lib/errors';
 
 // Mock fetch
-global.fetch = jest.fn();
+global.fetch = jest.fn() as any;
 
 // Mock Supabase client
 jest.mock('@/integrations/supabase/client', () => ({
@@ -47,7 +47,7 @@ describe('API Service', () => {
   describe('ApiService', () => {
     it('should make GET requests', async () => {
       const mockResponse = { data: 'test' };
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as any).mockResolvedValueOnce({
         ok: true,
         status: 200,
         statusText: 'OK',
@@ -72,7 +72,7 @@ describe('API Service', () => {
       const mockResponse = { success: true };
       const requestData = { test: 'data' };
       
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as any).mockResolvedValueOnce({
         ok: true,
         status: 200,
         statusText: 'OK',
@@ -92,7 +92,7 @@ describe('API Service', () => {
     });
 
     it('should handle authentication errors', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as any).mockResolvedValueOnce({
         ok: false,
         status: 401,
         statusText: 'Unauthorized',
@@ -109,7 +109,7 @@ describe('API Service', () => {
     });
 
     it('should handle validation errors', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as any).mockResolvedValueOnce({
         ok: false,
         status: 400,
         statusText: 'Bad Request',
@@ -126,7 +126,7 @@ describe('API Service', () => {
     });
 
     it('should retry failed requests', async () => {
-      (fetch as jest.Mock)
+      (fetch as any)
         .mockRejectedValueOnce(new Error('Network error'))
         .mockResolvedValueOnce({
           ok: true,
@@ -142,7 +142,7 @@ describe('API Service', () => {
     });
 
     it('should not retry client errors', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as any).mockResolvedValueOnce({
         ok: false,
         status: 400,
         statusText: 'Bad Request',
@@ -163,7 +163,7 @@ describe('API Service', () => {
   describe('WalletApi', () => {
     it('should create wallet', async () => {
       const mockResponse = { success: true, walletId: 'test-id' };
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as any).mockResolvedValueOnce({
         ok: true,
         status: 200,
         statusText: 'OK',
@@ -204,7 +204,7 @@ describe('API Service', () => {
       };
 
       const { supabaseClient } = await import('@/integrations/supabase/client');
-      supabaseClient.getClient.mockReturnValue(mockSupabaseClient);
+      (supabaseClient.getClient as any).mockReturnValue(mockSupabaseClient);
 
       const result = await WalletApi.getWallets();
       expect(result).toEqual(mockWallets);
@@ -223,7 +223,7 @@ describe('API Service', () => {
       };
 
       const { supabaseClient } = await import('@/integrations/supabase/client');
-      supabaseClient.getClient.mockReturnValue(mockSupabaseClient);
+      (supabaseClient.getClient as any).mockReturnValue(mockSupabaseClient);
 
       await expect(WalletApi.getWallets()).rejects.toThrow(AppError);
     });
@@ -232,7 +232,7 @@ describe('API Service', () => {
   describe('RecoveryApi', () => {
     it('should initiate recovery', async () => {
       const mockResponse = { success: true, recoveryId: 'test-id' };
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as any).mockResolvedValueOnce({
         ok: true,
         status: 200,
         statusText: 'OK',
@@ -269,7 +269,7 @@ describe('API Service', () => {
       };
 
       const { supabaseClient } = await import('@/integrations/supabase/client');
-      supabaseClient.getClient.mockReturnValue(mockSupabaseClient);
+      (supabaseClient.getClient as any).mockReturnValue(mockSupabaseClient);
 
       const result = await RecoveryApi.getRecoveryRequests('test-wallet-id');
       expect(result).toEqual(mockRecoveryRequests);
@@ -279,7 +279,7 @@ describe('API Service', () => {
   describe('BitcoinApi', () => {
     it('should get balance', async () => {
       const mockBalance = 1000000; // 0.01 BTC in satoshis
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as any).mockResolvedValueOnce({
         ok: true,
         status: 200,
         statusText: 'OK',
@@ -297,7 +297,7 @@ describe('API Service', () => {
         '3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy'
       ];
       
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as any).mockResolvedValueOnce({
         ok: true,
         status: 200,
         statusText: 'OK',
@@ -317,7 +317,7 @@ describe('API Service', () => {
         fee: 1000
       };
       
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as any).mockResolvedValueOnce({
         ok: true,
         status: 200,
         statusText: 'OK',
@@ -345,7 +345,7 @@ describe('API Service', () => {
         message: 'Guardian verified successfully'
       };
       
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as any).mockResolvedValueOnce({
         ok: true,
         status: 200,
         statusText: 'OK',
@@ -385,7 +385,7 @@ describe('API Service', () => {
       };
 
       const { supabaseClient } = await import('@/integrations/supabase/client');
-      supabaseClient.getClient.mockReturnValue(mockSupabaseClient);
+      (supabaseClient.getClient as any).mockReturnValue(mockSupabaseClient);
 
       const result = await GuardianApi.getGuardianByToken('test-token');
       expect(result).toEqual(mockGuardian);
@@ -394,19 +394,19 @@ describe('API Service', () => {
 
   describe('Error Handling', () => {
     it('should handle network errors', async () => {
-      (fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
+      (fetch as any).mockRejectedValue(new Error('Network error'));
 
       await expect(apiService.get('/test')).rejects.toThrow('Network error');
     });
 
     it('should handle timeout errors', async () => {
-      (fetch as jest.Mock).mockRejectedValue(new Error('Request timeout'));
+      (fetch as any).mockRejectedValue(new Error('Request timeout'));
 
       await expect(apiService.get('/test')).rejects.toThrow('Request timeout');
     });
 
     it('should handle JSON parsing errors', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as any).mockResolvedValueOnce({
         ok: true,
         status: 200,
         statusText: 'OK',

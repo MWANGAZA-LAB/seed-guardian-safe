@@ -119,7 +119,7 @@ class QueryOptimizer {
         const cachedResult = this.cache.get(queryKey);
         if (cachedResult) {
           logger.debug('Cache hit', { query, cacheKey: queryKey });
-          return cachedResult;
+          return cachedResult as T;
         }
       }
 
@@ -144,7 +144,7 @@ class QueryOptimizer {
         success: true,
       });
 
-      return result;
+      return result as T;
     } catch (error) {
       // Record error metrics
       this.recordMetrics({
@@ -175,7 +175,7 @@ class QueryOptimizer {
       this.executeRawQuery(query, params)
         .then((result) => {
           clearTimeout(timeoutId);
-          resolve(result);
+          resolve(result as T);
         })
         .catch((error) => {
           clearTimeout(timeoutId);
@@ -189,7 +189,7 @@ class QueryOptimizer {
     const { data, error } = await supabaseClient.getClient().rpc('execute_sql', {
       sql_query: query,
       sql_params: params || [],
-    });
+    } as any);
 
     if (error) {
       throw new Error(`Database query failed: ${error.message}`);

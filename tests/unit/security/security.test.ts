@@ -208,10 +208,10 @@ describe('Security Utilities', () => {
       
       const masked = SensitiveDataHandler.maskSensitiveData(data);
       
-      expect(masked.name).toBe('John Doe');
-      expect(masked.email).toBe('john@example.com');
-      expect(masked.password).toMatch(/^\*+$/);
-      expect(masked.token).toMatch(/^\*+$/);
+      expect((masked as any).name).toBe('John Doe');
+      expect((masked as any).email).toBe('john@example.com');
+      expect((masked as any).password).toMatch(/^\*+$/);
+      expect((masked as any).token).toMatch(/^\*+$/);
     });
 
     it('should identify sensitive fields', () => {
@@ -234,10 +234,10 @@ describe('Security Utilities', () => {
       
       const masked = SensitiveDataHandler.maskSensitiveData(data);
       
-      expect(masked.user.name).toBe('John');
-      expect(masked.user.password).toMatch(/^\*+$/);
-      expect(masked.user.profile.email).toBe('john@example.com');
-      expect(masked.user.profile.token).toMatch(/^\*+$/);
+      expect((masked as any).user.name).toBe('John');
+      expect((masked as any).user.password).toMatch(/^\*+$/);
+      expect((masked as any).user.profile.email).toBe('john@example.com');
+      expect((masked as any).user.profile.token).toMatch(/^\*+$/);
     });
   });
 

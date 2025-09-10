@@ -92,8 +92,8 @@ describe('Validation System', () => {
 
       const result = validators.guardian.safeValidate(validGuardian);
       expect(result.success).toBe(true);
-      expect(result.data?.email).toBe('guardian@example.com');
-      expect(result.data?.fullName).toBe('John Doe');
+      expect((result.data as any)?.email).toBe('guardian@example.com');
+      expect((result.data as any)?.fullName).toBe('John Doe');
     });
 
     it('should reject invalid guardian data', () => {
@@ -272,14 +272,14 @@ describe('Validation System', () => {
 
     it('should validate query parameters', () => {
       const params = { page: 1, limit: 20 };
-      const result = validateQueryParams(validators.pagination.schema, params);
-      expect(result.page).toBe(1);
-      expect(result.limit).toBe(20);
+      const result = validateQueryParams((validators.pagination as any).schema, params);
+      expect((result as any).page).toBe(1);
+      expect((result as any).limit).toBe(20);
     });
 
     it('should validate path parameters', () => {
       const params = { id: '123e4567-e89b-12d3-a456-426614174000' };
-      const uuidSchema = validators.createWallet.schema.shape.walletId;
+      const uuidSchema = ((validators.createWallet as any).schema as any).shape.walletId;
       const result = validatePathParams(uuidSchema, params);
       expect(result).toBeDefined();
     });

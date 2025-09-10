@@ -99,14 +99,7 @@ jobs:
           name: frontend-build
           path: dist/
           
-      - name: Deploy to Vercel (Preview)
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./
-          vercel-args: '--prod'
+      # Vercel deployment removed - using GitHub Pages instead
 
   deploy-production:
     name: Deploy Production
@@ -124,14 +117,7 @@ jobs:
           name: frontend-build
           path: dist/
           
-      - name: Deploy to Vercel (Production)
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./
-          vercel-args: '--prod'
+      # Vercel deployment removed - using GitHub Pages instead
           
       - name: Notify deployment
         run: |

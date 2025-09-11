@@ -195,6 +195,30 @@ const reconstructedSeed = await protocol.reconstructSeed(
 );
 ```
 
+### 5. **Proof of Life Setup**
+
+```typescript
+import { createPoLManager, DEFAULT_POL_CONFIG } from '@/protocol/pol';
+
+// Create Proof of Life manager
+const polManager = await createPoLManager({
+  walletId: wallet.id,
+  storage: createClientStorage(),
+  serverAPI: yourServerAPI,
+  webAuthnConfig: DEFAULT_WEBAUTHN_CONFIG,
+  polConfig: DEFAULT_POL_CONFIG,
+});
+
+// Enroll in Proof of Life
+await polManager.enroll('user-name', 'User Display Name', true);
+
+// Start automatic monitoring
+await polManager.startMonitoring();
+
+// Perform manual check-in
+const proof = await polManager.performCheckIn('manual');
+```
+
 ## 🔧 **Protocol Components**
 
 ### **Core Types** (`src/protocol/core/types.ts`)
@@ -202,12 +226,21 @@ const reconstructedSeed = await protocol.reconstructSeed(
 - Event types for audit logging
 - Cryptographic key types
 - Wallet and guardian interfaces
+- **Proof of Life types and interfaces**
 
 ### **Client-Side Cryptography** (`src/protocol/crypto/`)
 - **Shamir's Secret Sharing** (`shamir.ts`)
 - **RSA-OAEP Encryption** (`encryption.ts`)
 - **Digital Signatures** (RSA-PSS)
 - **AES-GCM** for local storage
+
+### **Proof of Life System** (`src/protocol/pol/`)
+- **WebAuthn Integration** (`webauthn.ts`) - Biometric authentication
+- **Key Generation** (`keygen.ts`) - Ed25519/secp256k1 keypairs
+- **Heartbeat System** (`heartbeat.ts`) - Automatic check-ins
+- **Guardian Verification** (`verifier.ts`) - Multi-guardian consensus
+- **PoL Manager** (`manager.ts`) - Main orchestrator
+- **Client Storage** (`storage.ts`) - Secure local storage
 
 ### **Audit Log Protocol** (`src/protocol/audit/audit-log.ts`)
 - JSON-based event logging
@@ -235,6 +268,8 @@ const reconstructedSeed = await protocol.reconstructSeed(
 - **AES-GCM**: Authenticated encryption for local storage
 - **RSA-PSS**: Digital signatures for audit logs
 - **PBKDF2**: Password-based key derivation
+- **Ed25519/secp256k1**: Proof of Life signature algorithms
+- **WebAuthn**: Biometric authentication standards
 
 ### **Zero-Knowledge Architecture**
 - Server never sees plaintext seeds
@@ -251,7 +286,8 @@ const reconstructedSeed = await protocol.reconstructSeed(
 ### **Guardian Verification**
 - Multi-factor authentication
 - Cryptographic signatures
-- Proof of life monitoring
+- **Proof of Life (PoL) monitoring** with automatic check-ins
+- **Multi-guardian recovery** with time-based triggers
 - Offline share storage
 
 ## 📱 **Multi-Client Support**
@@ -285,6 +321,26 @@ seed-guardian recover --wallet-id abc123 --reason "owner_unavailable"
 
 # Sign recovery
 seed-guardian sign --recovery-id def456 --verification email
+```
+
+### **Guardian CLI Tool** (Go)
+```bash
+# Initialize guardian
+./pol-cli init --guardian-id "guardian-1" --verification-level "enhanced"
+
+# Check Proof of Life status
+./pol-cli status --wallet-id "wallet-id" --server-url "https://api.example.com"
+
+# Verify proof
+./pol-cli verify --proof-file "proof.json" --public-key "public-key"
+
+# Manage notifications
+./pol-cli notifications --wallet-id "wallet-id"
+./pol-cli acknowledge --notification-id "notification-id"
+
+# Recovery operations
+./pol-cli recovery list --wallet-id "wallet-id"
+./pol-cli recovery sign --trigger-id "trigger-id"
 ```
 
 ### **Desktop Client** (Tauri/Electron)
@@ -489,11 +545,19 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🎯 **Roadmap**
 
-### **Phase 1: Core Protocol** ✅
+### **Phase 1: Core Protocol** ✅ **COMPLETE**
 - [x] Client-side cryptography
 - [x] Shamir's Secret Sharing
 - [x] Audit log protocol
 - [x] Storage layer
+- [x] **Proof of Life (PoL) system** - Complete implementation with WebAuthn, heartbeat monitoring, and guardian verification
+- [x] **WebAuthn integration** - Biometric authentication for enhanced security
+- [x] **Multi-guardian recovery** - Time-based recovery with consensus requirements
+- [x] **Smart contract integration** - Ethereum-based recovery contracts
+- [x] **Guardian CLI tools** - Go-based command-line interface for guardians
+- [x] **React UI components** - Complete user interface for PoL management
+- [x] **Documentation portal** - Comprehensive user-friendly documentation
+- [x] **Security testing** - All critical security tests enabled and passing
 
 ### **Phase 2: Multi-Client** 🚧
 - [ ] CLI client (Node.js/Go)

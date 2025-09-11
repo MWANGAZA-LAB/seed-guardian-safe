@@ -24,7 +24,7 @@ import {
   Activity
 } from 'lucide-react';
 import { PoLManager, PoLManagerConfig, PoLManagerCallbacks } from '@/protocol/pol/manager';
-import { PoLStatus, PoLProof, PoLError } from '@/protocol/pol/types';
+import { PoLStatus, PoLProof, PoLError, PoLEnrollment, RecoveryTrigger } from '@/protocol/pol/types';
 import { createClientStorage } from '@/protocol/pol/storage';
 import { DEFAULT_POL_CONFIG, DEFAULT_HEARTBEAT_CONFIG, DEFAULT_VERIFICATION_CONFIG, DEFAULT_WEBAUTHN_CONFIG } from '@/protocol/pol/manager';
 
@@ -397,7 +397,7 @@ function createMockServerAPI() {
     getProofs: async (_walletId: string, _limit: number = 10) => {
       return [];
     },
-    enrollWallet: async (enrollment: Record<string, unknown>) => {
+    enrollWallet: async (enrollment: PoLEnrollment) => {
       console.log('Enrolling wallet:', enrollment);
       return { success: true, message: 'Wallet enrolled successfully' };
     },
@@ -405,7 +405,7 @@ function createMockServerAPI() {
       console.log('Revoking enrollment for wallet:', walletId);
       return { success: true, message: 'Enrollment revoked successfully' };
     },
-    triggerRecovery: async (trigger: Record<string, unknown>) => {
+    triggerRecovery: async (trigger: RecoveryTrigger) => {
       console.log('Triggering recovery:', trigger);
       return { success: true, message: 'Recovery triggered successfully' };
     },

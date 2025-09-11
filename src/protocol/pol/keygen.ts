@@ -14,9 +14,9 @@ export interface KeyGenConfig {
 }
 
 export class PoLKeyManager {
-  private storage: unknown; // Will be injected
+  private storage: { storeKeyPair: (keyPair: PoLKeyPair) => Promise<void>; retrieveKeyPair: (keyId: string) => Promise<PoLKeyPair | null> } | undefined;
 
-  constructor(storage?: unknown) {
+  constructor(storage?: { storeKeyPair: (keyPair: PoLKeyPair) => Promise<void>; retrieveKeyPair: (keyId: string) => Promise<PoLKeyPair | null> }) {
     this.storage = storage;
   }
 
@@ -39,7 +39,9 @@ export class PoLKeyManager {
 
       // Store the key pair if storage is available
       if (this.storage && config.exportable) {
-        await this.storage.storeKeyPair(keyPair);
+        if (this.storage) {
+          await this.storage.storeKeyPair(keyPair);
+        }
       }
 
       return keyPair;
@@ -416,7 +418,10 @@ export class PoLKeyManager {
     }
 
     try {
-      return await this.storage.retrieveKeyPair(keyId);
+      if (this.storage) {
+        return await this.storage.retrieveKeyPair(keyId);
+      }
+      return null;
     } catch (error) {
       throw new PoLStorageError(
         'Failed to retrieve key pair',

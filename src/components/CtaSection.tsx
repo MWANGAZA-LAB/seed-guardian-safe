@@ -22,7 +22,7 @@ const CtaSection = () => {
       variant: "default",
     });
     // In a real app, this would open the GitHub repo
-    window.open('https://github.com/seed-guardian-safe', '_blank');
+    window.open('https://github.com/MWANGAZA-LAB/seed-guardian-safe', '_blank');
   };
 
   const handleReadDocs = () => {

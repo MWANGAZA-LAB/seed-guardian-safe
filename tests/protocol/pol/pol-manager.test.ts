@@ -584,6 +584,9 @@ describe('Proof of Life Manager', () => {
     });
 
     it('should handle storage errors', async () => {
+      // Set the mock to reject AFTER beforeEach runs
+      mockKeyManager.generateKeyPair.mockRejectedValue(new Error('Key generation failed'));
+      
       // Create a new manager instance to test initialization failure
       const config = {
         walletId: 'test_wallet_id',
@@ -595,9 +598,6 @@ describe('Proof of Life Manager', () => {
         verificationConfig: DEFAULT_VERIFICATION_CONFIG,
       };
       const errorManager = new PoLManager(config, {});
-      
-      // Set the mock to reject AFTER creating the manager (after beforeEach runs)
-      mockKeyManager.generateKeyPair.mockRejectedValue(new Error('Key generation failed'));
       
       await expect(errorManager.initialize())
         .rejects.toThrow('Failed to load or generate key pair');

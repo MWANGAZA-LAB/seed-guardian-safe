@@ -19,10 +19,10 @@ export default {
   ],
   coverageThreshold: {
     global: {
-      branches: 3,
-      functions: 3,
-      lines: 3,
-      statements: 3
+      branches: 95,
+      functions: 95,
+      lines: 95,
+      statements: 95
     }
   },
   testMatch: [
@@ -55,5 +55,15 @@ export default {
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   transformIgnorePatterns: [
     'node_modules/(?!(.*\\.mjs$))'
-  ]
+  ],
+  // Security-focused test configuration
+  detectOpenHandles: true,
+  forceExit: true,
+  runInBand: false,
+  // Fail on skipped tests
+  passWithNoTests: false,
+  // Additional security options
+  clearMocks: true,
+  restoreMocks: true,
+  resetMocks: true
 };

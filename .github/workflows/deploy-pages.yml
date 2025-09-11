@@ -1,5 +1,5 @@
 name: Deploy to GitHub Pages
-# Manual trigger for deployment fix
+# Manual trigger for deployment fix - v2
 
 on:
   push:

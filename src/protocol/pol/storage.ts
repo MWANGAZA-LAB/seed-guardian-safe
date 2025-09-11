@@ -220,7 +220,7 @@ export class ClientPoLStorage implements PoLStorage {
   /**
    * Store data in IndexedDB
    */
-  private async storeInIndexedDB(storeName: string, data: any): Promise<void> {
+  private async storeInIndexedDB(storeName: string, data: unknown): Promise<void> {
     if (!this.db) {
       throw new PoLStorageError('IndexedDB not initialized');
     }
@@ -289,7 +289,7 @@ export class ClientPoLStorage implements PoLStorage {
       const keyPairsRequest = keyPairsIndex.getAll(walletId);
       
       keyPairsRequest.onsuccess = () => {
-        keyPairsRequest.result.forEach((keyPair: any) => {
+        keyPairsRequest.result.forEach((keyPair: { keyId: string }) => {
           keyPairsStore.delete(keyPair.keyId);
         });
       };
@@ -300,7 +300,7 @@ export class ClientPoLStorage implements PoLStorage {
       const proofsRequest = proofsIndex.getAll(walletId);
       
       proofsRequest.onsuccess = () => {
-        proofsRequest.result.forEach((proof: any) => {
+        proofsRequest.result.forEach((proof: { id: string }) => {
           proofsStore.delete(proof.id);
         });
       };
@@ -317,7 +317,7 @@ export class ClientPoLStorage implements PoLStorage {
   /**
    * Store data in localStorage
    */
-  private async storeInLocalStorage(key: string, data: any): Promise<void> {
+  private async storeInLocalStorage(key: string, data: unknown): Promise<void> {
     try {
       const serialized = JSON.stringify(data);
       localStorage.setItem(key, serialized);

@@ -397,7 +397,7 @@ function createMockServerAPI() {
     getProofs: async (_walletId: string, _limit: number = 10) => {
       return [];
     },
-    enrollWallet: async (enrollment: any) => {
+    enrollWallet: async (enrollment: Record<string, unknown>) => {
       console.log('Enrolling wallet:', enrollment);
       return { success: true, message: 'Wallet enrolled successfully' };
     },
@@ -405,7 +405,7 @@ function createMockServerAPI() {
       console.log('Revoking enrollment for wallet:', walletId);
       return { success: true, message: 'Enrollment revoked successfully' };
     },
-    triggerRecovery: async (trigger: any) => {
+    triggerRecovery: async (trigger: Record<string, unknown>) => {
       console.log('Triggering recovery:', trigger);
       return { success: true, message: 'Recovery triggered successfully' };
     },

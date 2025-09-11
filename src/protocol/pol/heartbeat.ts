@@ -19,7 +19,7 @@ export interface HeartbeatEvent {
   type: 'check_in' | 'missed' | 'escalated' | 'recovery_triggered';
   timestamp: number;
   walletId: string;
-  data?: any;
+  data?: Record<string, unknown>;
 }
 
 export interface HeartbeatCallbacks {
@@ -319,7 +319,7 @@ export class PoLHeartbeat {
    * Handle missed check-in
    * @deprecated This method is not currently used but kept for future implementation
    */
-  // @ts-ignore - Intentionally unused method
+  // @ts-expect-error - Intentionally unused method
   private async _handleMissedCheckIn(): Promise<void> {
     this.missedCount++;
     
@@ -346,7 +346,7 @@ export class PoLHeartbeat {
   /**
    * Handle errors
    */
-  private handleError(error: any): void {
+  private handleError(error: unknown): void {
     if (this.callbacks.onError) {
       if (error instanceof PoLError) {
         this.callbacks.onError(error);

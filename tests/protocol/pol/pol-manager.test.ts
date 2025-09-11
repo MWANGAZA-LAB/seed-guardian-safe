@@ -16,124 +16,124 @@ import {
 import { PoLKeyPair, PoLProof, PoLStatus } from '@/protocol/pol/types';
 
 // Type assertion helper for mocks
-const mockFn = jest.fn as any;
+const jest.fn = jest.fn as any;
 
 // --- Mocks ---
 // WebAuthn
 const mockWebAuthn = {
-  isSupported: mockFn(() => true),
-  enrollCredential: mockFn(),
-  authenticate: mockFn(),
-  verifySignature: mockFn(),
+  isSupported: jest.fn(() => true),
+  enrollCredential: jest.fn(),
+  authenticate: jest.fn(),
+  verifySignature: jest.fn(),
 };
 
 // Key Manager
 const mockKeyManager = {
-  getKeyPair: mockFn(),
-  generateKeyPair: mockFn(),
-  encryptPrivateKey: mockFn(),
-  decryptPrivateKey: mockFn(),
-  signData: mockFn(),
-  verifySignature: mockFn(),
+  getKeyPair: jest.fn(),
+  generateKeyPair: jest.fn(),
+  encryptPrivateKey: jest.fn(),
+  decryptPrivateKey: jest.fn(),
+  signData: jest.fn(),
+  verifySignature: jest.fn(),
 };
 
 // Heartbeat
 const mockHeartbeat = {
-  initialize: mockFn(),
-  start: mockFn(),
-  stop: mockFn(),
-  performCheckIn: mockFn(),
-  performEmergencyCheckIn: mockFn(),
-  isRunning: mockFn(),
-  getStatus: mockFn(),
-  updateConfig: mockFn(),
-  updateHeartbeatConfig: mockFn(),
-  destroy: mockFn(),
+  initialize: jest.fn(),
+  start: jest.fn(),
+  stop: jest.fn(),
+  performCheckIn: jest.fn(),
+  performEmergencyCheckIn: jest.fn(),
+  isRunning: jest.fn(),
+  getStatus: jest.fn(),
+  updateConfig: jest.fn(),
+  updateHeartbeatConfig: jest.fn(),
+  destroy: jest.fn(),
 };
 
 // Storage
 const mockStorage = {
-  storeKeyPair: mockFn(),
-  retrieveKeyPair: mockFn(),
-  storeProof: mockFn(),
-  retrieveProofs: mockFn(),
-  storeConfig: mockFn(),
-  retrieveConfig: mockFn(),
-  clearStorage: mockFn(),
-  initialize: mockFn(),
+  storeKeyPair: jest.fn(),
+  retrieveKeyPair: jest.fn(),
+  storeProof: jest.fn(),
+  retrieveProofs: jest.fn(),
+  storeConfig: jest.fn(),
+  retrieveConfig: jest.fn(),
+  clearStorage: jest.fn(),
+  initialize: jest.fn(),
 };
 
 // Server API
 const mockServerAPI = {
-  submitProof: mockFn(),
-  getStatus: mockFn(),
-  getProofs: mockFn(),
-  enrollWallet: mockFn(),
-  revokeEnrollment: mockFn(),
-  triggerRecovery: mockFn(),
-  verifyProof: mockFn(),
+  submitProof: jest.fn(),
+  getStatus: jest.fn(),
+  getProofs: jest.fn(),
+  enrollWallet: jest.fn(),
+  revokeEnrollment: jest.fn(),
+  triggerRecovery: jest.fn(),
+  verifyProof: jest.fn(),
 };
 
 // --- Jest Mocks ---
 jest.mock('@/protocol/pol/webauthn', () => ({
-  WebAuthnManager: mockFn().mockImplementation(() => mockWebAuthn),
+  WebAuthnManager: jest.fn().mockImplementation(() => mockWebAuthn),
   WebAuthnConfig: {},
 }));
 
 jest.mock('@/protocol/pol/storage', () => ({
-  createClientStorage: mockFn(() => mockStorage),
+  createClientStorage: jest.fn(() => mockStorage),
 }));
 
 jest.mock('@/protocol/pol/keygen', () => ({
-  PoLKeyManager: mockFn().mockImplementation(() => mockKeyManager),
+  PoLKeyManager: jest.fn().mockImplementation(() => mockKeyManager),
   KeyGenerationConfig: {},
 }));
 
 jest.mock('@/protocol/pol/heartbeat', () => ({
-  PoLHeartbeat: mockFn().mockImplementation(() => mockHeartbeat),
+  PoLHeartbeat: jest.fn().mockImplementation(() => mockHeartbeat),
   HeartbeatCallbacks: {},
 }));
 
 jest.mock('@/protocol/pol/verifier', () => ({
-  PoLVerifier: mockFn().mockImplementation(() => ({
-    verifyProof: mockFn(),
-    addGuardian: mockFn(),
-    removeGuardian: mockFn(),
-    getGuardians: mockFn(() => []),
-    updateConfig: mockFn(),
-    getVerificationStats: mockFn(() => ({
+  PoLVerifier: jest.fn().mockImplementation(() => ({
+    verifyProof: jest.fn(),
+    addGuardian: jest.fn(),
+    removeGuardian: jest.fn(),
+    getGuardians: jest.fn(() => []),
+    updateConfig: jest.fn(),
+    getVerificationStats: jest.fn(() => ({
       totalVerifications: 0,
       successfulVerifications: 0,
     })),
-    createRecoveryTrigger: mockFn().mockResolvedValue({
+    createRecoveryTrigger: jest.fn().mockResolvedValue({
       walletId: 'test_wallet_id',
       reason: 'pol_timeout',
       timestamp: Date.now(),
       triggerId: 'test_trigger_id',
     }),
-    destroy: mockFn(),
+    destroy: jest.fn(),
   })),
   VerificationConfig: {},
   GuardianConfig: {},
 }));
 
 jest.mock('@/protocol/bitcoin/recovery-script', () => ({
-  BitcoinRecoveryManager: mockFn().mockImplementation(() => ({
-    createRecoveryScript: mockFn(),
-    createProofOfLifeTimeoutScript: mockFn(),
-    executeRecovery: mockFn(),
+  BitcoinRecoveryManager: jest.fn().mockImplementation(() => ({
+    createRecoveryScript: jest.fn(),
+    createProofOfLifeTimeoutScript: jest.fn(),
+    executeRecovery: jest.fn(),
   })),
 }));
 
 jest.mock('@/protocol/bitcoin/taproot', () => ({
-  TaprootRecoveryManager: mockFn().mockImplementation(() => ({
-    generateInternalKey: mockFn(),
-    createScriptTree: mockFn(),
-    generateOutputKey: mockFn(),
-    generateAddress: mockFn(),
-    createRecoveryScript: mockFn(),
-    createProofOfLifeTimeoutScript: mockFn(),
-    executeRecovery: mockFn(),
+  TaprootRecoveryManager: jest.fn().mockImplementation(() => ({
+    generateInternalKey: jest.fn(),
+    createScriptTree: jest.fn(),
+    generateOutputKey: jest.fn(),
+    generateAddress: jest.fn(),
+    createRecoveryScript: jest.fn(),
+    createProofOfLifeTimeoutScript: jest.fn(),
+    executeRecovery: jest.fn(),
   })),
 }));
 

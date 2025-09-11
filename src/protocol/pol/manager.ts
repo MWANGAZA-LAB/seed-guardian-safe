@@ -64,7 +64,7 @@ export class PoLManager {
   private taprootRecoveryManager: TaprootRecoveryManager;
   private isInitialized: boolean = false;
   private currentKeyPair: PoLKeyPair | null = null;
-  // @ts-ignore - Intentionally unused property for future implementation
+  // @ts-expect-error - Intentionally unused property for future implementation
   private _currentStatus: PoLStatus | null = null;
 
   constructor(config: PoLManagerConfig, callbacks: PoLManagerCallbacks = {}) {
@@ -405,8 +405,8 @@ export class PoLManager {
     isMonitoring: boolean;
     hasKeyPair: boolean;
     webAuthnSupported: boolean;
-    heartbeatStatus: any;
-    verificationStats: any;
+    heartbeatStatus: Record<string, unknown>;
+    verificationStats: Record<string, unknown>;
   } {
     return {
       isInitialized: this.isInitialized,

@@ -14,9 +14,9 @@ export interface KeyGenConfig {
 }
 
 export class PoLKeyManager {
-  private storage: any; // Will be injected
+  private storage: unknown; // Will be injected
 
-  constructor(storage?: any) {
+  constructor(storage?: unknown) {
     this.storage = storage;
   }
 

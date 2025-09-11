@@ -59,7 +59,6 @@ export default {
   // Security-focused test configuration
   detectOpenHandles: true,
   forceExit: true,
-  runInBand: false,
   // Fail on skipped tests
   passWithNoTests: false,
   // Additional security options

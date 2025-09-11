@@ -251,7 +251,7 @@ export const GuardianDashboard: React.FC<GuardianDashboardProps> = ({
                     <div className="flex items-center gap-2">
                       {getStatusIcon()}
                       <span className="font-medium">Status:</span>
-                      <Badge variant={getStatusColor() as any}>
+                      <Badge variant={getStatusColor() as "default" | "secondary" | "destructive" | "outline"}>
                         {status.status.replace('_', ' ').toUpperCase()}
                       </Badge>
                     </div>

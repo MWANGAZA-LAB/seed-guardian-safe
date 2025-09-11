@@ -498,7 +498,7 @@ const masterSeed = await protocol.completeEmergencyRecovery({
 - **Documentation**: [Complete Technical Documentation](TECHNICAL_DOCUMENTATION.md)
 - **API Reference**: [API Documentation](API_REFERENCE.md)
 - **Security Guide**: [Security Best Practices](SECURITY_GUIDE.md)
-- **Community Forum**: [Join the Discussion](https://forum.seedguardian.safe)
+- **GitHub Discussions**: [Join the Discussion](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
 - **GitHub Issues**: [Report Problems](https://github.com/MWANGAZA-LAB/seed-guardian-safe/issues)
 
 ---

@@ -300,13 +300,13 @@ The protocol includes comprehensive monitoring:
 
 **Community Support**:
 - [GitHub Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/issues)
-- [Discord Community](https://discord.gg/seedguardian)
-- [Community Forum](https://forum.seedguardian.safe)
+- [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
+- [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
 
 **Direct Support**:
-- Email: support@seedguardian.safe
-- Security: security@seedguardian.safe
-- Emergency: emergency@seedguardian.safe
+- GitHub Issues: [Report Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/issues)
+- Security: [Security Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/security)
+- Emergency: [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
 
 ### How do I report bugs?
 
@@ -321,8 +321,8 @@ When reporting bugs, please include:
 
 Feature requests can be submitted through:
 - [GitHub Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/issues)
-- [Community Forum](https://forum.seedguardian.safe)
-- [Discord Community](https://discord.gg/seedguardian)
+- [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
+- [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
 
 ## Legal and Compliance
 
@@ -348,4 +348,4 @@ The protocol is designed with **privacy-first principles**:
 
 ---
 
-**Still have questions?** Check out our [Support Resources](#support-questions) or join our [Discord Community](https://discord.gg/seedguardian) for real-time help.
+**Still have questions?** Check out our [Support Resources](#support-questions) or join our [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions) for help.

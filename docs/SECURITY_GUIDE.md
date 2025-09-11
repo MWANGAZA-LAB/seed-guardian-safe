@@ -453,9 +453,9 @@ const monitor = new SecurityMonitor({
 
 ### Contact Information
 
-- **Security Team**: security@seedguardian.safe
-- **Emergency Response**: emergency@seedguardian.safe
-- **Bug Reports**: security-bugs@seedguardian.safe
+- **Security Team**: [Security Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/security)
+- **Emergency Response**: [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/issues)
 
 ## Compliance and Standards
 

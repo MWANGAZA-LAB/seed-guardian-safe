@@ -27,7 +27,7 @@ This guide covers common issues users may encounter with the Seed Guardian Safe 
 2. **Check Server Status**
    ```bash
    # Check server health
-   curl -I https://api.seedguardian.safe/health
+   curl -I https://your-api-domain.com/health
    
    # Check GitHub Pages status
    curl -I https://mwangaza-lab.github.io/seed-guardian-safe/
@@ -517,13 +517,13 @@ This guide covers common issues users may encounter with the Seed Guardian Safe 
 
 2. **Community Support**
    - [GitHub Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/issues)
-   - [Discord Community](https://discord.gg/seedguardian)
-   - [Community Forum](https://forum.seedguardian.safe)
+   - [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
+   - [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
 
 3. **Direct Support**
-   - Email: support@seedguardian.safe
-   - Security: security@seedguardian.safe
-   - Emergency: emergency@seedguardian.safe
+   - GitHub Issues: [Report Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/issues)
+   - Security: [Security Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/security)
+   - Emergency: [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
 
 ### Reporting Issues
 
@@ -559,9 +559,9 @@ For critical security issues:
    - Contact security team
 
 2. **Contact Information**
-   - Emergency: emergency@seedguardian.safe
-   - Security: security@seedguardian.safe
-   - Phone: +1-XXX-XXX-XXXX
+   - Emergency: [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
+   - Security: [Security Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/security)
+   - GitHub: [Emergency Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/issues)
 
 3. **Documentation**
    - Document all actions taken

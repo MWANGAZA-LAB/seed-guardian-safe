@@ -42,7 +42,7 @@ import { createProtocolClient } from '@/protocol';
 
 const protocol = createProtocolClient({
   storage: {
-    baseUrl: 'https://api.seedguardian.safe',
+    baseUrl: 'https://your-api-domain.com',
     apiKey: 'your-api-key'
   }
 });
@@ -234,7 +234,7 @@ chmod +x pol-cli-linux
 - **Documentation** - [Complete Technical Documentation](TECHNICAL_DOCUMENTATION.md)
 - **API Reference** - [API Documentation](API_REFERENCE.md)
 - **Security Guide** - [Security Best Practices](SECURITY_GUIDE.md)
-- **Community Forum** - [Join the Discussion](https://forum.seedguardian.safe)
+- **GitHub Discussions** - [Join the Discussion](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
 - **GitHub Issues** - [Report Problems](https://github.com/MWANGAZA-LAB/seed-guardian-safe/issues)
 
 ---

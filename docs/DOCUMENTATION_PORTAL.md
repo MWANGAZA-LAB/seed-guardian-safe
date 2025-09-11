@@ -14,11 +14,11 @@
 
 ### API Documentation  
 **Interactive API docs**
-[→ External Link](https://api.seedguardian.safe/docs)
+[→ API Reference](API_REFERENCE.md)
 
 ### Security Audit
-**Third-party audit report**
-[→ External Link](https://audit.seedguardian.safe)
+**Security best practices and audit information**
+[→ Security Guide](SECURITY_GUIDE.md)
 
 ---
 
@@ -106,7 +106,7 @@
 
 ### Video Tutorials
 📹 **Step-by-step video guides**
-[→ Watch Videos](https://tutorials.seedguardian.safe)
+[→ Getting Started Guide](GETTING_STARTED.md)
 
 ### Security Best Practices
 🔒 **Essential security guidelines**
@@ -114,7 +114,7 @@
 
 ### Community Forum
 💬 **Connect with other users**
-[→ Join Forum](https://forum.seedguardian.safe)
+[→ GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
 
 ### API Documentation
 ⚡ **Developer API reference**
@@ -126,7 +126,7 @@
 
 ℹ️ **If you can't find what you're looking for, our support team is here to help.**
 
-[Contact Support →](mailto:support@seedguardian.safe)
+[Contact Support →](mailto:seedguardiansafe@gmail.com)
 
 ---
 

@@ -81,7 +81,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 # Application Configuration
 NODE_ENV=production
 PORT=3000
-API_BASE_URL=https://api.seedguardian.safe
+API_BASE_URL=https://your-api-domain.com
 
 # Proof of Life Configuration
 POL_CHECK_INTERVAL=604800
@@ -619,7 +619,7 @@ app.use('/api/recovery/', createRateLimit(60 * 60 * 1000, 10)); // 10 requests p
 import cors from 'cors';
 
 const corsOptions = {
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['https://seedguardian.safe'],
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['https://your-domain.com'],
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

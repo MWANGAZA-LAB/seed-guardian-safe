@@ -22,7 +22,7 @@ import { createProtocolClient, defaultProtocolConfig } from '@/protocol';
 
 const protocol = createProtocolClient({
   storage: {
-    baseUrl: 'https://api.seedguardian.safe',
+    baseUrl: 'https://your-api-domain.com',
     apiKey: 'your-api-key',
     timeout: 30000,
     retryAttempts: 3

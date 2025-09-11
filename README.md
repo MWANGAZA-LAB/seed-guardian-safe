@@ -540,7 +540,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 - **Documentation**: [Protocol Guide](PROTOCOL_README.md)
 - **Issues**: [GitHub Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/issues)
-- **Discord**: [Seed Guardian Safe Discord](https://discord.gg/seedguardian)
+- **Discord**: [GitHub Discussions](https://github.com/MWANGAZA-LAB/seed-guardian-safe/discussions)
 - **Email**: seedguardiansafe@gmail.com
 
 ## 🎯 **Roadmap**

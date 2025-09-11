@@ -35,7 +35,7 @@ Welcome to the comprehensive documentation for the Seed Guardian Safe protocol. 
    import { createProtocolClient } from '@/protocol';
    
    const protocol = createProtocolClient({
-     storage: { baseUrl: 'https://api.seedguardian.safe' }
+     storage: { baseUrl: 'https://your-api-domain.com' }
    });
    
    const wallet = await protocol.createWallet({

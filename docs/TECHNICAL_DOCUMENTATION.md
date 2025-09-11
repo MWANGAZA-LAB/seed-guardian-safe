@@ -47,7 +47,7 @@
 │  • Supabase (PostgreSQL)                                   │
 │  • IPFS (Decentralized)                                    │
 │  • Local Storage (IndexedDB)                               │
-│  • Smart Contracts (Ethereum)                              │
+│  • Bitcoin Script (Taproot)                                │
 └─────────────────────────────────────────────────────────────┘
 ```
 

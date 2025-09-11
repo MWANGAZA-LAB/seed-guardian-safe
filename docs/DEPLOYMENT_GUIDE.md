@@ -29,7 +29,7 @@
 - **Supabase**: Database and authentication
 - **Railway**: Application hosting
 - **GitHub Pages**: Static site hosting
-- **Ethereum Network**: Smart contract deployment
+- **Bitcoin Network**: Bitcoin Script deployment
 
 ### Development Tools
 

@@ -392,61 +392,57 @@ This guide covers common issues users may encounter with the Seed Guardian Safe 
 
 1. **Check Network Connection**
    ```bash
-   # Test Ethereum network
+   # Test Bitcoin network
    curl -X POST -H "Content-Type: application/json" \
-     --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' \
-     https://mainnet.infura.io/v3/YOUR_PROJECT_ID
+     --data '{"jsonrpc":"2.0","method":"getblockcount","params":[],"id":1}' \
+     https://api.blockcypher.com/v1/btc/main
    ```
 
-2. **Verify Contract Address**
+2. **Verify Script Address**
    ```typescript
-   // Check contract address
-   const contractAddress = '0x...';
-   const contract = new ethers.Contract(contractAddress, abi, provider);
-   const isDeployed = await contract.deployed();
-   console.log('Contract deployed:', isDeployed);
+   // Check script address
+   const scriptAddress = 'bc1p...';
+   const isValid = await validateBitcoinAddress(scriptAddress);
+   console.log('Script address valid:', isValid);
    ```
 
-3. **Check Contract ABI**
+3. **Check Script Hash**
    ```typescript
-   // Verify contract ABI
-   const contract = new ethers.Contract(address, abi, provider);
-   const methods = Object.keys(contract.interface.functions);
-   console.log('Contract methods:', methods);
+   // Verify script hash
+   const scriptHash = await calculateScriptHash(recoveryScript);
+   console.log('Script hash:', scriptHash);
    ```
 
 ### Issue: Guardian Registration Failed
 
 **Symptoms**:
 - "Guardian registration failed" errors
-- "Transaction failed" messages
-- "Insufficient gas" errors
+- "Script creation failed" messages
+- "Insufficient funds" errors
 
 **Solutions**:
 
-1. **Check Gas Settings**
+1. **Check Script Creation**
    ```typescript
-   // Estimate gas
-   const gasEstimate = await contract.estimateGas.registerGuardian(
-     walletId, guardianAddress, publicKey
+   // Create recovery script
+   const script = await bitcoinRecoveryManager.createRecoveryScript(
+     walletId, 2, 144
    );
-   console.log('Gas estimate:', gasEstimate.toString());
+   console.log('Script created:', script.toString('hex'));
    ```
 
-2. **Increase Gas Limit**
+2. **Verify Guardian Keys**
    ```typescript
-   // Set higher gas limit
-   const tx = await contract.registerGuardian(
-     walletId, guardianAddress, publicKey,
-     { gasLimit: 500000 }
-   );
+   // Check guardian public keys
+   const guardianKeys = await getGuardianPublicKeys();
+   console.log('Guardian keys:', guardianKeys.length);
    ```
 
-3. **Check Account Balance**
+3. **Check Bitcoin Balance**
    ```typescript
-   // Check account balance
-   const balance = await provider.getBalance(account.address);
-   console.log('Account balance:', ethers.utils.formatEther(balance));
+   // Check Bitcoin balance
+   const balance = await getBitcoinBalance(address);
+   console.log('Bitcoin balance:', balance);
    ```
 
 ## Performance Issues

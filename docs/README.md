@@ -250,7 +250,7 @@ Welcome to the comprehensive documentation for the Seed Guardian Safe protocol. 
 - **Railway** - Application hosting
 - **GitHub Pages** - Static site hosting
 - **Supabase** - Database and authentication
-- **Ethereum** - Smart contract deployment
+- **Bitcoin Script** - Bitcoin-native recovery scripts
 
 ### CI/CD Pipeline
 

@@ -541,7 +541,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - **Documentation**: [Protocol Guide](PROTOCOL_README.md)
 - **Issues**: [GitHub Issues](https://github.com/MWANGAZA-LAB/seed-guardian-safe/issues)
 - **Discord**: [Seed Guardian Safe Discord](https://discord.gg/seedguardian)
-- **Email**: support@seedguardian.safe
+- **Email**: seedguardiansafe@gmail.com
 
 ## 🎯 **Roadmap**
 
@@ -553,7 +553,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - [x] **Proof of Life (PoL) system** - Complete implementation with WebAuthn, heartbeat monitoring, and guardian verification
 - [x] **WebAuthn integration** - Biometric authentication for enhanced security
 - [x] **Multi-guardian recovery** - Time-based recovery with consensus requirements
-- [x] **Smart contract integration** - Ethereum-based recovery contracts
+- [x] **Bitcoin Script integration** - Bitcoin-native recovery using Taproot
 - [x] **Guardian CLI tools** - Go-based command-line interface for guardians
 - [x] **React UI components** - Complete user interface for PoL management
 - [x] **Documentation portal** - Comprehensive user-friendly documentation

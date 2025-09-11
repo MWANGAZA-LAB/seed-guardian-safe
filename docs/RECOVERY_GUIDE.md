@@ -236,68 +236,63 @@ await auditLog.addEntry({
 });
 ```
 
-## Smart Contract Integration
+## Bitcoin Script Integration
 
-### Recovery Contract
+### Recovery Script
 
 **Purpose**: Time-based recovery with multi-guardian consensus
-**Network**: Ethereum mainnet and testnets
-**Features**: Automated triggers and guardian management
+**Network**: Bitcoin mainnet and testnets
+**Features**: Automated triggers and guardian management using Bitcoin Script
 
-```solidity
-// Recovery contract
-contract ProofOfLifeRecovery {
-    struct RecoveryTrigger {
-        address walletOwner;
-        uint256 lastCheckIn;
-        uint256 timeoutPeriod;
-        uint256 escalationLevel;
-        bool isActive;
-    }
-    
-    mapping(bytes32 => RecoveryTrigger) public recoveryTriggers;
-    mapping(bytes32 => mapping(address => bool)) public guardianApprovals;
-    
-    function triggerRecovery(bytes32 walletId) external {
-        RecoveryTrigger storage trigger = recoveryTriggers[walletId];
-        require(trigger.isActive, "Recovery not active");
-        require(block.timestamp > trigger.lastCheckIn + trigger.timeoutPeriod, "Timeout not reached");
-        
-        // Emit recovery event
-        emit RecoveryTriggered(walletId, trigger.escalationLevel);
-    }
-    
-    function approveRecovery(bytes32 walletId, address guardian) external {
-        require(guardianApprovals[walletId][guardian], "Guardian not authorized");
-        require(!guardianApprovals[walletId][guardian], "Already approved");
-        
-        guardianApprovals[walletId][guardian] = true;
-        
-        // Check if threshold reached
-        if (checkRecoveryThreshold(walletId)) {
-            emit RecoveryApproved(walletId);
-        }
-    }
-}
+```typescript
+// Bitcoin Script-based recovery
+import { BitcoinScript, TaprootScript } from '@/protocol/bitcoin';
+
+// Create guardian recovery script with timelock
+const recoveryScript = BitcoinScript.createGuardianRecoveryScript(
+  guardianPublicKeys,    // Array of guardian public keys
+  2,                     // Threshold (2 of 3 guardians)
+  144                    // Timelock: 144 blocks (~24 hours)
+);
+
+// Create Proof of Life timeout script
+const polTimeoutScript = BitcoinScript.createProofOfLifeTimeoutScript(
+  guardianPublicKeys,    // Array of guardian public keys
+  2,                     // Threshold (2 of 3 guardians)
+  4320                   // PoL timeout: 4320 blocks (~30 days)
+);
+
+// Create Taproot script for enhanced privacy
+const taprootScript = TaprootScript.createConditionalRecoveryScript(
+  ownerPublicKey,        // Owner's public key
+  guardianPublicKeys,    // Array of guardian public keys
+  2,                     // Threshold (2 of 3 guardians)
+  144                    // Timelock: 144 blocks (~24 hours)
+);
 ```
 
 ### Guardian Management
 
 **Registration**: Guardians register their public keys
-**Verification**: Guardian identity verified on-chain
+**Verification**: Guardian identity verified using Bitcoin Script
 **Consensus**: Threshold-based approval system
 
 ```typescript
-// Register guardian on contract
-const tx = await recoveryContract.registerGuardian({
-  walletId: 'wallet-id',
-  guardianAddress: guardianAddress,
-  publicKey: guardianPublicKey,
-  verificationLevel: 'enhanced'
-});
+// Register guardian for Bitcoin Script recovery
+await bitcoinRecoveryManager.registerGuardian(
+  'guardian-1',
+  guardianPublicKey
+);
 
-// Wait for confirmation
-await tx.wait();
+// Create recovery script with registered guardians
+const recoveryScript = await bitcoinRecoveryManager.createRecoveryScript(
+  'wallet-id',
+  2,  // Threshold
+  144 // Timelock blocks
+);
+
+// Generate Taproot address for enhanced privacy
+const taprootAddress = await taprootRecoveryManager.generateAddress('wallet-id');
 ```
 
 ## Guardian CLI Tools

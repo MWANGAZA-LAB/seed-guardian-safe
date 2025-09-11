@@ -58,7 +58,7 @@
 - Recovery Types (Owner, Guardian, PoL Timeout, Emergency)
 - Guardian Verification Process
 - Multi-Signature Requirements
-- **Smart Contract Integration** - NEW! Ethereum-based recovery
+- **Bitcoin Script Integration** - NEW! Bitcoin-native recovery using Taproot
 - **Time-Based Escalation** - NEW! Automated safety nets
 - Seed Reconstruction Process
 
@@ -138,7 +138,7 @@
 - **WebAuthn Integration** - Biometric authentication using FIDO2 standards
 - **Automatic Heartbeat Monitoring** - Weekly check-ins with manual fallback
 - **Guardian CLI Tools** - Go-based command-line interface for guardians
-- **Smart Contract Recovery** - Ethereum-based time-triggered recovery
+- **Bitcoin Script Recovery** - Bitcoin-native time-triggered recovery
 - **Multi-Guardian Consensus** - 60% threshold for recovery approval
 - **React UI Components** - Complete user interface for PoL management
 

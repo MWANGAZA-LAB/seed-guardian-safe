@@ -26,6 +26,8 @@ import { WebAuthnManager, WebAuthnConfig } from './webauthn';
 import { PoLKeyManager } from './keygen';
 import { PoLHeartbeat, HeartbeatCallbacks } from './heartbeat';
 import { PoLVerifier, VerificationConfig, GuardianConfig } from './verifier';
+import { BitcoinRecoveryManager } from '../bitcoin/recovery-script';
+import { TaprootRecoveryManager } from '../bitcoin/taproot';
 
 export interface PoLManagerConfig {
   walletId: string;
@@ -36,6 +38,8 @@ export interface PoLManagerConfig {
   polConfig: PoLConfig;
   heartbeatConfig: PoLHeartbeatConfig;
   verificationConfig: VerificationConfig;
+  bitcoinRecoveryManager?: BitcoinRecoveryManager;
+  taprootRecoveryManager?: TaprootRecoveryManager;
 }
 
 export interface PoLManagerCallbacks {
@@ -56,6 +60,8 @@ export class PoLManager {
   private keyManager: PoLKeyManager;
   private heartbeat: PoLHeartbeat;
   private verifier: PoLVerifier;
+  private bitcoinRecoveryManager: BitcoinRecoveryManager;
+  private taprootRecoveryManager: TaprootRecoveryManager;
   private isInitialized: boolean = false;
   private currentKeyPair: PoLKeyPair | null = null;
   private _currentStatus: PoLStatus | null = null;
@@ -74,6 +80,10 @@ export class PoLManager {
       callbacks
     );
     this.verifier = new PoLVerifier(this.keyManager, config.verificationConfig);
+    
+    // Initialize Bitcoin recovery managers
+    this.bitcoinRecoveryManager = config.bitcoinRecoveryManager || new BitcoinRecoveryManager();
+    this.taprootRecoveryManager = config.taprootRecoveryManager || new TaprootRecoveryManager();
   }
 
   /**
@@ -456,6 +466,93 @@ export class PoLManager {
         { originalError: error instanceof Error ? error.message : 'Unknown error' }
       );
     }
+  }
+
+  /**
+   * Create Bitcoin recovery script for Proof of Life timeout
+   */
+  async createBitcoinRecoveryScript(
+    guardianPublicKeys: Buffer[],
+    threshold: number,
+    timelockBlocks: number
+  ): Promise<Buffer> {
+    return await this.bitcoinRecoveryManager.createRecoveryScript(
+      this.config.walletId,
+      threshold,
+      timelockBlocks
+    );
+  }
+
+  /**
+   * Create Taproot recovery script for enhanced privacy
+   */
+  async createTaprootRecoveryScript(
+    guardianPublicKeys: Buffer[],
+    threshold: number,
+    timelockBlocks: number
+  ): Promise<Buffer> {
+    return await this.taprootRecoveryManager.createRecoveryScript(
+      this.config.walletId,
+      guardianPublicKeys,
+      threshold,
+      timelockBlocks
+    );
+  }
+
+  /**
+   * Create Proof of Life timeout script using Bitcoin Script
+   */
+  async createProofOfLifeTimeoutScript(
+    guardianPublicKeys: Buffer[],
+    threshold: number,
+    polTimeoutBlocks: number
+  ): Promise<Buffer> {
+    return await this.bitcoinRecoveryManager.createProofOfLifeTimeoutScript(
+      this.config.walletId,
+      threshold,
+      polTimeoutBlocks
+    );
+  }
+
+  /**
+   * Execute Bitcoin-based recovery
+   */
+  async executeBitcoinRecovery(
+    guardianSignatures: Array<{
+      guardianId: string;
+      signature: Buffer;
+    }>,
+    recoveryAddress: string
+  ): Promise<string> {
+    return await this.bitcoinRecoveryManager.executeRecovery(
+      this.config.walletId,
+      guardianSignatures,
+      recoveryAddress
+    );
+  }
+
+  /**
+   * Execute Taproot-based recovery
+   */
+  async executeTaprootRecovery(
+    guardianSignatures: Array<{
+      guardianId: string;
+      signature: Buffer;
+    }>,
+    recoveryAddress: string
+  ): Promise<string> {
+    return await this.taprootRecoveryManager.executeRecovery(
+      this.config.walletId,
+      guardianSignatures,
+      recoveryAddress
+    );
+  }
+
+  /**
+   * Generate Taproot address for recovery
+   */
+  async generateTaprootAddress(): Promise<string> {
+    return await this.taprootRecoveryManager.generateAddress(this.config.walletId);
   }
 
   /**

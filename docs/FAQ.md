@@ -130,7 +130,7 @@ const testRecovery = await protocol.initiateRecovery({
 
 ### What smart contracts are used?
 
-The protocol uses Ethereum smart contracts for:
+The protocol uses Bitcoin Script for:
 - **Time-based recovery triggers**
 - **Multi-guardian consensus**
 - **Guardian management**
@@ -138,18 +138,18 @@ The protocol uses Ethereum smart contracts for:
 
 ### Which networks are supported?
 
-- **Ethereum Mainnet** - Production use
-- **Ethereum Testnets** - Testing and development
-- **Polygon** - Lower gas costs
-- **Arbitrum** - Layer 2 scaling
+- **Bitcoin Mainnet** - Production use
+- **Bitcoin Testnet** - Testing and development
+- **Bitcoin Regtest** - Local development
+- **Bitcoin Signet** - Testing network
 
-### How do I interact with smart contracts?
+### How do I interact with Bitcoin Script?
 
-You can interact with smart contracts through:
+You can interact with Bitcoin Script through:
 - **Web interface** - User-friendly interface
 - **CLI tools** - Command-line interface
 - **API** - Programmatic access
-- **Direct contract calls** - Advanced users
+- **Direct script calls** - Advanced users
 
 ## CLI Tools
 
@@ -264,7 +264,7 @@ See the [Deployment Guide](DEPLOYMENT_GUIDE.md) for detailed instructions:
 - **Railway** - Application hosting
 - **GitHub Pages** - Static site hosting
 - **Supabase** - Database and authentication
-- **Ethereum** - Smart contract deployment
+- **Bitcoin Script** - Bitcoin-native recovery scripts
 
 ### What are the system requirements?
 

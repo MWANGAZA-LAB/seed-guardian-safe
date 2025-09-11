@@ -24,7 +24,7 @@ import {
 } from './types';
 import { WebAuthnManager, WebAuthnConfig } from './webauthn';
 import { PoLKeyManager } from './keygen';
-import { PoLHeartbeat, HeartbeatCallbacks } from './heartbeat';
+import { PoLHeartbeat } from './heartbeat';
 import { PoLVerifier, VerificationConfig, GuardianConfig } from './verifier';
 import { BitcoinRecoveryManager } from '../bitcoin/recovery-script';
 import { TaprootRecoveryManager } from '../bitcoin/taproot';
@@ -64,6 +64,7 @@ export class PoLManager {
   private taprootRecoveryManager: TaprootRecoveryManager;
   private isInitialized: boolean = false;
   private currentKeyPair: PoLKeyPair | null = null;
+  // @ts-ignore - Intentionally unused property for future implementation
   private _currentStatus: PoLStatus | null = null;
 
   constructor(config: PoLManagerConfig, callbacks: PoLManagerCallbacks = {}) {
@@ -219,7 +220,7 @@ export class PoLManager {
   async getStatus(): Promise<PoLStatus> {
     try {
       const status = await this.config.serverAPI.getStatus(this.config.walletId);
-      this.currentStatus = status;
+      this._currentStatus = status;
       return status;
     } catch (error) {
       throw new PoLNetworkError(
@@ -287,7 +288,7 @@ export class PoLManager {
       }
 
       if (this.callbacks.onRecoveryTriggered) {
-        this.callbacks.onRecoveryTriggered(trigger);
+        this.callbacks.onRecoveryTriggered(this.config.walletId, trigger.reason);
       }
 
       return trigger;
@@ -472,7 +473,7 @@ export class PoLManager {
    * Create Bitcoin recovery script for Proof of Life timeout
    */
   async createBitcoinRecoveryScript(
-    guardianPublicKeys: Buffer[],
+    _guardianPublicKeys: Buffer[],
     threshold: number,
     timelockBlocks: number
   ): Promise<Buffer> {
@@ -503,7 +504,7 @@ export class PoLManager {
    * Create Proof of Life timeout script using Bitcoin Script
    */
   async createProofOfLifeTimeoutScript(
-    guardianPublicKeys: Buffer[],
+    _guardianPublicKeys: Buffer[],
     threshold: number,
     polTimeoutBlocks: number
   ): Promise<Buffer> {

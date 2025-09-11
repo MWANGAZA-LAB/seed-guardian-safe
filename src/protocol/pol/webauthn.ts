@@ -30,12 +30,17 @@ export class WebAuthnManager {
    * Check if WebAuthn is supported by the browser
    */
   isSupported(): boolean {
-    return !!(
-      window.PublicKeyCredential &&
-      window.navigator.credentials &&
-      window.navigator.credentials.create &&
-      window.navigator.credentials.get
-    );
+    try {
+      return !!(
+        typeof window !== 'undefined' &&
+        window.PublicKeyCredential &&
+        window.navigator?.credentials &&
+        typeof window.navigator.credentials.create === 'function' &&
+        typeof window.navigator.credentials.get === 'function'
+      );
+    } catch {
+      return false;
+    }
   }
 
   /**
@@ -117,7 +122,7 @@ export class WebAuthnManager {
    */
   async authenticate(
     credentialId: string,
-    _challenge: string
+    challenge: string
   ): Promise<{
     credential: PublicKeyCredential;
     signature: string;
@@ -176,7 +181,7 @@ export class WebAuthnManager {
     authenticatorData: string,
     clientDataJSON: string,
     publicKey: string,
-    challenge: string
+    _challenge: string
   ): Promise<boolean> {
     try {
       // Import the public key

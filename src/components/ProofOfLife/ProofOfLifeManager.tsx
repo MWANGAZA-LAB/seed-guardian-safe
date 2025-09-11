@@ -394,7 +394,7 @@ function createMockServerAPI() {
         guardianNotifications: [],
       };
     },
-    getProofs: async (walletId: string, limit: number = 10) => {
+    getProofs: async (_walletId: string, _limit: number = 10) => {
       return [];
     },
     enrollWallet: async (enrollment: any) => {

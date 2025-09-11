@@ -20,8 +20,7 @@ import {
   Clock,
   RefreshCw,
   Eye,
-  FileText,
-  Settings
+  FileText
 } from 'lucide-react';
 import { PoLStatus, GuardianNotification, RecoveryTrigger, PoLProof } from '@/protocol/pol/types';
 
@@ -35,8 +34,6 @@ interface GuardianDashboardProps {
 export const GuardianDashboard: React.FC<GuardianDashboardProps> = ({
   guardianId,
   walletId,
-  onStatusChange,
-  onRecoveryTriggered,
 }) => {
   const [status, setStatus] = useState<PoLStatus | null>(null);
   const [notifications, setNotifications] = useState<GuardianNotification[]>([]);

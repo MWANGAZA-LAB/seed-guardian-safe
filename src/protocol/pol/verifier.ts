@@ -47,7 +47,7 @@ export class PoLVerifier {
   /**
    * Add guardian configuration
    */
-  addGuardian(_config: GuardianConfig): void {
+  addGuardian(config: GuardianConfig): void {
     this.guardianConfigs.set(config.guardianId, config);
   }
 
@@ -258,7 +258,7 @@ export class PoLVerifier {
     const notifications: GuardianNotification[] = [];
     const now = Math.floor(Date.now() / 1000);
 
-    for (const [guardianId, config] of this.guardianConfigs) {
+    for (const [guardianId, _config] of this.guardianConfigs) {
       let notificationType: 'pol_missed' | 'pol_escalated' | 'recovery_triggered';
       let message: string;
 

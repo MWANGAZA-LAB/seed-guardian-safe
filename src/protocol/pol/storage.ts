@@ -211,7 +211,7 @@ export class ClientPoLStorage implements PoLStorage {
         }
 
         if (!db.objectStoreNames.contains('configs')) {
-          const configsStore = db.createObjectStore('configs', { keyPath: 'walletId' });
+          db.createObjectStore('configs', { keyPath: 'walletId' });
         }
       };
     });

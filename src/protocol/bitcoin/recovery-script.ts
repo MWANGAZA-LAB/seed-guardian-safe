@@ -114,7 +114,7 @@ export class BitcoinScript {
   static createGuardianRecoveryScript(
     guardianPublicKeys: Buffer[],
     threshold: number,
-    timelockBlocks: number
+    _timelockBlocks: number
   ): Buffer {
     const script: number[] = [];
     
@@ -252,7 +252,7 @@ export class BitcoinTransaction {
       address: string;
       amount: number;
     }>,
-    recoveryScript: Buffer
+    _recoveryScript: Buffer
   ): Buffer {
     // This would integrate with a Bitcoin library like bitcoinjs-lib
     // For now, return a placeholder structure
@@ -395,7 +395,7 @@ export class BitcoinRecoveryManager {
    */
   async checkRecoveryConditions(
     walletId: string,
-    currentBlockHeight: number
+    _currentBlockHeight: number
   ): Promise<boolean> {
     const script = this.recoveryScripts.get(walletId);
     if (!script) return false;

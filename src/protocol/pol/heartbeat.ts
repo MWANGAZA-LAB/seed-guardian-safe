@@ -180,7 +180,7 @@ export class PoLHeartbeat {
     try {
       // In a real implementation, this would make an API call to the server
       // For now, we'll simulate the submission
-      const response = await this.simulateServerSubmission(proof);
+      const response = await this.simulateServerSubmission(_proof);
       
       if (!response.success) {
         throw new PoLNetworkError('Failed to submit proof', { response });
@@ -199,7 +199,7 @@ export class PoLHeartbeat {
   /**
    * Simulate server submission (replace with real API call)
    */
-  private async simulateServerSubmission(proof: PoLProof): Promise<{ success: boolean; message: string }> {
+  private async simulateServerSubmission(_proof: PoLProof): Promise<{ success: boolean; message: string }> {
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 100));
     
@@ -317,8 +317,10 @@ export class PoLHeartbeat {
 
   /**
    * Handle missed check-in
+   * @deprecated This method is not currently used but kept for future implementation
    */
-  private async handleMissedCheckIn(): Promise<void> {
+  // @ts-ignore - Intentionally unused method
+  private async _handleMissedCheckIn(): Promise<void> {
     this.missedCount++;
     
     if (this.callbacks.onMissed) {

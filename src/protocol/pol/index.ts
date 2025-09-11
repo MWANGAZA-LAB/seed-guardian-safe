@@ -67,12 +67,17 @@ export const PoLUtils = {
    * Check if WebAuthn is supported
    */
   isWebAuthnSupported(): boolean {
-    return !!(
-      window.PublicKeyCredential &&
-      window.navigator.credentials &&
-      window.navigator.credentials.create &&
-      window.navigator.credentials.get
-    );
+    try {
+      return !!(
+        typeof window !== 'undefined' &&
+        window.PublicKeyCredential &&
+        window.navigator?.credentials &&
+        typeof window.navigator.credentials.create === 'function' &&
+        typeof window.navigator.credentials.get === 'function'
+      );
+    } catch {
+      return false;
+    }
   },
 
   /**

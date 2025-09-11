@@ -5,7 +5,7 @@
  * in Bitcoin Script-based recovery scenarios
  */
 
-import { createHash, createHmac } from 'crypto';
+import { createHash } from 'crypto';
 import { Buffer } from 'buffer';
 
 // Taproot constants
@@ -125,9 +125,9 @@ export class Taproot {
    * Verify a Taproot signature
    */
   static verifySignature(
-    message: Buffer,
-    signature: Buffer,
-    publicKey: Buffer
+    _message: Buffer,
+    _signature: Buffer,
+    _publicKey: Buffer
   ): boolean {
     // This would use a proper signature verification library
     // For now, return a placeholder
@@ -271,7 +271,7 @@ export class TaprootTransaction {
   static signTransaction(
     transaction: Buffer,
     privateKey: Buffer,
-    scriptPath?: Buffer
+    _scriptPath?: Buffer
   ): Buffer {
     // This would use a proper Bitcoin signing library
     // For now, return a placeholder
@@ -286,9 +286,9 @@ export class TaprootTransaction {
    * Verify a Taproot transaction
    */
   static verifyTransaction(
-    transaction: Buffer,
-    signature: Buffer,
-    publicKey: Buffer
+    _transaction: Buffer,
+    _signature: Buffer,
+    _publicKey: Buffer
   ): boolean {
     // This would use a proper Bitcoin verification library
     // For now, return a placeholder
@@ -369,7 +369,10 @@ export class TaprootRecoveryManager {
     );
 
     // Add to script tree
-    const existingScripts = this.scriptTrees.get(walletId) ? [] : [];
+    const existingScripts: Array<{
+      script: Buffer;
+      leafVersion: number;
+    }> = this.scriptTrees.get(walletId) ? [] : [];
     existingScripts.push({
       script,
       leafVersion: TAPROOT_LEAF_VERSION
@@ -395,7 +398,10 @@ export class TaprootRecoveryManager {
     );
 
     // Add to script tree
-    const existingScripts = this.scriptTrees.get(walletId) ? [] : [];
+    const existingScripts: Array<{
+      script: Buffer;
+      leafVersion: number;
+    }> = this.scriptTrees.get(walletId) ? [] : [];
     existingScripts.push({
       script,
       leafVersion: TAPROOT_LEAF_VERSION
@@ -410,7 +416,7 @@ export class TaprootRecoveryManager {
    */
   async executeRecovery(
     walletId: string,
-    guardianSignatures: Array<{
+    _guardianSignatures: Array<{
       guardianId: string;
       signature: Buffer;
     }>,

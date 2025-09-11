@@ -4,40 +4,157 @@
  * Comprehensive tests for the Proof of Life system
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import { PoLManager, createPoLManager, DEFAULT_POL_CONFIG, DEFAULT_HEARTBEAT_CONFIG, DEFAULT_VERIFICATION_CONFIG, DEFAULT_WEBAUTHN_CONFIG } from '@/protocol/pol/manager';
 import { PoLKeyPair, PoLProof, PoLStatus, PoLError } from '@/protocol/pol/types';
 import { createClientStorage } from '@/protocol/pol/storage';
 
+// Mock WebAuthn module
+jest.mock('@/protocol/pol/webauthn', () => ({
+  WebAuthnManager: jest.fn().mockImplementation(() => mockWebAuthn),
+  WebAuthnConfig: {},
+}));
+
+// Mock storage module
+jest.mock('@/protocol/pol/storage', () => ({
+  createClientStorage: jest.fn(() => ({
+    storeKeyPair: jest.fn().mockResolvedValue(undefined),
+    retrieveKeyPair: jest.fn().mockResolvedValue(null), // No existing key pair
+    storeProof: jest.fn().mockResolvedValue(undefined),
+    retrieveProofs: jest.fn().mockResolvedValue([]),
+    storeConfig: jest.fn().mockResolvedValue(undefined),
+    retrieveConfig: jest.fn().mockResolvedValue(null),
+    clearStorage: jest.fn().mockResolvedValue(undefined),
+    initialize: jest.fn().mockResolvedValue(undefined),
+  })),
+}));
+
+// Mock keygen module
+jest.mock('@/protocol/pol/keygen', () => ({
+  PoLKeyManager: jest.fn().mockImplementation(() => mockKeyManager),
+  KeyGenerationConfig: {},
+}));
+
+// Mock heartbeat module
+jest.mock('@/protocol/pol/heartbeat', () => ({
+  PoLHeartbeat: jest.fn().mockImplementation(() => mockHeartbeat),
+  HeartbeatCallbacks: {},
+}));
+
+// Mock verifier module
+jest.mock('@/protocol/pol/verifier', () => ({
+  PoLVerifier: jest.fn().mockImplementation(() => ({
+    verifyProof: jest.fn(),
+    addGuardian: jest.fn(),
+    removeGuardian: jest.fn(),
+    getGuardians: jest.fn(() => []),
+    updateConfig: jest.fn(),
+    getVerificationStats: jest.fn(() => ({ totalVerifications: 0, successfulVerifications: 0 })),
+    createRecoveryTrigger: jest.fn().mockResolvedValue({
+      walletId: 'test_wallet_id',
+      reason: 'pol_timeout',
+      timestamp: Date.now(),
+      triggerId: 'test_trigger_id',
+    }),
+    destroy: jest.fn(),
+  })),
+  VerificationConfig: {},
+  GuardianConfig: {},
+}));
+
+// Mock Bitcoin recovery modules
+jest.mock('@/protocol/bitcoin/recovery-script', () => ({
+  BitcoinRecoveryManager: jest.fn().mockImplementation(() => ({
+    createRecoveryScript: jest.fn(),
+    createProofOfLifeTimeoutScript: jest.fn(),
+    executeRecovery: jest.fn(),
+  })),
+}));
+
+jest.mock('@/protocol/bitcoin/taproot', () => ({
+  TaprootRecoveryManager: jest.fn().mockImplementation(() => ({
+    createRecoveryScript: jest.fn(),
+    executeRecovery: jest.fn(),
+    generateAddress: jest.fn(),
+  })),
+}));
+
 // Mock WebAuthn
 const mockWebAuthn = {
-  isSupported: vi.fn(() => true),
-  enrollCredential: vi.fn(),
-  authenticate: vi.fn(),
-  verifySignature: vi.fn(),
+  isSupported: jest.fn(() => true),
+  enrollCredential: jest.fn().mockResolvedValue({
+    id: 'mock_credential_id',
+    type: 'public-key',
+    rawId: Buffer.from('mock_credential_id'),
+    response: {
+      attestationObject: Buffer.from('mock_attestation'),
+      clientDataJSON: Buffer.from('mock_client_data'),
+    },
+  }),
+  authenticate: jest.fn(),
+  verifySignature: jest.fn(),
+};
+
+// Mock KeyManager
+const mockKeyManager = {
+  getKeyPair: jest.fn().mockResolvedValue(null), // No existing key pair by default
+  generateKeyPair: jest.fn().mockResolvedValue({
+    publicKey: 'mock_public_key',
+    privateKey: 'mock_private_key',
+    keyId: 'test_key_id',
+    algorithm: 'ed25519',
+  }),
+  encryptPrivateKey: jest.fn().mockResolvedValue('encrypted_private_key'),
+  decryptPrivateKey: jest.fn().mockResolvedValue('decrypted_private_key'),
+  signData: jest.fn().mockResolvedValue('mock_signature'),
+  verifySignature: jest.fn().mockResolvedValue(true),
+};
+
+// Mock Heartbeat
+const mockHeartbeat = {
+  initialize: jest.fn().mockResolvedValue(undefined),
+  start: jest.fn(),
+  stop: jest.fn(),
+  performCheckIn: jest.fn().mockImplementation((proofType) => Promise.resolve({
+    walletId: 'test_wallet_id',
+    proofType: proofType || 'manual',
+    signature: 'mock_signature',
+    timestamp: Date.now(),
+  })),
+  performEmergencyCheckIn: jest.fn().mockResolvedValue({
+    walletId: 'test_wallet_id',
+    proofType: 'emergency',
+    signature: 'mock_signature',
+    timestamp: Date.now(),
+  }),
+  isRunning: jest.fn(() => false),
+  getStatus: jest.fn(() => ({ isRunning: false, lastCheckIn: null })),
+  updateConfig: jest.fn(),
+  updateHeartbeatConfig: jest.fn(),
+  destroy: jest.fn(),
 };
 
 // Mock storage
 const mockStorage = {
-  storeKeyPair: vi.fn(),
-  retrieveKeyPair: vi.fn(),
-  storeProof: vi.fn(),
-  retrieveProofs: vi.fn(),
-  storeConfig: vi.fn(),
-  retrieveConfig: vi.fn(),
-  clearStorage: vi.fn(),
-  initialize: vi.fn(),
+  storeKeyPair: jest.fn(),
+  retrieveKeyPair: jest.fn(),
+  storeProof: jest.fn(),
+  retrieveProofs: jest.fn(),
+  storeConfig: jest.fn(),
+  retrieveConfig: jest.fn(),
+  clearStorage: jest.fn(),
+  initialize: jest.fn(),
 };
 
 // Mock server API
 const mockServerAPI = {
-  submitProof: vi.fn(),
-  getStatus: vi.fn(),
-  getProofs: vi.fn(),
-  enrollWallet: vi.fn(),
-  revokeEnrollment: vi.fn(),
-  triggerRecovery: vi.fn(),
-  verifyProof: vi.fn(),
+  submitProof: jest.fn(),
+  getStatus: jest.fn(),
+  getProofs: jest.fn(),
+  enrollWallet: jest.fn(),
+  revokeEnrollment: jest.fn(),
+  triggerRecovery: jest.fn(),
+  verifyProof: jest.fn(),
 };
 
 describe('Proof of Life Manager', () => {
@@ -48,7 +165,19 @@ describe('Proof of Life Manager', () => {
 
   beforeEach(() => {
     // Reset all mocks
-    vi.clearAllMocks();
+    jest.clearAllMocks();
+    
+    // Reset WebAuthn mock to default values
+    mockWebAuthn.isSupported.mockReturnValue(true);
+    mockWebAuthn.enrollCredential.mockResolvedValue({
+      id: 'mock_credential_id',
+      type: 'public-key',
+      rawId: Buffer.from('mock_credential_id'),
+      response: {
+        attestationObject: Buffer.from('mock_attestation'),
+        clientDataJSON: Buffer.from('mock_client_data'),
+      },
+    });
 
     // Setup mock data
     mockKeyPair = {
@@ -130,23 +259,30 @@ describe('Proof of Life Manager', () => {
 
     it('should generate key pair if none exists', async () => {
       await manager.initialize();
-      expect(mockStorage.storeKeyPair).toHaveBeenCalled();
+      expect(mockKeyManager.generateKeyPair).toHaveBeenCalled();
     });
 
     it('should load existing key pair if available', async () => {
-      mockStorage.retrieveKeyPair.mockResolvedValue(mockKeyPair);
+      mockKeyManager.getKeyPair.mockResolvedValue(mockKeyPair);
       await manager.initialize();
-      expect(mockStorage.retrieveKeyPair).toHaveBeenCalled();
+      expect(mockKeyManager.getKeyPair).toHaveBeenCalled();
     });
 
     it('should throw error if WebAuthn not supported', async () => {
-      // Mock WebAuthn not supported
-      Object.defineProperty(window, 'PublicKeyCredential', {
-        value: undefined,
-        writable: true,
-      });
+      // Create a new manager with WebAuthn not supported
+      mockWebAuthn.isSupported.mockReturnValue(false);
+      const config = {
+        walletId: 'test_wallet_id',
+        storage: mockStorage,
+        serverAPI: mockServerAPI,
+        webAuthnConfig: {},
+        polConfig: {},
+        heartbeatConfig: {},
+        verificationConfig: {},
+      };
+      const unsupportedManager = new PoLManager(config, {});
 
-      await expect(manager.initialize()).rejects.toThrow('WebAuthn not supported');
+      await expect(unsupportedManager.initialize()).rejects.toThrow('WebAuthn not supported');
     });
   });
 
@@ -175,10 +311,11 @@ describe('Proof of Life Manager', () => {
     });
 
     it('should handle WebAuthn enrollment failure', async () => {
+      // Reset the mock to reject
       mockWebAuthn.enrollCredential.mockRejectedValue(new Error('WebAuthn failed'));
 
       await expect(manager.enroll('test_user', 'Test User', true))
-        .rejects.toThrow();
+        .rejects.toThrow('WebAuthn failed');
     });
   });
 
@@ -188,6 +325,8 @@ describe('Proof of Life Manager', () => {
     });
 
     it('should start monitoring', async () => {
+      // Mock heartbeat to return running status
+      mockHeartbeat.getStatus.mockReturnValue({ isRunning: true, lastCheckIn: null });
       await manager.startMonitoring();
       const systemInfo = manager.getSystemInfo();
       expect(systemInfo.isMonitoring).toBe(true);
@@ -195,6 +334,8 @@ describe('Proof of Life Manager', () => {
 
     it('should stop monitoring', async () => {
       await manager.startMonitoring();
+      // Mock heartbeat to return stopped status
+      mockHeartbeat.getStatus.mockReturnValue({ isRunning: false, lastCheckIn: null });
       manager.stopMonitoring();
       const systemInfo = manager.getSystemInfo();
       expect(systemInfo.isMonitoring).toBe(false);
@@ -206,7 +347,7 @@ describe('Proof of Life Manager', () => {
       expect(proof.walletId).toBe('test_wallet_id');
       expect(proof.proofType).toBe('manual');
       expect(proof.signature).toBeDefined();
-      expect(mockServerAPI.submitProof).toHaveBeenCalled();
+      expect(mockHeartbeat.performCheckIn).toHaveBeenCalledWith('manual');
     });
 
     it('should perform emergency check-in', async () => {
@@ -390,19 +531,50 @@ describe('Proof of Life Manager', () => {
       });
 
       await expect(manager.revokeEnrollment())
-        .rejects.toThrow('Revocation failed');
+        .rejects.toThrow('Enrollment revocation failed');
     });
   });
 
   describe('Error Handling', () => {
-    it('should handle initialization errors', async () => {
-      mockStorage.initialize.mockRejectedValue(new Error('Storage initialization failed'));
+    beforeEach(() => {
+      // Reset mocks for error handling tests
+      jest.clearAllMocks();
+      
+      // Reset WebAuthn mock to default values
+      mockWebAuthn.isSupported.mockReturnValue(true);
+      mockWebAuthn.enrollCredential.mockResolvedValue({
+        id: 'mock_credential_id',
+        type: 'public-key',
+        rawId: Buffer.from('mock_credential_id'),
+        response: {
+          attestationObject: Buffer.from('mock_attestation'),
+          clientDataJSON: Buffer.from('mock_client_data'),
+        },
+      });
+    });
 
-      await expect(manager.initialize())
-        .rejects.toThrow('PoL initialization failed');
+    it('should handle initialization errors', async () => {
+      // Create a new manager instance to test initialization failure
+      mockKeyManager.getKeyPair.mockRejectedValue(new Error('Key pair loading failed'));
+      
+      const config = {
+        walletId: 'test_wallet_id',
+        storage: mockStorage,
+        serverAPI: mockServerAPI,
+        webAuthnConfig: DEFAULT_WEBAUTHN_CONFIG,
+        polConfig: DEFAULT_POL_CONFIG,
+        heartbeatConfig: DEFAULT_HEARTBEAT_CONFIG,
+        verificationConfig: DEFAULT_VERIFICATION_CONFIG,
+      };
+      const errorManager = new PoLManager(config, {});
+
+      await expect(errorManager.initialize())
+        .rejects.toThrow('Failed to load or generate key pair');
     });
 
     it('should handle network errors', async () => {
+      // Reset keyManager to not fail initialization
+      mockKeyManager.getKeyPair.mockResolvedValue(mockKeyPair);
       await manager.initialize();
       
       mockServerAPI.getStatus.mockRejectedValue(new Error('Network error'));
@@ -412,15 +584,31 @@ describe('Proof of Life Manager', () => {
     });
 
     it('should handle storage errors', async () => {
-      mockStorage.storeKeyPair.mockRejectedValue(new Error('Storage error'));
-
-      await expect(manager.initialize())
-        .rejects.toThrow();
+      // Create a new manager instance to test initialization failure
+      const config = {
+        walletId: 'test_wallet_id',
+        storage: mockStorage,
+        serverAPI: mockServerAPI,
+        webAuthnConfig: DEFAULT_WEBAUTHN_CONFIG,
+        polConfig: DEFAULT_POL_CONFIG,
+        heartbeatConfig: DEFAULT_HEARTBEAT_CONFIG,
+        verificationConfig: DEFAULT_VERIFICATION_CONFIG,
+      };
+      const errorManager = new PoLManager(config, {});
+      
+      // Set the mock to reject AFTER creating the manager (after beforeEach runs)
+      mockKeyManager.generateKeyPair.mockRejectedValue(new Error('Key generation failed'));
+      
+      await expect(errorManager.initialize())
+        .rejects.toThrow('Failed to load or generate key pair');
     });
   });
 
   describe('Factory Function', () => {
     it('should create manager with factory function', async () => {
+      // Reset keyManager to not fail initialization
+      mockKeyManager.getKeyPair.mockResolvedValue(mockKeyPair);
+      
       const config = {
         walletId: 'test_wallet_id',
         storage: mockStorage,

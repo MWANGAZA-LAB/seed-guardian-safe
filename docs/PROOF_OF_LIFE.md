@@ -176,7 +176,7 @@ const triggers = await manager.getRecoveryTriggers();
 ### Check Status
 
 ```bash
-./pol-cli status --wallet-id "wallet-id" --server-url "https://api.example.com"
+./pol-cli status --wallet-id "wallet-id" --server-url "https://api.seedguardiansafe.com"
 ```
 
 ### Verify Proof

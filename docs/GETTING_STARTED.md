@@ -51,9 +51,9 @@ const wallet = await protocol.createWallet({
   name: 'My Inheritance Wallet',
   masterSeed: 'your-24-word-mnemonic-seed-phrase',
   guardians: [
-    { email: 'guardian1@example.com', fullName: 'John Doe' },
-    { email: 'guardian2@example.com', fullName: 'Jane Smith' },
-    { email: 'guardian3@example.com', fullName: 'Bob Johnson' }
+    { email: 'guardian1@seedguardiansafe.com', fullName: 'John Doe' },
+    { email: 'guardian2@seedguardiansafe.com', fullName: 'Jane Smith' },
+    { email: 'guardian3@seedguardiansafe.com', fullName: 'Bob Johnson' }
   ],
   threshold: 2, // Require 2 of 3 guardians
   userPassword: 'your-secure-password'

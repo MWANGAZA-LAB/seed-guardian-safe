@@ -5,7 +5,13 @@
  * using Web Crypto API and audited libraries.
  */
 
-import { CryptoError, KeyPair } from '../core/types';
+import { 
+  CryptoError, 
+  EncryptionError, 
+  KeyGenerationError,
+  handleProtocolError 
+} from '../errors';
+import { KeyPair } from '../core/types';
 
 export interface EncryptionResult {
   encryptedData: string;
@@ -59,9 +65,13 @@ export class ClientSideEncryption {
         createdAt: new Date().toISOString(),
       };
     } catch (error) {
-      throw new CryptoError('Failed to generate key pair', {
-        error: error instanceof Error ? error.message : 'Unknown error'
-      });
+      throw handleProtocolError(
+        new KeyGenerationError('Failed to generate key pair', { 
+          algorithm: 'RSA-OAEP',
+          keySize: 2048 
+        }),
+        { operation: 'generateKeyPair' }
+      );
     }
   }
 
@@ -97,10 +107,13 @@ export class ClientSideEncryption {
         keyId,
       };
     } catch (error) {
-      throw new CryptoError('Failed to encrypt with RSA', {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        keyId
-      });
+      throw handleProtocolError(
+        new EncryptionError('Failed to encrypt with RSA', { 
+          keyId,
+          dataLength: data.length 
+        }),
+        { operation: 'encryptWithRSA', keyId }
+      );
     }
   }
 
@@ -135,10 +148,13 @@ export class ClientSideEncryption {
         verified: true, // RSA-OAEP provides authentication
       };
     } catch (error) {
-      throw new CryptoError('Failed to decrypt with RSA', {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        keyId
-      });
+      throw handleProtocolError(
+        new EncryptionError('Failed to decrypt with RSA', { 
+          keyId,
+          encryptedDataLength: encryptedData.length 
+        }),
+        { operation: 'decryptWithRSA', keyId }
+      );
     }
   }
 
@@ -183,9 +199,13 @@ export class ClientSideEncryption {
         keyId: await this.generateKeyId(password),
       };
     } catch (error) {
-      throw new CryptoError('Failed to encrypt with AES', {
-        error: error instanceof Error ? error.message : 'Unknown error'
-      });
+      throw handleProtocolError(
+        new EncryptionError('Failed to encrypt with AES', { 
+          dataLength: data.length,
+          algorithm: 'AES-GCM' 
+        }),
+        { operation: 'encryptWithAES' }
+      );
     }
   }
 
@@ -231,9 +251,13 @@ export class ClientSideEncryption {
         verified: true, // AES-GCM provides authentication
       };
     } catch (error) {
-      throw new CryptoError('Failed to decrypt with AES', {
-        error: error instanceof Error ? error.message : 'Unknown error'
-      });
+      throw handleProtocolError(
+        new EncryptionError('Failed to decrypt with AES', { 
+          encryptedDataLength: encryptedData.length,
+          algorithm: 'AES-GCM' 
+        }),
+        { operation: 'decryptWithAES' }
+      );
     }
   }
 
@@ -263,9 +287,12 @@ export class ClientSideEncryption {
 
       return this.bufferToBase64(signatureBuffer);
     } catch (error) {
-      throw new CryptoError('Failed to sign data', {
-        error: error instanceof Error ? error.message : 'Unknown error'
-      });
+      throw handleProtocolError(
+        new CryptoError('Failed to sign data', 'SIGNING_FAILED', 'critical', { 
+          dataLength: data.length 
+        }),
+        { operation: 'signData' }
+      );
     }
   }
 
@@ -296,9 +323,13 @@ export class ClientSideEncryption {
         dataBuffer
       );
     } catch (error) {
-      throw new CryptoError('Failed to verify signature', {
-        error: error instanceof Error ? error.message : 'Unknown error'
-      });
+      throw handleProtocolError(
+        new CryptoError('Failed to verify signature', 'SIGNATURE_VERIFICATION_FAILED', 'critical', { 
+          signatureLength: signature.length,
+          dataLength: data.length 
+        }),
+        { operation: 'verifySignature' }
+      );
     }
   }
 
@@ -307,7 +338,8 @@ export class ClientSideEncryption {
    */
   private async deriveKeyFromPassword(password: string): Promise<CryptoKey> {
     const passwordBuffer = new TextEncoder().encode(password);
-    const salt = new TextEncoder().encode('seed-guardian-salt'); // In production, use random salt
+    // Generate cryptographically secure random salt
+    const salt = crypto.getRandomValues(new Uint8Array(16));
 
     const keyMaterial = await crypto.subtle.importKey(
       'raw',

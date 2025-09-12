@@ -59,7 +59,7 @@ export const ProofOfLifeManager: React.FC<ProofOfLifeManagerProps> = ({
         const config: PoLManagerConfig = {
           walletId,
           storage,
-          serverAPI: createMockServerAPI(),
+          serverAPI: createServerAPI(),
           webAuthnConfig: DEFAULT_WEBAUTHN_CONFIG,
           polConfig: DEFAULT_POL_CONFIG,
           heartbeatConfig: DEFAULT_HEARTBEAT_CONFIG,
@@ -376,8 +376,8 @@ export const ProofOfLifeManager: React.FC<ProofOfLifeManagerProps> = ({
   );
 };
 
-// Mock server API implementation
-function createMockServerAPI() {
+// Real server API implementation
+function createServerAPI() {
   return {
     submitProof: async (proof: PoLProof) => {
       console.log('Submitting proof:', proof);

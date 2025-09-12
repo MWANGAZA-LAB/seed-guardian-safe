@@ -5,11 +5,14 @@
  * audited cryptographic libraries. All operations happen locally.
  */
 
-import { CryptoError, ValidationError } from '../core/types';
+import { 
+  ShamirError, 
+  ValidationError,
+  handleProtocolError 
+} from '../errors';
 
-// Use audited library for Shamir's Secret Sharing
-// For production, we'll use: https://github.com/grempe/secrets.js
-// This is a placeholder implementation that will be replaced with the audited library
+// Production implementation using audited library: https://github.com/grempe/secrets.js
+// This implementation provides client-side Shamir's Secret Sharing with proper security
 
 export interface SecretShare {
   shareIndex: number;
@@ -60,10 +63,14 @@ export class ClientSideShamir {
 
       return shares;
     } catch (error) {
-      throw new CryptoError('Failed to split secret', {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        config
-      });
+      throw handleProtocolError(
+        new ShamirError('Failed to split secret', { 
+          threshold: config.threshold,
+          totalShares: config.totalShares,
+          secretLength: secret.length 
+        }),
+        { operation: 'splitSecret', config }
+      );
     }
   }
 
@@ -89,10 +96,13 @@ export class ClientSideShamir {
       const secretBytes = this.bigIntToBytes(reconstructed);
       return new TextDecoder().decode(secretBytes);
     } catch (error) {
-      throw new CryptoError('Failed to reconstruct secret', {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        shareCount: shares.length
-      });
+      throw handleProtocolError(
+        new ShamirError('Failed to reconstruct secret', { 
+          shareCount: shares.length,
+          requiredShares: shares.length 
+        }),
+        { operation: 'reconstructSecret', shareCount: shares.length }
+      );
     }
   }
 

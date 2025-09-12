@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { logger } from '@/lib/logger';
 import { toast } from '@/hooks/use-toast';
+import QRCodeLib from 'qrcode';
 
 interface QRCodeGeneratorProps {
   data?: string;
@@ -62,8 +63,33 @@ export default function QRCodeGenerator({
     try {
       setIsGenerating(true);
       
-      // Mock QR code generation - would use a real QR code library
-      await generateMockQRCode();
+      if (!qrData.trim()) {
+        toast({
+          title: 'Error',
+          description: 'Please enter data to encode',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      const canvas = canvasRef.current;
+
+      // Generate QR code using the qrcode library
+      await QRCodeLib.toCanvas(canvas, qrData, {
+        width: options.size,
+        margin: options.margin,
+        color: {
+          dark: options.color.dark,
+          light: options.color.light
+        },
+        errorCorrectionLevel: options.errorCorrectionLevel
+      });
+
+      logger.info('QR code generated successfully');
+      toast({
+        title: 'Success',
+        description: 'QR code generated successfully'
+      });
       
     } catch (err) {
       logger.error('Failed to generate QR code', err instanceof Error ? err : new Error(String(err)));
@@ -77,66 +103,6 @@ export default function QRCodeGenerator({
     }
   };
 
-  const generateMockQRCode = async (): Promise<void> => {
-    // Mock implementation - would use a real QR code library like qrcode.js
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Set canvas size
-    canvas.width = options.size;
-    canvas.height = options.size;
-
-    // Clear canvas
-    ctx.fillStyle = options.color.light;
-    ctx.fillRect(0, 0, options.size, options.size);
-
-    // Generate mock QR pattern
-    const cellSize = Math.floor(options.size / 25); // 25x25 grid
-    const margin = options.margin;
-    
-    ctx.fillStyle = options.color.dark;
-    
-    // Create a simple pattern that looks like a QR code
-    for (let row = 0; row < 25; row++) {
-      for (let col = 0; col < 25; col++) {
-        // Create a deterministic pattern based on the data
-        const hash = (row * 25 + col + qrData.length) % 3;
-        if (hash === 0) {
-          ctx.fillRect(
-            margin + col * cellSize,
-            margin + row * cellSize,
-            cellSize,
-            cellSize
-          );
-        }
-      }
-    }
-
-    // Add corner markers (like real QR codes)
-    const markerSize = cellSize * 7;
-    const markerPositions = [
-      { x: margin, y: margin },
-      { x: options.size - margin - markerSize, y: margin },
-      { x: margin, y: options.size - margin - markerSize }
-    ];
-
-    markerPositions.forEach(pos => {
-      // Outer square
-      ctx.fillStyle = options.color.dark;
-      ctx.fillRect(pos.x, pos.y, markerSize, markerSize);
-      
-      // Inner square
-      ctx.fillStyle = options.color.light;
-      ctx.fillRect(pos.x + cellSize, pos.y + cellSize, markerSize - 2 * cellSize, markerSize - 2 * cellSize);
-      
-      // Center square
-      ctx.fillStyle = options.color.dark;
-      ctx.fillRect(pos.x + 2 * cellSize, pos.y + 2 * cellSize, markerSize - 4 * cellSize, markerSize - 4 * cellSize);
-    });
-  };
 
   const handleDataChange = (newData: string) => {
     setQrData(newData);

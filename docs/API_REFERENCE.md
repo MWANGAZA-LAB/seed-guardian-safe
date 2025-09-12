@@ -426,7 +426,7 @@ const config = await storage.retrieveConfig(walletId);
 ```typescript
 // Create guardian
 const guardian = await guardianAPI.createGuardian({
-  email: 'guardian@example.com',
+  email: 'guardian@seedguardiansafe.com',
   fullName: 'John Doe',
   verificationLevel: 'enhanced'
 });
@@ -562,7 +562,7 @@ event RecoveryExecuted(
 ./pol-cli init --guardian-id "guardian-1" --verification-level "enhanced"
 
 # Check status
-./pol-cli status --wallet-id "wallet-id" --server-url "https://api.example.com"
+./pol-cli status --wallet-id "wallet-id" --server-url "https://api.seedguardiansafe.com"
 
 # Verify proof
 ./pol-cli verify --proof-file "proof.json" --public-key "public-key"
@@ -588,7 +588,7 @@ seed-guardian create --name "My Wallet" --threshold 3 --guardians 5
 seed-guardian load --wallet-id "wallet-id"
 
 # Add guardian
-seed-guardian add-guardian --wallet-id "wallet-id" --email "guardian@example.com"
+seed-guardian add-guardian --wallet-id "wallet-id" --email "guardian@seedguardiansafe.com"
 
 # Initiate recovery
 seed-guardian recover --wallet-id "wallet-id" --reason "owner_unavailable"

@@ -103,49 +103,33 @@ export default function RecoveryInitiationForm({
   };
 
   const loadGuardiansFromSupabase = async (): Promise<GuardianInfo[]> => {
-    // Mock implementation - would integrate with Supabase
-    return [
-      {
-        id: 'guardian-1',
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '+1-555-0123',
-        priority: 'high',
-        responseTime: 2,
-        reliability: 95,
-        status: 'active'
-      },
-      {
-        id: 'guardian-2',
-        name: 'Jane Smith',
-        email: 'jane@example.com',
-        phone: '+1-555-0124',
-        priority: 'high',
-        responseTime: 4,
-        reliability: 88,
-        status: 'active'
-      },
-      {
-        id: 'guardian-3',
-        name: 'Bob Johnson',
-        email: 'bob@example.com',
-        phone: '+1-555-0125',
-        priority: 'medium',
-        responseTime: 24,
-        reliability: 72,
-        status: 'active'
-      },
-      {
-        id: 'guardian-4',
-        name: 'Alice Brown',
-        email: 'alice@example.com',
-        phone: '+1-555-0126',
-        priority: 'low',
-        responseTime: 48,
-        reliability: 0,
-        status: 'pending'
+    try {
+      // Load guardians from Supabase
+      const { supabaseClient } = await import('@/integrations/supabase/client');
+      const { data: guardians, error } = await supabaseClient
+        .getClient()
+        .from('guardians')
+        .select('*')
+        .eq('wallet_id', walletId || '');
+      
+      if (error) {
+        throw new Error(`Failed to load guardians: ${error.message}`);
       }
-    ];
+      
+      return (guardians || []).map((guardian: any) => ({
+        id: guardian.id,
+        name: guardian.full_name,
+        email: guardian.email,
+        phone: guardian.phone_number,
+        priority: guardian.priority,
+        responseTime: guardian.response_time,
+        reliability: guardian.reliability,
+        status: guardian.status
+      }));
+    } catch (error) {
+      console.error('Failed to load guardians:', error);
+      return [];
+    }
   };
 
   const validateStep = (step: number): boolean => {

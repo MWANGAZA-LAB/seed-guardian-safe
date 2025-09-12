@@ -109,7 +109,7 @@ func main() {
 					&cli.StringFlag{
 						Name:  "server-url",
 						Usage: "Server URL",
-						Value: "http://localhost:3000",
+						Value: "https://api.seedguardiansafe.com",
 					},
 				},
 				Action: checkStatus,
@@ -143,7 +143,7 @@ func main() {
 					&cli.StringFlag{
 						Name:  "server-url",
 						Usage: "Server URL",
-						Value: "http://localhost:3000",
+						Value: "https://api.seedguardiansafe.com",
 					},
 				},
 				Action: listNotifications,
@@ -160,7 +160,7 @@ func main() {
 					&cli.StringFlag{
 						Name:  "server-url",
 						Usage: "Server URL",
-						Value: "http://localhost:3000",
+						Value: "https://api.seedguardiansafe.com",
 					},
 				},
 				Action: acknowledgeNotification,

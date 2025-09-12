@@ -42,8 +42,8 @@ Welcome to the comprehensive documentation for the Seed Guardian Safe protocol. 
      name: 'My Inheritance Wallet',
      masterSeed: 'your-24-word-mnemonic',
      guardians: [
-       { email: 'guardian1@example.com', fullName: 'John Doe' },
-       { email: 'guardian2@example.com', fullName: 'Jane Smith' }
+       { email: 'guardian1@seedguardiansafe.com', fullName: 'John Doe' },
+       { email: 'guardian2@seedguardiansafe.com', fullName: 'Jane Smith' }
      ],
      threshold: 2
    });

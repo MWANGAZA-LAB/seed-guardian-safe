@@ -5,8 +5,17 @@
  * This replaces Ethereum smart contracts with Bitcoin-native solutions
  */
 
-import { createHash } from 'crypto';
 import { Buffer } from 'buffer';
+import * as bitcoin from 'bitcoinjs-lib';
+import { ECPairFactory } from 'ecpair';
+import * as ecc from 'tiny-secp256k1';
+import { 
+  BitcoinAddressError, 
+  BitcoinTransactionError, 
+  BitcoinRecoveryError,
+  BitcoinScriptError,
+  handleProtocolError 
+} from '../errors';
 
 // Bitcoin Script opcodes
 export const OP_CODES = {
@@ -253,48 +262,80 @@ export class BitcoinTransaction {
       amount: number;
     }>,
     _recoveryScript: Buffer
-  ): Buffer {
-    // This would integrate with a Bitcoin library like bitcoinjs-lib
-    // For now, return a placeholder structure
-    const tx = {
-      version: 0x02000000,
-      inputs: inputs.map(input => ({
-        txid: Buffer.from(input.txid, 'hex'),
-        vout: input.vout,
-        scriptSig: Buffer.alloc(0), // Will be filled during signing
-        sequence: 0xffffffff
-      })),
-      outputs: outputs.map(output => ({
-        value: output.amount,
-        scriptPubKey: Buffer.from(output.address, 'hex')
-      })),
-      locktime: 0
-    };
-    
-    return Buffer.from(JSON.stringify(tx));
+  ): bitcoin.Transaction {
+    try {
+      // Create transaction using bitcoinjs-lib v6 API
+      const tx = new bitcoin.Transaction();
+      
+      // Add inputs
+      inputs.forEach(input => {
+        tx.addInput(Buffer.from(input.txid, 'hex'), input.vout);
+      });
+      
+      // Add outputs
+      outputs.forEach(output => {
+        const address = bitcoin.address.toOutputScript(output.address, bitcoin.networks.bitcoin);
+        tx.addOutput(address, output.amount);
+      });
+      
+      // Set locktime if needed (for timelock scripts)
+      tx.locktime = 0;
+      
+      return tx;
+    } catch (error) {
+      throw handleProtocolError(
+        new BitcoinTransactionError('Failed to create recovery transaction', { 
+          inputCount: inputs.length,
+          outputCount: outputs.length 
+        }),
+        { operation: 'createRecoveryTransaction' }
+      );
+    }
   }
 
   /**
    * Sign a recovery transaction with guardian signatures
    */
   static signRecoveryTransaction(
-    transaction: Buffer,
+    transaction: bitcoin.Transaction,
     guardianSignatures: Array<{
       guardianId: string;
       signature: Buffer;
       publicKey: Buffer;
     }>,
-    recoveryScript: Buffer
-  ): Buffer {
-    // This would integrate with a Bitcoin signing library
-    // For now, return a placeholder
-    const signedTx = {
-      transaction,
-      signatures: guardianSignatures,
-      script: recoveryScript
-    };
-    
-    return Buffer.from(JSON.stringify(signedTx));
+    _recoveryScript: Buffer
+  ): bitcoin.Transaction {
+    try {
+      // Create ECPair factory for signing
+      const ECPair = ECPairFactory(ecc);
+      
+      // Sign the transaction with guardian signatures
+      const signedTx = transaction.clone();
+      
+      // Add signatures for each input
+      guardianSignatures.forEach((sig, index) => {
+        if (index < signedTx.ins.length) {
+          const keyPair = ECPair.fromPublicKey(sig.publicKey);
+          const hashType = bitcoin.Transaction.SIGHASH_ALL;
+          const signature = keyPair.sign(signedTx.hashForSignature(index, _recoveryScript, hashType));
+          const scriptSig = bitcoin.script.compile([
+            Buffer.from(signature),
+            sig.publicKey
+          ]);
+          signedTx.ins[index].script = scriptSig;
+        }
+      });
+      
+      return signedTx;
+    } catch (error) {
+      throw handleProtocolError(
+        new BitcoinTransactionError('Failed to sign recovery transaction', { 
+          transactionId: transaction.getId(),
+          signatureCount: guardianSignatures.length 
+        }),
+        { operation: 'signRecoveryTransaction' }
+      );
+    }
   }
 }
 
@@ -304,32 +345,63 @@ export class BitcoinAddress {
    * Generate a Taproot address from a public key
    */
   static generateTaprootAddress(publicKey: Buffer): string {
-    // This would use a Bitcoin library to generate P2TR addresses
-    // For now, return a placeholder
-    const hash = createHash('sha256').update(publicKey).digest();
-    return `bc1p${hash.toString('hex').substring(0, 40)}`;
+    try {
+      // Generate P2TR (Pay-to-Taproot) address using bitcoinjs-lib
+      const p2tr = bitcoin.payments.p2tr({
+        pubkey: publicKey,
+        network: bitcoin.networks.bitcoin
+      });
+      return p2tr.address || '';
+    } catch (error) {
+      throw handleProtocolError(
+        new BitcoinAddressError('Failed to generate Taproot address', { 
+          publicKeyLength: publicKey.length 
+        }),
+        { operation: 'generateTaprootAddress' }
+      );
+    }
   }
 
   /**
    * Generate a P2WSH address from a script
    */
   static generateP2WSHAddress(script: Buffer): string {
-    // This would use a Bitcoin library to generate P2WSH addresses
-    // For now, return a placeholder
-    const hash = createHash('sha256').update(script).digest();
-    return `bc1q${hash.toString('hex').substring(0, 40)}`;
+    try {
+      // Generate P2WSH (Pay-to-Witness-Script-Hash) address using bitcoinjs-lib
+      const p2wsh = bitcoin.payments.p2wsh({
+        redeem: { output: script },
+        network: bitcoin.networks.bitcoin
+      });
+      return p2wsh.address || '';
+    } catch (error) {
+      throw handleProtocolError(
+        new BitcoinAddressError('Failed to generate P2WSH address', { 
+          scriptLength: script.length 
+        }),
+        { operation: 'generateP2WSHAddress' }
+      );
+    }
   }
 
   /**
    * Generate a P2SH address from a script
    */
   static generateP2SHAddress(script: Buffer): string {
-    // This would use a Bitcoin library to generate P2SH addresses
-    // For now, return a placeholder
-    const hash = createHash('ripemd160').update(
-      createHash('sha256').update(script).digest()
-    ).digest();
-    return `3${hash.toString('hex').substring(0, 40)}`;
+    try {
+      // Generate P2SH (Pay-to-Script-Hash) address using bitcoinjs-lib
+      const p2sh = bitcoin.payments.p2sh({
+        redeem: { output: script },
+        network: bitcoin.networks.bitcoin
+      });
+      return p2sh.address || '';
+    } catch (error) {
+      throw handleProtocolError(
+        new BitcoinAddressError('Failed to generate P2SH address', { 
+          scriptLength: script.length 
+        }),
+        { operation: 'generateP2SHAddress' }
+      );
+    }
   }
 }
 
@@ -401,8 +473,20 @@ export class BitcoinRecoveryManager {
     if (!script) return false;
 
     // Parse script to check timelock conditions
-    // This would integrate with a Bitcoin library
-    return true; // Placeholder
+    // Integrate with Bitcoin library to verify timelock conditions
+    try {
+      const scriptBuffer = Buffer.from(script as unknown as string, 'hex');
+      // Parse OP_CHECKLOCKTIMEVERIFY or OP_CHECKSEQUENCEVERIFY
+      // This would use a proper Bitcoin script parser
+      return scriptBuffer.length > 0; // Basic validation
+    } catch (error) {
+      throw handleProtocolError(
+        new BitcoinScriptError('Failed to parse recovery script', { 
+          scriptLength: script.length 
+        }),
+        { operation: 'parseRecoveryScript' }
+      );
+    }
   }
 
   /**
@@ -417,12 +501,15 @@ export class BitcoinRecoveryManager {
     recoveryAddress: string
   ): Promise<string> {
     const script = this.recoveryScripts.get(walletId);
-    if (!script) throw new Error('Recovery script not found');
+    if (!script) throw new BitcoinRecoveryError('Recovery script not found', { walletId });
 
-    // Create and sign recovery transaction
+    // Create and sign recovery transaction with proper inputs and outputs
+    const inputs = await this.getRecoveryInputs(walletId);
+    const outputs = [{ address: recoveryAddress, amount: await this.getRecoveryAmount(walletId) }];
+    
     const transaction = BitcoinTransaction.createRecoveryTransaction(
-      [], // Inputs would be provided
-      [{ address: recoveryAddress, amount: 0 }], // Outputs
+      inputs,
+      outputs,
       script
     );
 
@@ -435,8 +522,26 @@ export class BitcoinRecoveryManager {
       script
     );
 
-    // This would broadcast the transaction to the Bitcoin network
-    return signedTx.toString('hex');
+    // Return the signed transaction as hex string
+    return signedTx.toHex();
+  }
+
+  /**
+   * Get recovery inputs for a wallet
+   */
+  private async getRecoveryInputs(_walletId: string): Promise<Array<{ txid: string; vout: number; scriptPubKey: Buffer; amount: number }>> {
+    // This would query the Bitcoin network for UTXOs
+    // For now, return empty array - would be implemented with proper Bitcoin RPC
+    return [];
+  }
+
+  /**
+   * Get recovery amount for a wallet
+   */
+  private async getRecoveryAmount(_walletId: string): Promise<number> {
+    // This would calculate the total amount to recover
+    // For now, return 0 - would be implemented with proper balance calculation
+    return 0;
   }
 }
 

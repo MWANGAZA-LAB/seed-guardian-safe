@@ -77,74 +77,36 @@ export default function GuardianStatusChart({
   };
 
   const loadGuardianStatus = async (): Promise<GuardianStatus[]> => {
-    // Mock data - would typically load from protocol client
-    return [
-      {
-        id: 'guardian-1',
-        name: 'John Doe',
-        email: 'john@example.com',
-        status: 'active',
-        lastSeen: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-        responseTime: 2,
-        reliability: 95,
-        priority: 'high',
-        verificationMethod: 'email',
-        sharesHeld: 1,
-        totalShares: 5
-      },
-      {
-        id: 'guardian-2',
-        name: 'Jane Smith',
-        email: 'jane@example.com',
-        status: 'active',
-        lastSeen: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
-        responseTime: 4,
-        reliability: 88,
-        priority: 'high',
-        verificationMethod: 'both',
-        sharesHeld: 1,
-        totalShares: 5
-      },
-      {
-        id: 'guardian-3',
-        name: 'Bob Johnson',
-        email: 'bob@example.com',
-        status: 'inactive',
-        lastSeen: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-        responseTime: 24,
-        reliability: 72,
-        priority: 'medium',
-        verificationMethod: 'sms',
-        sharesHeld: 1,
-        totalShares: 5
-      },
-      {
-        id: 'guardian-4',
-        name: 'Alice Brown',
-        email: 'alice@example.com',
-        status: 'pending',
-        lastSeen: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
-        responseTime: 48,
-        reliability: 0,
-        priority: 'low',
-        verificationMethod: 'email',
-        sharesHeld: 0,
-        totalShares: 5
-      },
-      {
-        id: 'guardian-5',
-        name: 'Charlie Wilson',
-        email: 'charlie@example.com',
-        status: 'suspended',
-        lastSeen: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
-        responseTime: 72,
-        reliability: 45,
-        priority: 'low',
-        verificationMethod: 'both',
-        sharesHeld: 1,
-        totalShares: 5
+    try {
+      // Load guardian data from Supabase
+      const { supabaseClient } = await import('@/integrations/supabase/client');
+      const { data: guardians, error } = await supabaseClient
+        .getClient()
+        .from('guardians')
+        .select('*')
+        .eq('wallet_id', walletId || '');
+      
+      if (error) {
+        throw new Error(`Failed to load guardians: ${error.message}`);
       }
-    ];
+      
+      return guardians.map((guardian: any) => ({
+        id: guardian.id,
+        name: guardian.full_name,
+        email: guardian.email,
+        status: guardian.status,
+        lastSeen: guardian.last_seen,
+        responseTime: guardian.response_time,
+        reliability: guardian.reliability,
+        priority: guardian.priority,
+        verificationMethod: guardian.verification_method,
+        sharesHeld: guardian.shares_held,
+        totalShares: guardian.total_shares
+      }));
+    } catch (error) {
+      console.error('Failed to load guardian data:', error);
+      return [];
+    }
   };
 
   const getGuardianStats = (): GuardianStats => {

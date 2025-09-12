@@ -531,7 +531,7 @@ CREATE POLICY guardian_access_policy ON guardians
 ```typescript
 // 1. Invite Guardian
 const invitation = await protocol.inviteGuardian(walletId, {
-  email: 'guardian@example.com',
+  email: 'guardian@seedguardiansafe.com',
   fullName: 'John Doe',
   verificationLevel: 'enhanced'
 });
@@ -586,7 +586,7 @@ const recovery = await protocol.initiateRecovery({
   walletId: 'wallet-id',
   guardianId: 'guardian-id',
   reason: 'owner_unavailable',
-  newOwnerEmail: 'newowner@example.com',
+  newOwnerEmail: 'newowner@seedguardiansafe.com',
   guardianPrivateKey: 'private-key'
 });
 

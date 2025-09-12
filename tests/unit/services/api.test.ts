@@ -31,7 +31,8 @@ jest.mock('@/integrations/supabase/client', () => ({
       }))
     })),
     getSession: jest.fn(() => Promise.resolve({
-      access_token: 'mock-token'
+      access_token: 'mock-token',
+      user: { id: 'test-user-id' }
     }))
   }
 }));
@@ -39,6 +40,12 @@ jest.mock('@/integrations/supabase/client', () => ({
 describe('API Service', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Ensure getSession returns a valid session for all tests
+    const { supabaseClient } = require('@/integrations/supabase/client');
+    supabaseClient.getSession.mockResolvedValue({
+      access_token: 'mock-token',
+      user: { id: 'test-user-id' }
+    });
   });
 
   afterEach(() => {

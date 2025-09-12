@@ -12,6 +12,17 @@ import {
   PoLStorage, 
   PoLStorageError 
 } from './types';
+import { encryption } from '../crypto/encryption';
+
+// Encrypted proof type for secure storage
+export interface EncryptedPoLProof {
+  id: string;
+  walletId: string;
+  encryptedData: string;
+  iv: string;
+  timestamp: number;
+  type: 'automatic' | 'manual' | 'emergency';
+}
 
 export interface StorageConfig {
   dbName: string;
@@ -79,15 +90,18 @@ export class ClientPoLStorage implements PoLStorage {
   }
 
   /**
-   * Store proof
+   * Store proof with client-side encryption
    */
   async storeProof(proof: PoLProof): Promise<void> {
     try {
+      // Encrypt proof data before storage
+      const encryptedProof = await this.encryptProof(proof);
+      
       if (this.config.useIndexedDB && this.db) {
-        await this.storeInIndexedDB('proofs', proof);
+        await this.storeInIndexedDB('proofs', encryptedProof);
       } else if (this.config.useLocalStorage) {
         const key = `pol_proof_${proof.walletId}_${proof.id}`;
-        await this.storeInLocalStorage(key, proof);
+        await this.storeInLocalStorage(key, encryptedProof);
       } else {
         throw new PoLStorageError('No storage method available');
       }
@@ -100,17 +114,33 @@ export class ClientPoLStorage implements PoLStorage {
   }
 
   /**
-   * Retrieve proofs
+   * Retrieve proofs with client-side decryption
    */
   async retrieveProofs(walletId: string): Promise<PoLProof[]> {
     try {
+      let encryptedProofs: unknown[];
+      
       if (this.config.useIndexedDB && this.db) {
-        return await this.retrieveProofsFromIndexedDB(walletId);
+        encryptedProofs = await this.retrieveProofsFromIndexedDB(walletId);
       } else if (this.config.useLocalStorage) {
-        return await this.retrieveProofsFromLocalStorage(walletId);
+        encryptedProofs = await this.retrieveProofsFromLocalStorage(walletId);
       } else {
         throw new PoLStorageError('No storage method available');
       }
+      
+      // Decrypt all proofs
+      const decryptedProofs: PoLProof[] = [];
+      for (const encryptedProof of encryptedProofs) {
+        try {
+          const decryptedProof = await this.decryptProof(encryptedProof as EncryptedPoLProof);
+          decryptedProofs.push(decryptedProof);
+        } catch (decryptError) {
+          // Log decryption error but continue with other proofs
+          console.warn('Failed to decrypt proof:', decryptError);
+        }
+      }
+      
+      return decryptedProofs;
     } catch (error) {
       throw new PoLStorageError(
         'Failed to retrieve proofs',
@@ -174,6 +204,71 @@ export class ClientPoLStorage implements PoLStorage {
     } catch (error) {
       throw new PoLStorageError(
         'Failed to clear storage',
+        { originalError: error instanceof Error ? error.message : 'Unknown error' }
+      );
+    }
+  }
+
+  /**
+   * Encrypt proof data for secure storage
+   */
+  private async encryptProof(proof: PoLProof): Promise<EncryptedPoLProof> {
+    try {
+      const proofData = JSON.stringify({
+        signature: proof.signature,
+        publicKey: proof.publicKey,
+        metadata: proof.metadata,
+        challenge: proof.challenge
+      });
+
+      const encryptionKey = this.config.encryptionKey || 'default-pol-key';
+      const encrypted = await encryption.encryptWithAES(proofData, encryptionKey);
+
+      return {
+        id: proof.id,
+        walletId: proof.walletId,
+        encryptedData: encrypted.encryptedData,
+        iv: encrypted.iv,
+        timestamp: proof.timestamp,
+        type: proof.proofType
+      };
+    } catch (error) {
+      throw new PoLStorageError(
+        'Failed to encrypt proof',
+        { originalError: error instanceof Error ? error.message : 'Unknown error' }
+      );
+    }
+  }
+
+  /**
+   * Decrypt proof data from secure storage
+   */
+  private async decryptProof(encryptedProof: EncryptedPoLProof): Promise<PoLProof> {
+    try {
+      const encryptionKey = this.config.encryptionKey || 'default-pol-key';
+      const decrypted = await encryption.decryptWithAES(
+        encryptedProof.encryptedData,
+        encryptedProof.iv,
+        '', // tag not used in this implementation
+        encryptionKey
+      );
+      const decryptedData = decrypted.decryptedData;
+
+      const proofData = JSON.parse(decryptedData);
+
+      return {
+        id: encryptedProof.id,
+        walletId: encryptedProof.walletId,
+        timestamp: encryptedProof.timestamp,
+        proofType: encryptedProof.type as 'automatic' | 'manual' | 'emergency',
+        signature: proofData.signature,
+        publicKey: proofData.publicKey || '',
+        metadata: proofData.metadata,
+        challenge: proofData.challenge
+      };
+    } catch (error) {
+      throw new PoLStorageError(
+        'Failed to decrypt proof',
         { originalError: error instanceof Error ? error.message : 'Unknown error' }
       );
     }
